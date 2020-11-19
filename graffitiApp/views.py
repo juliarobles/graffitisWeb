@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework_mongoengine import viewsets
-from graffitiApp.serializers import PublicacionSerializer
+from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer
 from graffitiApp.models import Publicacion, Usuario
 from django.http import HttpResponse
 
@@ -13,8 +13,16 @@ def index(request):
 
 class PublicacionViewSet(viewsets.ModelViewSet):
 
-    lookup_field = '_id'
+    lookup_field = 'id'
     serializer_class = PublicacionSerializer
 
     def get_queryset(self):
         return Publicacion.objects.all()
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+
+    lookup_field = 'id'
+    serializer_class = UsuarioSerializer
+
+    def get_queryset(self):
+        return Usuario.objects.all()
