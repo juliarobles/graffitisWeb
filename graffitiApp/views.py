@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework_mongoengine import viewsets
-from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer
-from graffitiApp.models import Publicacion, Usuario
+from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer
+from graffitiApp.models import Publicacion, Usuario, Graffiti
 from django.http import HttpResponse
 
 # Create your views here.
@@ -26,3 +26,12 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Usuario.objects.all()
+
+
+class GraffitiViewSet(viewsets.ModelViewSet):
+
+    lookup_field = 'id'
+    serializer_class = GraffitiSerializer
+
+    def get_queryset(self):
+        return Graffiti.objects.all()
