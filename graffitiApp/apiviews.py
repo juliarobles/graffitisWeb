@@ -123,7 +123,7 @@ class UsuarioDetail(APIView):
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
         
-class GraffitiDetail(APIView):
+class GraffitiList(APIView):
     def get_object(self, pk, gpk):
         try:
             pk = ObjectId(pk)
@@ -131,10 +131,9 @@ class GraffitiDetail(APIView):
             publicacion = Publicacion.objects.get(pk=pk)
             graffitis = publicacion.listaGraffitis.get(_id=gpk)
             return graffitis
-        except Publicacion.DoesNotExist:
+        except Publicacion.DoesNotExist:  #esto
             raise Http404
       
-
     def get(self, request, pk, gpk=None):
         if gpk: 
             pk = ObjectId(pk)
@@ -153,12 +152,37 @@ class GraffitiDetail(APIView):
         serializer = GraffitiSerializer(data=request.data)
         publicacion = PublicacionDetail.get_object(request, pk)
         if serializer.is_valid():
-            serializer.save()
-            graffiti = self.get_object(pk, serializer.get_value(0))
-            publicacion.listaGraffitis.append(graffiti)
+            publicacion.listaGraffitis.append(serializer.save())
             publicacion.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class GraffitiDetail(APIView):
+    def get_object(self, pk, gpk):
+        try:
+            pk = ObjectId(pk)
+            gpk = ObjectId(gpk)
+            publicacion = Publicacion.objects.get(pk=pk)
+            graffitis = publicacion.listaGraffitis.get(_id=gpk)
+            return graffitis
+        except Publicacion.DoesNotExist:  #esto
+            raise Http404
+      
+    def get(self, request, pk, gpk=None):
+        if gpk: 
+            pk = ObjectId(pk)
+            gpk = ObjectId(gpk)
+            graffiti = self.get_object(pk, gpk)
+            serializer = GraffitiSerializer(graffiti)
+                
+        else:
+            pk = ObjectId(pk)
+            graffiti = Publicacion.objects.get(pk=pk).listaGraffitis
+            serializer = GraffitiSerializer(graffiti, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, gpk):
         pk = ObjectId(pk)
@@ -166,6 +190,7 @@ class GraffitiDetail(APIView):
         graffiti = self.get_object(pk,gpk)
         publicacion = Publicacion.objects.get(pk=pk)
         publicacion.listaGraffitis.remove(graffiti)
+        publicacion.save()
 
        
         return Response(status=status.HTTP_204_NO_CONTENT)
