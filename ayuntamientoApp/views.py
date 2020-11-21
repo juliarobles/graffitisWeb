@@ -18,7 +18,9 @@ def leer_objeto(request):
      fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827', 'limit':'5', 'q': 'title:jones'}
      )
     return HttpResponse(r.data)
-    
+
+
+
 
 
     

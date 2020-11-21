@@ -1,7 +1,6 @@
 from django.conf.urls import url,include
 from rest_framework import routers
 from graffitiApp import views
-from ayuntamientoApp.views import leer_objeto
 from graffitiApp.apiviews import PublicacionDetail, UsuarioDetail, GraffitiDetail
 #from django.urls import url_include
 
@@ -20,5 +19,4 @@ urlpatterns = [
 
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffiti/$', GraffitiDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffiti/(?P<gpk>[a-zA-Z0-9-]+)$', GraffitiDetail.as_view()),
-    url('pruebas/', leer_objeto)
 ]

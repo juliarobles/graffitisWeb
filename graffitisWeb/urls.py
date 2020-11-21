@@ -22,6 +22,7 @@ from django_mongoengine import mongo_admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('graffitiApp.urls')),
+    path('', include('ayuntamientoApp.urls')),
     #path('Publicacion/', include('graffitiApp.urls'))
     path('mongoadmin/', mongo_admin.site.urls),
 ]
