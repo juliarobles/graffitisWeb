@@ -19,6 +19,28 @@ class CalidadDelAireTodo(APIView):
         datos = json.loads(r.data)
         return Response(datos, status=status.HTTP_200_OK)
 
+#skip va incluido y limit no
+class CalidadDelAirePaginacion(APIView):
+    def get(self, request, limit, skip=0):
+        limit = int(self.kwargs.get("limit"))
+        try:
+            skip = int(self.kwargs.get("skip"))
+        except:
+            skip = 0
+        http = urllib3.PoolManager()
+        r = http.request('GET', urlCalidadDelAire)
+        datos = json.loads(r.data)
+        numDatos = len(datos['features'])
+        res = {}
+        if skip+limit > numDatos:
+            limit = numDatos-skip
+        if skip < numDatos:
+            for i in range(skip, skip+limit):
+                res[i] = datos['features'][i]
+        return Response(res, status=status.HTTP_200_OK)
+
+#Esta función asume que cada coordenada esta contenida en una única zona
+#IMPORTANTE que si se pega una coordenada de google maps quitar espacio
 class CalidadDelAireCoordenadas(APIView):
     def get(self, request, x, y):
         coordX = float(self.kwargs.get("x"))
@@ -26,9 +48,12 @@ class CalidadDelAireCoordenadas(APIView):
         http = urllib3.PoolManager()
         r = http.request('GET', urlCalidadDelAire)
         datos = json.loads(r.data)
-        zonas = {}#Quizas haga falta que sea un diccionario
+        numDatos = len(datos['features'])
+        zona = {}
+        encontrado = False
         i = 0
-        for zona in datos['features']:
+        while i < numDatos and not encontrado:
+            zona = datos['features'][i]
             coordenadas = zona['geometry']['coordinates']
             vertx = []
             verty = []
@@ -37,11 +62,13 @@ class CalidadDelAireCoordenadas(APIView):
             for y in coordenadas[0]:
                 verty.append(float(y[0]))
             res = pnpoly(len(vertx), vertx, verty, coordX, coordY)
-
             if res:
-                zonas["zona " + str(i)] = zona 
+                encontrado = True
+            else:
                 i += 1
-        return Response(zonas, status=status.HTTP_200_OK)
+        if not encontrado:
+            zona = {}
+        return Response(zona, status=status.HTTP_200_OK)
 
 #Algoritmo: https://stackoverflow.com/questions/11716268/point-in-polygon-algorithm
 #nvert = numero de vertices, vertx y verty = arrays que contienen x e y coordenadas del poligono, testx y testy = nuestras coordenadas
@@ -49,15 +76,7 @@ def pnpoly(nvert, vertx, verty, testx, testy):
     c = False
     i = 0
     j = nvert-1
-    # print(nvert)
-    # print(vertx)
-    # print(verty)
-    # print(testx)
-    # print(testy)
     while i < nvert:
-        #a = (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]
-        #print(a) poniendo esto sale división por 0
-        #El problema tiene pinta de estar aqui
         if (((verty[i]>testy) != (verty[j]>testy)) and
         (testx < (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i])):
             c = not c
@@ -65,8 +84,7 @@ def pnpoly(nvert, vertx, verty, testx, testy):
         i += 1
     return c
 
-class eventos(APIView):
-
+class Eventos(APIView):
     def get(self, request, contenido,campo=''):
         http = urllib3.PoolManager()
         r = http.request('GET',
@@ -90,7 +108,30 @@ class eventos(APIView):
                         break
         return Response(resultado,status=status.HTTP_200_OK)
 
-class bicis(APIView):
+class EventosPaginacion(APIView):
+    def get(self, request, limit, skip=0):
+        limit = int(self.kwargs.get("limit"))
+        try:
+            skip = int(self.kwargs.get("skip"))
+        except:
+            skip = 0
+        http = urllib3.PoolManager()
+        r = http.request('GET',
+        'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
+        fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
+        )
+        datos = json.loads(r.data)
+        numDatos = len(datos['result']['records'])
+        res = {}
+        if skip+limit > numDatos:
+            limit = numDatos-skip
+        if skip < numDatos:
+            for i in range(skip, skip+limit):
+                res[i] = datos['result']['records'][i]
+        return Response(res, status=status.HTTP_200_OK)
+
+
+class Bicis(APIView):
     
     def get(self, request, latitud, longitud, rango):
         http = urllib3.PoolManager()
