@@ -1,7 +1,7 @@
 from django.conf.urls import url,include
 from rest_framework import routers
 from .views import index, PublicacionViewSet, UsuarioViewSet
-from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail, ComentarioDetail
+from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail, ComentarioDetail, PublicacionLike
 #from django.urls import url_include
 
 # router = routers.DefaultRouter()
@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^index', index),
     url(r'^publicaciones/$', PublicacionDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/$', PublicacionDetail.as_view()),
+    url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/like$', PublicacionLike.as_view()),
     url(r'^usuarios/$', UsuarioDetail.as_view()),
     url(r'^usuarios/(?P<pk>[a-zA-Z0-9-]+)/$', UsuarioDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffiti/$', GraffitiList.as_view()),

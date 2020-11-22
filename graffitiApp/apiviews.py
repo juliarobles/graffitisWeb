@@ -1,6 +1,8 @@
 from enum import auto
+import re
 from rest_framework import status
 from rest_framework import serializers
+from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
@@ -79,6 +81,25 @@ class PublicacionDetail(APIView):
 
         publicacion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PublicacionLike(APIView):
+    def get(self, request, pk):
+        publicacion = PublicacionDetail.get_object(request, pk)
+        return Response(publicacion.meGusta, status=status.HTTP_200_OK)
+        
+    def post(self, request, pk):
+        publicacion = PublicacionDetail.get_object(request, pk)
+        if request.data['usuario']:
+            usuario = UsuarioDetail.get_object(request, request.data['usuario'])
+            if usuario not in publicacion.meGusta: # like de la publicacion
+                publicacion.meGusta.append(usuario)
+            else: 
+                publicacion.meGusta.remove(usuario)
+            publicacion.save()
+            serializer = PublicacionSerializer(publicacion)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST) 
 
 
 class UsuarioDetail(APIView): 
