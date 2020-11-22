@@ -1,5 +1,6 @@
 from enum import auto
 from rest_framework import status
+from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
@@ -122,34 +123,50 @@ class UsuarioDetail(APIView):
         usuario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# class ComentarioDetail(APIView):
-#     #serializer_class = PublicacionSerializer
-#     def get_object(self,pk):
-#         try:
-#             pk = ObjectId(pk)
-#             return Publicacion.objects.get(pk=pk)
-#         except Publicacion.DoesNotExist:
-#             raise Http404
+class ComentarioDetail(APIView):
+    #serializer_class = PublicacionSerializer
+    def get_object(self,pk, cpk=None):
+        try:
+            pk = ObjectId(pk)
+            publicacion = Publicacion.objects.get(pk=pk)
+            comentario = publicacion.listaComentarios.get(_id=cpk)
+            return comentario
+        except Publicacion.DoesNotExist:
+            raise Http404
 
-#     def get_embedded_field(self, obj):
+    def get(self, request, pk, cpk=None):
+        pk = ObjectId(pk)
+        if cpk:
+            cpk = ObjectId(cpk)
+            comentario = self.get_object(pk,cpk)
+            serializer = ComentarioSerializer(comentario)
+        else:
+            comentario = Publicacion.objects.get(pk=pk).listaComentarios
+            serializer = ComentarioSerializer(comentario, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-#     def get_queryset(self):
-#         idComentario = self.kwargs['idComentario']
-#         return Publicacion.objects.filter(listaComentarios=idComentario)
     
-#     def post(self, request, pk=None):
-#         serializer = UsuarioSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, pk=None):
+        serializer = ComentarioSerializer(data=request.data)
+        publicacion = PublicacionDetail.get_object(request, pk)
+        if serializer.is_valid():
+            publicacion.listaComentarios.append(serializer.save())
+            publicacion.save()
+            serializer.instance.autor.listaComentariosPublicaciones.append(publicacion)
+            serializer.instance.autor.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-#     def delete(self, request, pk):
-#         pk = ObjectId(pk)
-#         usuario = self.get_object(pk)
-#         usuario.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, pk, cpk):
+        pk = ObjectId(pk)
+        gpk = ObjectId(cpk)
+        comentario = self.get_object(pk, gpk)
+        publicacion = Publicacion.objects.get(pk=pk)
+        comentario.autor.listaComentariosPublicaciones.remove(publicacion)
+        comentario.autor.save()
+        publicacion.listaComentarios.remove(comentario)
+        publicacion.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
         
 class GraffitiList(APIView):
@@ -218,7 +235,7 @@ class GraffitiDetail(APIView):
         gpk = ObjectId(gpk)
         graffiti = self.get_object(pk,gpk)
         publicacion = Publicacion.objects.get(pk=pk)
-        graffiti.autor.listaGraffitisPublicaciones.remove(publicacion) # Comprobar que ocurre cuando el usuario tiene varios graffitis en la misma publicacion
+        graffiti.autor.listaGraffitisPublicaciones.remove(publicacion)
         graffiti.autor.save()
         publicacion.listaGraffitis.remove(graffiti)
         publicacion.save()
