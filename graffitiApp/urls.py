@@ -15,4 +15,6 @@ urlpatterns = [
     url(r'^Publicacion/(?P<pk>[a-zA-Z0-9-]+)/$', PublicacionDetail.as_view()),
     url(r'^Usuario/$', UsuarioDetail.as_view()),
     url(r'^Usuario/(?P<pk>[a-zA-Z0-9-]+)/$', UsuarioDetail.as_view()),
+    url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffiti/$', GraffitiList.as_view()),
+    url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffiti/(?P<gpk>[a-zA-Z0-9-]+)$', GraffitiDetail.as_view()),
 ]
