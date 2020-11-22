@@ -86,14 +86,14 @@ class PublicacionLike(APIView):
     def get(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         return Response(publicacion.meGusta, status=status.HTTP_200_OK)
-        
+
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         if request.data['usuario']:
             usuario = UsuarioDetail.get_object(request, request.data['usuario'])
             if usuario not in publicacion.meGusta: # like de la publicacion
                 publicacion.meGusta.append(usuario)
-            else: 
+            else: # quitar dislike de la publicacion
                 publicacion.meGusta.remove(usuario)
             publicacion.save()
             serializer = PublicacionSerializer(publicacion)
@@ -143,6 +143,29 @@ class UsuarioDetail(APIView):
         usuario = self.get_object(pk)
         usuario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UsuarioFollow(APIView):
+    def get(self, request, pk):
+        usuario = UsuarioDetail.get_object(request, pk)
+        serializer = UsuarioSerializer(usuario.listaSeguimiento, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, pk):
+        usuario = UsuarioDetail.get_object(request, pk)
+        if request.data['usuario']:
+            seguir = UsuarioDetail.get_object(request, request.data['usuario'])
+            if usuario == seguir:
+                return Response(data={"error": "Un usuario no puede seguirse asi mismo"},status=status.HTTP_403_FORBIDDEN)
+
+            if seguir not in usuario.listaSeguimiento: # follow
+                usuario.listaSeguimiento.append(seguir)
+            else: # unfollow
+                usuario.listaSeguimiento.remove(seguir)
+            usuario.save()
+            serializer = UsuarioSerializer(usuario)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class ComentarioDetail(APIView):
     #serializer_class = PublicacionSerializer
