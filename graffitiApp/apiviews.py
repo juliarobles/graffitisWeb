@@ -181,8 +181,11 @@ class GraffitiList(APIView):
         serializer = GraffitiSerializer(data=request.data)
         publicacion = PublicacionDetail.get_object(request, pk)
         if serializer.is_valid():
-            publicacion.listaGraffitis.append(serializer.save())
+            graffiti = serializer.save()
+            publicacion.listaGraffitis.append(graffiti)
             publicacion.save()
+            graffiti.autor.listaGraffitisPublicaciones.append(graffiti)
+            graffiti.autor.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -218,6 +221,8 @@ class GraffitiDetail(APIView):
         gpk = ObjectId(gpk)
         graffiti = self.get_object(pk,gpk)
         publicacion = Publicacion.objects.get(pk=pk)
+        graffiti.autor.listaGraffitisPublicaciones.remove(publicacion) # Comprobar que ocurre cuando el usuario tiene varios graffitis en la misma publicacion
+        graffiti.autor.save()
         publicacion.listaGraffitis.remove(graffiti)
         publicacion.save()
 
