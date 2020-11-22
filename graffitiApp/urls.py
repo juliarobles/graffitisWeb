@@ -1,6 +1,6 @@
 from django.conf.urls import url,include
 from rest_framework import routers
-from graffitiApp import views
+from .views import index, PublicacionViewSet, UsuarioViewSet
 from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail
 #from django.urls import url_include
 
@@ -10,7 +10,7 @@ from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDe
 
 urlpatterns = [
     # url('', include(router.urls)), 
-    url(r'^index', views.index),
+    url(r'^index', index),
     url(r'^publicaciones/$', PublicacionDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/$', PublicacionDetail.as_view()),
     url(r'^usuarios/$', UsuarioDetail.as_view()),

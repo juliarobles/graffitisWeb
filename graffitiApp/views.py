@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework_mongoengine import viewsets
-from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer
-from graffitiApp.models import Publicacion, Usuario, Graffiti
+from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer
+from .models import Publicacion, Usuario, Graffiti
 from django.http import HttpResponse
 
 # Create your views here.
