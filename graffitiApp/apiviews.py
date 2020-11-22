@@ -85,7 +85,8 @@ class PublicacionDetail(APIView):
 class PublicacionLike(APIView):
     def get(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
-        return Response(publicacion.meGusta, status=status.HTTP_200_OK)
+        serializer = UsuarioSerializer(publicacion.meGusta, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
