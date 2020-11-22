@@ -1,15 +1,15 @@
 from django.conf.urls import url,include
 from rest_framework import routers
 from graffitiApp import views
-from graffitiApp.apiviews import PublicacionDetail, UsuarioDetail, GraffitiDetail, GraffitiList
+from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail
 #from django.urls import url_include
 
-router = routers.DefaultRouter()
-router.register(r'publicaciones', views.PublicacionViewSet, basename="Publicacion" )
-router.register(r'usuarios', views.UsuarioViewSet, basename="Usuario" )
+# router = routers.DefaultRouter()
+# router.register(r'Publicacion', views.PublicacionViewSet, basename="Publicacion" )
+# router.register(r'Usuario', views.UsuarioViewSet, basename="Usuario" )
 
 urlpatterns = [
-    url('', include(router.urls)), 
+    # url('', include(router.urls)), 
     url(r'^index', views.index),
     url(r'^publicaciones/$', PublicacionDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/$', PublicacionDetail.as_view()),

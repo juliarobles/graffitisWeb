@@ -88,6 +88,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'iweb',
+        'ENFORCE_SCHEMA': False,
     }
 }
 

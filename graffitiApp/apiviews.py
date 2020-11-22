@@ -1,3 +1,4 @@
+from enum import auto
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -5,8 +6,8 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import JSONParser
 from bson import ObjectId
 from django.http import Http404
-from graffitiApp.models import Publicacion, Usuario, Graffiti
-from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
+from .models import Publicacion, Usuario, Graffiti
+from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
 
 class PublicacionDetail(APIView): 
 
@@ -31,7 +32,22 @@ class PublicacionDetail(APIView):
     def post(self, request, pk=None):
         serializer = PublicacionSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            publicacion = serializer.save() # Guardar la publicacion
+           
+            # Actualizar los campos de los usuarios
+            publicacion.creador.listaPublicaciones.append(publicacion)
+            publicacion.creador.save()
+
+            # Actualizar Graffiti...
+            for graffiti in publicacion.listaGraffitis:
+                graffiti.autor.listaGraffitisPublicaciones.append(publicacion)
+                graffiti.autor.save()
+
+            # Actualizar Comentarios...
+            for comentario in publicacion.listaComentarios:
+                comentario.autor.listaComentariosPublicaciones.append(publicacion)
+                comentario.autor.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -47,6 +63,19 @@ class PublicacionDetail(APIView):
     def delete(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
+        # Actualizar la lista de publicaciones del creador
+        publicacion.creador.listaPublicaciones.remove(publicacion)
+        publicacion.creador.save()
+
+        # Actualizar la lista de graffitis de cada usuario relacionado
+        for graffiti in publicacion.listaGraffitis:
+            graffiti.autor.listaGraffitisPublicaciones.remove(publicacion)
+            graffiti.autor.save()
+
+        for comentario in publicacion.listaComentarios:
+            comentario.autor.listaComentariosPublicaciones.remove(publicacion)
+            comentario.autor.save()
+
         publicacion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -189,6 +218,8 @@ class GraffitiDetail(APIView):
         gpk = ObjectId(gpk)
         graffiti = self.get_object(pk,gpk)
         publicacion = Publicacion.objects.get(pk=pk)
+        graffiti.autor.listaGraffitisPublicaciones.remove(publicacion) # Comprobar que ocurre cuando el usuario tiene varios graffitis en la misma publicacion
+        graffiti.autor.save()
         publicacion.listaGraffitis.remove(graffiti)
         publicacion.save()
 
