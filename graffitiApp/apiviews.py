@@ -24,7 +24,7 @@ class PublicacionDetail(APIView):
             raise Http404
     
     @swagger_auto_schema(operation_description="Devuelve todas las publicaciones",
-                         responses={status.HTTP_200_OK: PublicacionSerializer})
+                         responses={status.HTTP_200_OK: "Publicacion"})
     def get(self, request, pk=None):
         if pk: 
             pk = ObjectId(pk)
