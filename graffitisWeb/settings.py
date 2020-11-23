@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_mongoengine',
     'django_mongoengine.mongo_auth',
     'django_mongoengine.mongo_admin',
+    'drf_yasg',
     'graffitiApp'
 ]
 

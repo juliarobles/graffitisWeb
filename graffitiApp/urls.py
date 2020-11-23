@@ -2,11 +2,15 @@ from django.conf.urls import url,include
 from rest_framework import routers
 from .views import index, PublicacionViewSet, UsuarioViewSet
 from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail, ComentarioDetail, PublicacionLike, UsuarioFollow
+
+# De momento no usamos routers
+# --------------------------------------
 #from django.urls import url_include
 
 # router = routers.DefaultRouter()
 # router.register(r'Publicacion', views.PublicacionViewSet, basename="Publicacion" )
 # router.register(r'Usuario', views.UsuarioViewSet, basename="Usuario" )
+# --------------------------------------
 
 urlpatterns = [
     # url('', include(router.urls)), 

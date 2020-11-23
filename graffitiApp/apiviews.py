@@ -11,16 +11,20 @@ from bson import ObjectId
 from django.http import Http404
 from .models import Publicacion, Usuario, Graffiti
 from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 class PublicacionDetail(APIView): 
-
+    
     def get_object(self,pk):
         try:
             pk = ObjectId(pk)
             return Publicacion.objects.get(pk=pk)
         except Publicacion.DoesNotExist:
             raise Http404
-
+    
+    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones",
+                         responses={status.HTTP_200_OK: PublicacionSerializer})
     def get(self, request, pk=None):
         if pk: 
             pk = ObjectId(pk)
@@ -32,6 +36,7 @@ class PublicacionDetail(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="Crea una nueva publicación")
     def post(self, request, pk=None):
         serializer = PublicacionSerializer(data=request.data)
         if serializer.is_valid():
@@ -54,6 +59,7 @@ class PublicacionDetail(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_description="Modifica una publicación")
     def put(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
@@ -63,6 +69,7 @@ class PublicacionDetail(APIView):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_description="Elimina todas las publicaciones")
     def delete(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
@@ -82,7 +89,10 @@ class PublicacionDetail(APIView):
         publicacion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class PublicacionLike(APIView):
+    @swagger_auto_schema(operation_description="Devuelve a todos los usuarios a los que les guste la publicacion",
+                         responses={200:UsuarioSerializer(many=True)})
     def get(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         serializer = UsuarioSerializer(publicacion.meGusta, many=True)
@@ -111,7 +121,9 @@ class UsuarioDetail(APIView):
             return Usuario.objects.get(pk=pk)
         except Usuario.DoesNotExist:
             raise Http404
-
+        
+    @swagger_auto_schema(operation_description="Devuelve todos los usuarios",
+                         responses={status.HTTP_200_OK: UsuarioSerializer})
     def get(self, request, pk=None):
         if pk: 
             pk = ObjectId(pk)
