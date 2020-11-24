@@ -11,16 +11,20 @@ from bson import ObjectId
 from django.http import Http404
 from .models import Publicacion, Usuario, Graffiti
 from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
-class PublicacionDetail(APIView): 
-
+class PublicacionList(APIView): 
+    
     def get_object(self,pk):
         try:
             pk = ObjectId(pk)
             return Publicacion.objects.get(pk=pk)
         except Publicacion.DoesNotExist:
             raise Http404
-
+    
+    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones.",
+                         responses={'200': "Publicacion"})
     def get(self, request, pk=None):
         if pk: 
             pk = ObjectId(pk)
@@ -32,6 +36,7 @@ class PublicacionDetail(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="Crea una nueva publicación.")
     def post(self, request, pk=None):
         serializer = PublicacionSerializer(data=request.data)
         if serializer.is_valid():
@@ -54,6 +59,30 @@ class PublicacionDetail(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class PublicacionDetail(APIView): 
+    
+    def get_object(self,pk):
+        try:
+            pk = ObjectId(pk)
+            return Publicacion.objects.get(pk=pk)
+        except Publicacion.DoesNotExist:
+            raise Http404
+    
+    @swagger_auto_schema(operation_description="Devuelve la publicación según el id.",
+                         responses={'200': "Publicacion"})
+    def get(self, request, pk=None):
+        if pk: 
+            pk = ObjectId(pk)
+            publicacion = self.get_object(pk)
+            serializer = PublicacionSerializer(publicacion)
+            
+        else:
+            publicacion = Publicacion.objects.all()
+            serializer = PublicacionSerializer(publicacion, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(operation_description="Modifica una publicación.")
     def put(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
@@ -63,6 +92,7 @@ class PublicacionDetail(APIView):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_description="Elimina la publicación.")
     def delete(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
@@ -82,12 +112,19 @@ class PublicacionDetail(APIView):
         publicacion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class PublicacionLike(APIView):
+    @swagger_auto_schema(operation_description="Devuelve a todos los usuarios a los que les guste la publicacion.",
+                         responses={200:UsuarioSerializer(many=True)})
     def get(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         serializer = UsuarioSerializer(publicacion.meGusta, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="El usuario pasado como parametro pasará a dar me gusta a la publicación.",
+                         responses={200: UsuarioSerializer,
+                                    400: 'Bad request'},
+                         request_body=UsuarioSerializer)
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         if request.data['usuario']:
@@ -102,16 +139,16 @@ class PublicacionLike(APIView):
 
         return Response(status=status.HTTP_400_BAD_REQUEST) 
 
-
-class UsuarioDetail(APIView): 
-
+class UsuarioList(APIView):
     def get_object(self,pk):
         try:
             pk = ObjectId(pk)
             return Usuario.objects.get(pk=pk)
         except Usuario.DoesNotExist:
             raise Http404
-
+        
+    @swagger_auto_schema(operation_description="Devuelve todos los usuarios.",
+                         responses={200: UsuarioSerializer(many=True)})
     def get(self, request, pk=None):
         if pk: 
             pk = ObjectId(pk)
@@ -123,12 +160,40 @@ class UsuarioDetail(APIView):
             serializer = UsuarioSerializer(usuario, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="Crea un nuevo usuario.",
+                         responses={201: UsuarioSerializer,
+                                    400: 'Causas del error'},
+                         request_body=UsuarioSerializer)
     def post(self, request, pk=None):
         serializer = UsuarioSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+class UsuarioDetail(APIView): 
+
+    def get_object(self,pk):
+        try:
+            pk = ObjectId(pk)
+            return Usuario.objects.get(pk=pk)
+        except Usuario.DoesNotExist:
+            raise Http404
+        
+    @swagger_auto_schema(operation_description="Devuelve un usuario según el id.",
+                         responses={200: UsuarioSerializer(many=True)})
+    def get(self, request, pk=None):
+        if pk: 
+            pk = ObjectId(pk)
+            usuario = self.get_object(pk)
+            serializer = UsuarioSerializer(usuario)
+            
+        else:
+            usuario = Usuario.objects.all()
+            serializer = UsuarioSerializer(usuario, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         pk = ObjectId(pk)
@@ -139,6 +204,9 @@ class UsuarioDetail(APIView):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_description="Borra al usuario pasado en la petición",
+                         responses={204: UsuarioSerializer},
+                         request_body=UsuarioSerializer)
     def delete(self, request, pk):
         pk = ObjectId(pk)
         usuario = self.get_object(pk)
@@ -151,6 +219,11 @@ class UsuarioFollow(APIView):
         serializer = UsuarioSerializer(usuario.listaSeguimiento, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="El usuario actual seguirá al usuario pasado en la petición.",
+                         responses={200: UsuarioSerializer,
+                                    403: 'Un usuario no puede seguirse a si mismo',
+                                    404: 'Not found'},
+                         request_body=UsuarioSerializer)
     def post(self, request, pk):
         usuario = UsuarioDetail.get_object(request, pk)
         if request.data['usuario']:
@@ -167,8 +240,7 @@ class UsuarioFollow(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-class ComentarioDetail(APIView):
+class ComentarioList(APIView):
     #serializer_class = PublicacionSerializer
     def get_object(self,pk, cpk=None):
         try:
@@ -178,7 +250,9 @@ class ComentarioDetail(APIView):
             return comentario
         except Publicacion.DoesNotExist:
             raise Http404
-
+    
+    @swagger_auto_schema(operation_description="Devuelve todos los comentarios realizados en la publicación actual.",
+                         responses={200: ComentarioSerializer(many=True)})
     def get(self, request, pk, cpk=None):
         pk = ObjectId(pk)
         if cpk:
@@ -190,7 +264,10 @@ class ComentarioDetail(APIView):
             serializer = ComentarioSerializer(comentario, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
+    @swagger_auto_schema(operation_description="Crea un nuevo comentario, pasado mediante la petición, para la publicación seleccionada.",
+                         responses={201: ComentarioSerializer,
+                                    400: 'Causas del error'},
+                         request_body=ComentarioSerializer)
     def post(self, request, pk=None):
         serializer = ComentarioSerializer(data=request.data)
         publicacion = PublicacionDetail.get_object(request, pk)
@@ -202,6 +279,36 @@ class ComentarioDetail(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    
+
+
+class ComentarioDetail(APIView):
+    #serializer_class = PublicacionSerializer
+    def get_object(self,pk, cpk=None):
+        try:
+            pk = ObjectId(pk)
+            publicacion = Publicacion.objects.get(pk=pk)
+            comentario = publicacion.listaComentarios.get(_id=cpk)
+            return comentario
+        except Publicacion.DoesNotExist:
+            raise Http404
+    
+    @swagger_auto_schema(operation_description="Devuelve un comentario de la publicación actual según el id.",
+                         responses={200: ComentarioSerializer(many=True)})
+    def get(self, request, pk, cpk=None):
+        pk = ObjectId(pk)
+        if cpk:
+            cpk = ObjectId(cpk)
+            comentario = self.get_object(pk,cpk)
+            serializer = ComentarioSerializer(comentario)
+        else:
+            comentario = Publicacion.objects.get(pk=pk).listaComentarios
+            serializer = ComentarioSerializer(comentario, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(operation_description="Borra el comentario seleccionado.",
+                         responses={204: 'Response vacía'},
+                         request_body=ComentarioSerializer)
     def delete(self, request, pk, cpk):
         pk = ObjectId(pk)
         gpk = ObjectId(cpk)
@@ -224,7 +331,9 @@ class GraffitiList(APIView):
             return graffitis
         except Publicacion.DoesNotExist:  #esto
             raise Http404
-      
+    
+    @swagger_auto_schema(operation_description="Devuelve los graffitis correspondientes a la publicación seleccionada",
+                         responses={200: GraffitiSerializer})
     def get(self, request, pk, gpk=None):
         if gpk: 
             pk = ObjectId(pk)
@@ -238,6 +347,10 @@ class GraffitiList(APIView):
             serializer = GraffitiSerializer(graffiti, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="Crea un nuevo graffiti, pasado mediante la petición, para la publicación seleccionada.",
+                         responses={201: GraffitiSerializer,
+                                    400: 'Causas del error'},
+                         request_body=GraffitiSerializer)
     def post(self, request, pk, gpk=None):
 
         serializer = GraffitiSerializer(data=request.data)
@@ -250,9 +363,6 @@ class GraffitiList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
 class GraffitiDetail(APIView):
     def get_object(self, pk, gpk):
         try:
@@ -263,7 +373,9 @@ class GraffitiDetail(APIView):
             return graffitis
         except Publicacion.DoesNotExist:  #esto
             raise Http404
-      
+    
+    @swagger_auto_schema(operation_description="Devuelve un graffiti de la publicación seleccionada según el id.",
+                         responses={200: GraffitiSerializer}) 
     def get(self, request, pk, gpk=None):
         if gpk: 
             pk = ObjectId(pk)
@@ -277,6 +389,9 @@ class GraffitiDetail(APIView):
             serializer = GraffitiSerializer(graffiti, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_description="Borra el graffiti seleccionado.",
+                         responses={204: 'Response vacía'},
+                         request_body=GraffitiSerializer)
     def delete(self, request, pk, gpk):
         pk = ObjectId(pk)
         gpk = ObjectId(gpk)
@@ -290,6 +405,10 @@ class GraffitiDetail(APIView):
        
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @swagger_auto_schema(operation_description="Modifica un graffiti ya existente.",
+                         responses={202: GraffitiSerializer, 
+                                    400: 'Bad request y causas del error'},
+                         request_body=GraffitiSerializer)
     def put(self, request, pk, gpk):
         gpk = ObjectId(gpk)
         pk = ObjectId(pk)

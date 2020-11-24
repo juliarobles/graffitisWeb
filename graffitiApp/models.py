@@ -1,13 +1,9 @@
 from mongoengine import Document, EmbeddedDocument, fields, CASCADE
 from django.contrib.auth.models import User
 
-
-# Create your models here.
-
-
-
 class Usuario(Document):
-    #user = fields.ReferenceField('User', reverse_delete_rule=CASCADE)
+    usuario = fields.StringField(required=True, max_length=30)
+    password = fields.StringField(required=True, min_length=8)
     imagen = fields.URLField(required=False)
     descripcion = fields.StringField(max_length=500)
     listaSeguimiento = fields.ListField(fields.ReferenceField('Usuario'))
@@ -34,15 +30,15 @@ class Publicacion(Document):
     titulo = fields.StringField(max_length=100, required=True, null=False)
     descripcion = fields.StringField(max_length=500)
     localizacion = fields.StringField(max_length=50, required=True)
-    #tematica = fields.ListField(fields.StringField(max_length=30))
+    tematica = fields.ListField(fields.StringField(max_length=30))
     autor = fields.StringField(max_length=50)
     listaComentarios = fields.EmbeddedDocumentListField(Comentario)
     meGusta = fields.ListField(fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE))
     creador = fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE, required=True)
     listaGraffitis = fields.EmbeddedDocumentListField(Graffiti, required=True)
 
-    def __str__(self):
-        return self.titulo
+    #def __str__(self):
+    #    return self.titulo
 
 Usuario.register_delete_rule(Usuario, "listaSeguimiento", CASCADE)
 Usuario.register_delete_rule(Publicacion, "listaComentariosPublicaciones", CASCADE)

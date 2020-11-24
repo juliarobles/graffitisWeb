@@ -1,0 +1,158 @@
+[{
+  "_id": {
+    "$oid": "5fbab0abbcbecf56728297aa"
+  },
+  "titulo": "Primer graffiti",
+  "descripcion": "El primero de todos",
+  "localizacion": "Malaga",
+  "tematica": [
+    "Perros",
+    "Callejón"
+  ],
+  "autor": "Marquitos",
+  "listaComentarios": [
+    {
+      "_id": {
+        "$oid": "5fbab0abbcbecf56728297a8"
+      },
+      "texto": "¡Me encanta este graffiti!",
+      "autor": {
+        "$oid": "5fbaaade48f5052d28f3dffa"
+      }
+    }
+  ],
+  "meGusta": [
+    {
+      "$oid": "5fbaaade48f5052d28f3dffa"
+    }
+  ],
+  "creador": {
+    "$oid": "5fbaaa1c875f83f6d3cb9a9d"
+  },
+  "listaGraffitis": [
+    {
+      "_id": {
+        "$oid": "5fbab0abbcbecf56728297a9"
+      },
+      "imagen": "https://www.hola.com/imagenes/estar-bien/20190820147813/razas-perros-pequenos-parecen-grandes/0-711-550/razas-perro-pequenos-grandes-m.jpg",
+      "estado": "perfecto",
+      "fechaCaptura": {
+        "$date": "2020-09-30T00:00:00Z"
+      },
+      "autor": {
+        "$oid": "5fbaaa1c875f83f6d3cb9a9d"
+      }
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "5fbab37bbcbecf56728297b0"
+  },
+  "titulo": "Firma Sonche",
+  "descripcion": "Firma del grafitero Sonche",
+  "localizacion": "A Coruña",
+  "tematica": [
+    "Firma"
+  ],
+  "autor": "Sonche",
+  "listaComentarios": [
+    {
+      "_id": {
+        "$oid": "5fbab37bbcbecf56728297ab"
+      },
+      "texto": "Es un poco fea, pero bueno...",
+      "autor": {
+        "$oid": "5fbaaa1c875f83f6d3cb9a9d"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "5fbab37bbcbecf56728297ac"
+      },
+      "texto": "Pero que dices kolega.",
+      "autor": {
+        "$oid": "5fbaaade48f5052d28f3dffa"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "5fbab37bbcbecf56728297ad"
+      },
+      "texto": "En la foto que he subido se ve un poco mejor.",
+      "autor": {
+        "$oid": "5fbaaa1c875f83f6d3cb9a9d"
+      }
+    }
+  ],
+  "meGusta": [
+    {
+      "$oid": "5fbaaade48f5052d28f3dffa"
+    },
+    {
+      "$oid": "5fbaaa1c875f83f6d3cb9a9d"
+    }
+  ],
+  "creador": {
+    "$oid": "5fbaaade48f5052d28f3dffa"
+  },
+  "listaGraffitis": [
+    {
+      "_id": {
+        "$oid": "5fbab37bbcbecf56728297ae"
+      },
+      "imagen": "https://cflvdg.avoz.es/default/2019/06/12/00121560338701711998500/Foto/i11j9026.jpg",
+      "estado": "regular",
+      "fechaCaptura": {
+        "$date": "2020-10-02T00:00:00Z"
+      },
+      "autor": {
+        "$oid": "5fbaaade48f5052d28f3dffa"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "5fbab37bbcbecf56728297af"
+      },
+      "imagen": "https://cflvdg.avoz.es/sc/zr8kqejc9M-dLCrVSx6TZEedMtg=/x/2019/06/12/00121560338462613408934/Foto/i11j9055.jpg",
+      "estado": "regular",
+      "fechaCaptura": {
+        "$date": "2020-10-07T00:00:00Z"
+      },
+      "autor": {
+        "$oid": "5fbaaa1c875f83f6d3cb9a9d"
+      }
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "5fbab421bcbecf56728297b2"
+  },
+  "titulo": "Graffiti Ejemplo",
+  "descripcion": "Probablemente se borre",
+  "localizacion": "Suecia",
+  "tematica": [
+    "Frio",
+    "Igualdad"
+  ],
+  "autor": "PatriRansa",
+  "listaComentarios": [],
+  "meGusta": [],
+  "creador": {
+    "$oid": "5fbaabbb48f5052d28f3dffb"
+  },
+  "listaGraffitis": [
+    {
+      "_id": {
+        "$oid": "5fbab421bcbecf56728297b1"
+      },
+      "imagen": "https://cflvdg.avoz.es/default/2019/06/12/00121560338701711998500/Foto/i11j9026.jpg",
+      "estado": "perfecto",
+      "fechaCaptura": {
+        "$date": "2020-08-12T00:00:00Z"
+      },
+      "autor": {
+        "$oid": "5fbaabbb48f5052d28f3dffb"
+      }
+    }
+  ]
+}]

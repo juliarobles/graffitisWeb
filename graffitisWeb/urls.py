@@ -19,12 +19,34 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from django_mongoengine import mongo_admin
 
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Graffiti Web",
+      default_version='v1',
+      description="¡Bienvenido a la API-REST de <b>Graffiti Web!</b>\nAdemás de poder acceder a datos relativos a diferentes servicios del ámbito malagueño, podrá interactuar con nuestra aplicación <b>Graffiti App</b>",
+      terms_of_service="https://www.grafittiApp.com/policies/terms/",
+      contact=openapi.Contact(email="contact@graffitiApp.local"),
+      license=openapi.License(name="Test License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('graffitiApp.urls')),
     path('', include('ayuntamientoApp.urls')),
     #path('Publicacion/', include('graffitiApp.urls'))
     path('mongoadmin/', mongo_admin.site.urls),
+    # OpenApi
+    path('', schema_view.with_ui('swagger',
+                                 cache_timeout=0), name="schema-swagger-ui"),
+    path('redoc/', schema_view.with_ui('redoc',
+                                      cache_timeout=0), name="schema-redoc"),
 ]
 
 # let django built-in server serve static and media content

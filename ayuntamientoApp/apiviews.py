@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import JSONParser
+from math import radians, cos, sin, asin, sqrt
 import urllib3, json, unidecode
 
 urlCalidadDelAire = 'https://datosabiertos.malaga.eu/recursos/ambiente/calidadaire/calidadaire.json'
@@ -31,12 +32,12 @@ class CalidadDelAirePaginacion(APIView):
         r = http.request('GET', urlCalidadDelAire)
         datos = json.loads(r.data)
         numDatos = len(datos['features'])
-        res = {}
+        res = []
         if skip+limit > numDatos:
             limit = numDatos-skip
         if skip < numDatos:
             for i in range(skip, skip+limit):
-                res[i] = datos['features'][i]
+                res.append(datos['features'][i])
         return Response(res, status=status.HTTP_200_OK)
 
 #Esta función asume que cada coordenada esta contenida en una única zona
@@ -84,6 +85,49 @@ def pnpoly(nvert, vertx, verty, testx, testy):
         i += 1
     return c
 
+class CalidadDelAireDistancia(APIView):
+    def get(self, request, x, y, km):
+        coordX = float(self.kwargs.get("x"))
+        coordY = float(self.kwargs.get("y"))
+        distancia = float(self.kwargs.get("km"))
+        http = urllib3.PoolManager()
+        r = http.request('GET', urlCalidadDelAire)
+        datos = json.loads(r.data)
+        zonas = []
+        for zona in datos['features']:
+            coordenadas = zona['geometry']['coordinates']
+            vertx = []
+            verty = []
+            for x in coordenadas[0]:
+                vertx.append(float(x[1])) #No se porque han guardado las coordenadas (y, x)
+            for y in coordenadas[0]:
+                verty.append(float(y[0])) 
+            if comprobar_distancia_poligono(vertx, verty, coordX, coordY, distancia):
+                zonas.append(zona)
+        return Response(zonas, status=status.HTTP_200_OK)
+
+#Si algunas coordenadas del poligono esta a x o menos metros de nuestra coordenada es true 
+def comprobar_distancia_poligono(vertx,verty,coordX,coordY,distancia):
+    encontrado = False
+    i = 0
+    num = len(vertx)
+    while i < num and not encontrado:
+        if calcularDistancia(vertx[i], verty[i], coordX, coordY) <= distancia: 
+            encontrado = True
+    return encontrado
+
+#Código extraido de: https://stackoverrun.com/es/q/4271930
+def calcularDistancia(lat1, lon1, lat2, lon2):
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    # Radius of earth in kilometers is 6371
+    km = 6371* c
+    return km
+
 class Eventos(APIView):
     def get(self, request, contenido='',campo=''):
         http = urllib3.PoolManager()
@@ -126,12 +170,12 @@ class EventosPaginacion(APIView):
         )
         datos = json.loads(r.data)
         numDatos = len(datos['result']['records'])
-        res = {}
+        res = []
         if skip+limit > numDatos:
             limit = numDatos-skip
         if skip < numDatos:
             for i in range(skip, skip+limit):
-                res[i] = datos['result']['records'][i]
+                res.append(datos['result']['records'][i])
         return Response(res, status=status.HTTP_200_OK)
 
 
