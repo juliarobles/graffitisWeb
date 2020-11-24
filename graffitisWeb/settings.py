@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_xml',
     'rest_framework_mongoengine',
     'django_mongoengine',
     'django_mongoengine.mongo_auth',
@@ -145,3 +146,17 @@ SESSION_ENGINE = 'django_mongoengine.sessions'
 SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 
 #MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
+
+# Django configuration
+REST_FRAMEWORK = {
+  'DEFAULT_PARSER_CLASSES': (
+    'rest_framework.renderers.JSONRenderer',
+    'rest_framework_xml.parsers.XMLParser',
+    'rest_framework_csv.parsers.CSVParser'
+  ),
+    'DEFAULT_RENDERER_CLASSES': (
+    'rest_framework.renderers.JSONRenderer',
+    'rest_framework_xml.renderers.XMLRenderer',
+    'rest_framework_csv.renderers.CSVRenderer'
+  ),
+}

@@ -19,5 +19,6 @@ urlpatterns = [
     path('eventos/<contenido>/', Eventos.as_view()),
     path('eventos/', Eventos.as_view()),
     path('eventosID/<int:pk>', EventosID.as_view()),
-    path('bicis/<latitud>+<longitud>+<rango>/', Bicis.as_view())
+    path('bicis/<latitud>+<longitud>+<rango>/', Bicis.as_view()),
+    path('bicis/<str:pk>/', Bicis.as_view())
 ]

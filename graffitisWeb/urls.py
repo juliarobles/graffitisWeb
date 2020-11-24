@@ -20,9 +20,11 @@ from django.urls import path, include
 from django_mongoengine import mongo_admin
 
 from rest_framework import permissions
+from rest_framework.urlpatterns import format_suffix_patterns
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+# Para configurar drf_yasg
 schema_view = get_schema_view(
    openapi.Info(
       title="Graffiti Web",
@@ -52,3 +54,5 @@ urlpatterns = [
 # let django built-in server serve static and media content
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html','xml'])
