@@ -2,7 +2,7 @@ from django.conf.urls import url,include
 from rest_framework import routers
 from .views import index, PublicacionViewSet, UsuarioViewSet
 from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail, ComentarioDetail, PublicacionLike, UsuarioFollow, PublicacionList, UsuarioList, ComentarioList
-
+from .apiviews import UsuarioFilterName, PublicacionFilterAuthor
 # De momento no usamos routers
 # --------------------------------------
 #from django.urls import url_include
@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffitis/(?P<gpk>[a-zA-Z0-9-]+)$', GraffitiDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/$', ComentarioList.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/(?P<cpk>[a-zA-Z0-9-]+)$', ComentarioDetail.as_view()),
+    url(r'^usuarios/username/(?P<username>[a-zA-Z0-9-]+)/$', UsuarioFilterName.as_view()),
+    url(r'^publicaciones/autor/(?P<author>[a-zA-Z0-9-]+)/$', PublicacionFilterAuthor.as_view()),
 ]

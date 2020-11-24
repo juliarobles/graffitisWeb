@@ -40,24 +40,7 @@ class PublicacionList(APIView):
 
     @swagger_auto_schema(responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, request_body=PublicacionSerializer)
     def post(self, request, pk=None):
-        """Permite crear una nueva publicacion con el siguiente formato:
-            {
-                "titulo": <string>,
-                "descripcion": <string>,
-                "localizacion": <string>,
-                "tematica": [<string-1>,...,<string-n>],
-                "autor": <string>
-                "creador": <id usuario>,
-                "liataGraffitis":[
-                    {
-                        "imagen": <string-url>,
-                        "estado": <string>,
-                        "fechaCaptura": YYYY-MM-DD,
-                        "autor": <id usuario>
-                    }
-                ]
-            }
-         """
+        """Permite crear una nueva publicacion"""
         serializer = PublicacionSerializer(data=request.data)
         if serializer.is_valid():
             publicacion = serializer.save() # Guardar la publicacion
@@ -457,3 +440,25 @@ class GraffitiDetail(APIView):
 #     "fechaCaptura": "2020-05-06",
 #     "autor": "5fb8e5cbb2abaebd2dd2b735"
 # }
+
+# Consultas parametrizadas
+class UsuarioFilterName(APIView):
+    @swagger_auto_schema(operation_description="Devuelve todos los usuarios que contengan en su nombre una cadena de texto.",
+                            responses={200: 'OK', 400: 'Error en la cadena enviada'})
+    def get(self, request, username):
+        if username:
+            usuarios = Usuario.objects.filter(usuario__contains=username)
+            serializer = UsuarioSerializer(usuarios, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error":"No se ha proporcionado un username"}, status=status.HTTP_400_BAD_REQUEST)
+
+class PublicacionFilterAuthor(APIView):
+    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada",
+                            responses={200: 'OK', 400: 'Error con la cadena enviada'})
+    def get(self, request, author):
+        if author:
+            publicaciones = Publicacion.objects.filter(autor__contains=author)
+            serializer = PublicacionSerializer(publicaciones, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error":"No se ha proporcionado un autor"}, status=status.HTTP_400_BAD_REQUEST)
+            
