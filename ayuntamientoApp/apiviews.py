@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 from threading import Thread
 
 urlCalidadDelAire = 'https://datosabiertos.malaga.eu/recursos/ambiente/calidadaire/calidadaire.json'
-url_eventos = 'https://datosabiertos.malaga.eu/api/3/action/datastore_search'
+url_eventos = 'https://datosabiertos.malaga.eu/api/3/action/datastore_search?resource_id=7f96bcbb-020b-449d-9277-1d86bd11b827'
 url_bicis =  'https://datosabiertos.malaga.eu/recursos/transporte/trafico/da_carrilesBici-25830.geojson'
 def comprobar_distancia(latitud1, latitud2, longitud1, longitud2, rango):
     return latitud1-latitud2<abs(rango) and longitud1-longitud2<abs(rango) 
@@ -22,11 +22,8 @@ def comprobar_distancia(latitud1, latitud2, longitud1, longitud2, rango):
 def cargar_url(url):
     http = urllib3.PoolManager()
     r = http.request('GET',
-    url,
-    fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
+    url
     )
-
-   
     return r.data
      
 class CalidadDelAireTodo(APIView):
