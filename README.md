@@ -22,7 +22,7 @@ Para llevar este proyecto acabo hemos usado las siguientes tecnologías:
 
 ## Instalación y puesta a punto
 Para poder ejecutar nuestra API en su propia máquina, solo tiene que seguir estos pasos:
- 1. Instalar MongoDB desde su [página oficial](https://www.mongodb.com/) o bien preparar una base de datos propia.
+ 1. Instalar MongoDB desde su [página oficial](https://www.mongodb.com/) o bien preparar una base de datos propia. OPCIONAL: puede también usar los datos de muestra proporcionados.
  2. Instalar Python (Que ya viene con [pip](https://pypi.org/project/pip/) instalado por defecto :tada:)
  ``` shell
  pip install python
