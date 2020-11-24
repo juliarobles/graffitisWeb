@@ -10,11 +10,12 @@ Actualmente, nuestra API alberga diversos métodos encargados de consultar, crea
 Además, contamos con una conexión a la API *Datos abiertos del Ayuntamiento de Málaga* para la consulta de datos de interés de diversa índole, en concreto para la consulta de:
 * Datos de la calidad del aire en la ciudad.
 * Eventos próximos que se llevarán a cabo.
+* Carriles bici de la ciudad.
 
 **¡Para que no te pierdas nada de lo pasa en nuestra ciudad!**
 
 ### Tecnologías usadas
-Para llevar este proyecto acabo hemos usado las siguientes tecnologías:
+Para llevar este proyecto a cabo hemos usado las siguientes tecnologías:
 * [Python 3](https://www.python.org/download/releases/3.0/)
 * [DJango](https://www.djangoproject.com/)
 * [MongoDB](mongodb.com)
@@ -22,7 +23,7 @@ Para llevar este proyecto acabo hemos usado las siguientes tecnologías:
 
 ## Instalación y puesta a punto
 Para poder ejecutar nuestra API en su propia máquina, solo tiene que seguir estos pasos:
- 1. Instalar MongoDB desde su [página oficial](https://www.mongodb.com/) o bien preparar una base de datos propia. OPCIONAL: puede también usar los datos de muestra proporcionados.
+ 1. Instalar MongoDB desde su [página oficial](https://www.mongodb.com/) o bien preparar una base de datos propia con el nombre de _iweb_. OPCIONAL: puede también usar los datos de muestra proporcionados en la carpeta _Ejemplos bd_.
  2. Instalar Python (Que ya viene con [pip](https://pypi.org/project/pip/) instalado por defecto :tada:)
  ``` shell
  pip install python
@@ -35,7 +36,7 @@ Para poder ejecutar nuestra API en su propia máquina, solo tiene que seguir est
  
  4. Instalar los requisitos especificados dentro del archivo requirements.txt,
  ``` shell
- pip install -r requirements.txt.
+ pip install -r requirements.txt
  ```
 Y con eso, tenemos todo a punto para ejecutar la aplicación.
 
