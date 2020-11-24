@@ -32,6 +32,7 @@ Para poder ejecutar nuestra API en su propia máquina, solo tiene que seguir est
  git clone https://github.com/juliarobles/graffitisWeb.git
  ```
  O bien descargándolo directamente desde aquí.
+ 
  4. Instalar los requisitos especificados dentro del archivo requirements.txt,
  ``` shell
  pip install -r requirements.txt.
