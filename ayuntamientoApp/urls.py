@@ -10,7 +10,7 @@ from ayuntamientoApp.apiviews import *
 urlpatterns = [
     url(r'^calidadDelAire/$', CalidadDelAireTodo.as_view()),
     url(r'^calidadDelAire/(?P<x>[0-9-.]+),(?P<y>[0-9-.]+)$', CalidadDelAireCoordenadas.as_view()),
-    url(r'^calidadDelAire/(?P<x>[0-9-.]+),(?P<y>[0-9-.]+)&km=(?P<km>[0-9-]+)$', CalidadDelAireDistancia.as_view()),
+    url(r'^calidadDelAire/(?P<x>[0-9-.]+),(?P<y>[0-9-.]+)&km=(?P<km>[0-9-.]+)$', CalidadDelAireDistancia.as_view()),
     url(r'^calidadDelAire/limit=(?P<limit>[0-9-]+)&skip=(?P<skip>[0-9-]+)$', CalidadDelAirePaginacion.as_view()),
     url(r'^calidadDelAire/limit=(?P<limit>[0-9-]+)$', CalidadDelAirePaginacion.as_view()),
     url(r'^eventos/limit=(?P<limit>[0-9-]+)&skip=(?P<skip>[0-9-]+)$', EventosPaginacion.as_view()),

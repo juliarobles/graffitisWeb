@@ -9,6 +9,7 @@ from math import radians, cos, sin, asin, sqrt
 import urllib3, json, unidecode
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from threading import Thread
 
 urlCalidadDelAire = 'https://datosabiertos.malaga.eu/recursos/ambiente/calidadaire/calidadaire.json'
 
@@ -97,6 +98,7 @@ def pnpoly(nvert, vertx, verty, testx, testy):
         i += 1
     return c
 
+
 class CalidadDelAireDistancia(APIView):
     def get(self, request, x, y, km):
         coordX = float(self.kwargs.get("x"))
@@ -118,14 +120,15 @@ class CalidadDelAireDistancia(APIView):
                 zonas.append(zona)
         return Response(zonas, status=status.HTTP_200_OK)
 
-#Si algunas coordenadas del poligono esta a x o menos metros de nuestra coordenada es true 
+#Si el centro del poligono esta a x o menos metros de nuestra coordenada es true 
 def comprobar_distancia_poligono(vertx,verty,coordX,coordY,distancia):
     encontrado = False
     i = 0
     num = len(vertx)
-    while i < num and not encontrado:
-        if calcularDistancia(vertx[i], verty[i], coordX, coordY) <= distancia: 
-            encontrado = True
+    sX = sum(vertx)/num
+    sY = sum(verty)/num
+    if calcularDistancia(sX, sY, coordX, coordY) <= distancia: 
+        encontrado = True
     return encontrado
 
 #Código extraido de: https://stackoverrun.com/es/q/4271930
