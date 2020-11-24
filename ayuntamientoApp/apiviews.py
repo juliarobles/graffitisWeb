@@ -7,11 +7,23 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import JSONParser
 from math import radians, cos, sin, asin, sqrt
 import urllib3, json, unidecode
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 urlCalidadDelAire = 'https://datosabiertos.malaga.eu/recursos/ambiente/calidadaire/calidadaire.json'
 
 def comprobar_distancia(latitud1, latitud2, longitud1, longitud2, rango):
     return latitud1-latitud2<abs(rango) and longitud1-longitud2<abs(rango) 
+
+def cargar_url():
+    http = urllib3.PoolManager()
+    r = http.request('GET',
+    'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
+    fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
+    )
+
+    lista = json.loads(r.data)['result']['records']
+    return lista
      
 class CalidadDelAireTodo(APIView):
     def get(self, request, pk=None):
@@ -128,22 +140,36 @@ def calcularDistancia(lat1, lon1, lat2, lon2):
     km = 6371* c
     return km
 
-class Eventos(APIView):
-    def get(self, request, contenido,campo=''):
-        http = urllib3.PoolManager()
-        r = http.request('GET',
-        'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
-        fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
-        )
+class EventosID(APIView):
+    def get_object(self, request, pk):
+        lista = cargar_url()
 
-        lista = json.loads(r.data)['result']['records']
-        # lista = y['result']['records']
+        for elem in lista:
+            if(elem['ID_ACTIVIDAD'] == pk):
+                return Response(elem, status=200)
+        return Response(status=404) 
+    @swagger_auto_schema(operation_description="Devuelve el evento de id PK. Si no hay devuelve error.",
+                         responses={200: 'Todo correcto', 404:'Elemento no existente'}) 
+    def get(self, request, pk):
+        return self.get_object(request, pk)
+
+class Eventos(APIView):
+    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en la propiedad CAMPO. En el caso de que no se pase ningún campo buscará la cadena en todos los campos del objeto. Si no se le pasa ningún parámetro devolverá todos los eventos. ",
+                         responses={200: 'Todo correcto'}) 
+    def get(self, request, contenido='',campo=''):
+
+        lista = cargar_url()
         resultado = []
         c= str(contenido)
+  
+        
+        if(campo=='' and contenido==''):
+            return Response(lista, status=status.HTTP_200_OK)
         if(campo != ''):
             for elem in lista:
                 if (unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(elem[campo]).casefold())):
                     resultado.append(elem)
+                
         else:
             for elem in lista:
                 for v in elem.items():
@@ -153,6 +179,8 @@ class Eventos(APIView):
         return Response(resultado,status=status.HTTP_200_OK)
 
 class EventosPaginacion(APIView):
+    @swagger_auto_schema(operation_description="Devuelve todos los eventos divididos en páginas de tamaño LIMIT y saltando SKIP páginas.",
+                         responses={200: 'Todo correcto'}) 
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
         try:
@@ -164,6 +192,7 @@ class EventosPaginacion(APIView):
         'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
         fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
         )
+
         datos = json.loads(r.data)
         numDatos = len(datos['result']['records'])
         res = []
