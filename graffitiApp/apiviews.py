@@ -24,8 +24,7 @@ class PublicacionList(APIView):
         except Publicacion.DoesNotExist:
             raise Http404
     
-    @swagger_auto_schema(#operation_description="Devuelve todas las publicaciones.",
-                         responses={'200': "Publicacion"})
+    @swagger_auto_schema(responses={'200': PublicacionSerializer(many=True)})
     def get(self, request, pk=None):
         """Devuelve todas las publicaciones o una publicacion en concreto si hay un id en la url"""
         if pk: 
@@ -38,7 +37,8 @@ class PublicacionList(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, request_body=PublicacionSerializer)
+    @swagger_auto_schema(responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, 
+                         request_body=PublicacionSerializer)
     def post(self, request, pk=None):
         """Permite crear una nueva publicacion"""
         serializer = PublicacionSerializer(data=request.data)
@@ -73,7 +73,7 @@ class PublicacionDetail(APIView):
             raise Http404
     
     @swagger_auto_schema(operation_description="Devuelve la publicación según el id.",
-                         responses={'200': "Publicacion"})
+                         responses={200: PublicacionSerializer})
     def get(self, request, pk=None):
         if pk: 
             pk = ObjectId(pk)
@@ -85,7 +85,10 @@ class PublicacionDetail(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="Modifica una publicación.")
+    @swagger_auto_schema(operation_description="Modifica una publicación existente.",
+                         request_body=PublicacionSerializer,
+                         responses={202: "Modificación aceptada",
+                                    400: "Error y sus causas"})
     def put(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
@@ -96,7 +99,8 @@ class PublicacionDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(operation_description="Elimina una publicacion.",
-                            responses={'204':'Publicacion Eliminada', '404':'Publicacion no encontrada'})
+                            responses={'204':'Publicacion Eliminada', 
+                                       '404':'Publicacion no encontrada'})
     def delete(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
