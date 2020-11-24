@@ -7,23 +7,25 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import JSONParser
 from math import radians, cos, sin, asin, sqrt
 import urllib3, json, unidecode
+from django.http import Http404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 urlCalidadDelAire = 'https://datosabiertos.malaga.eu/recursos/ambiente/calidadaire/calidadaire.json'
-
+url_eventos = 'https://datosabiertos.malaga.eu/api/3/action/datastore_search'
+url_bicis =  'https://datosabiertos.malaga.eu/recursos/transporte/trafico/da_carrilesBici-25830.geojson'
 def comprobar_distancia(latitud1, latitud2, longitud1, longitud2, rango):
     return latitud1-latitud2<abs(rango) and longitud1-longitud2<abs(rango) 
 
-def cargar_url():
+def cargar_url(url):
     http = urllib3.PoolManager()
     r = http.request('GET',
-    'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
+    url,
     fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
     )
 
-    lista = json.loads(r.data)['result']['records']
-    return lista
+   
+    return r.data
      
 class CalidadDelAireTodo(APIView):
     def get(self, request, pk=None):
@@ -142,23 +144,24 @@ def calcularDistancia(lat1, lon1, lat2, lon2):
 
 class EventosID(APIView):
     def get_object(self, request, pk):
-        lista = cargar_url()
+        lista = json.loads(cargar_url(url_eventos))['result']['records']
 
         for elem in lista:
             if(elem['ID_ACTIVIDAD'] == pk):
                 return Response(elem, status=200)
-        return Response(status=404) 
+        return Response(status=404)
     @swagger_auto_schema(operation_description="Devuelve el evento de id PK. Si no hay devuelve error.",
                          responses={200: 'Todo correcto', 404:'Elemento no existente'}) 
     def get(self, request, pk):
         return self.get_object(request, pk)
 
+# URL: 'https://datosabiertos.malaga.eu/api/3/action/datastore_search'
 class Eventos(APIView):
     @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en la propiedad CAMPO. En el caso de que no se pase ningún campo buscará la cadena en todos los campos del objeto. Si no se le pasa ningún parámetro devolverá todos los eventos. ",
-                         responses={200: 'Todo correcto'}) 
+                         responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}) 
     def get(self, request, contenido='',campo=''):
 
-        lista = cargar_url()
+        lista = json.loads(cargar_url(url_eventos))['result']['records']
         resultado = []
         c= str(contenido)
   
@@ -167,16 +170,21 @@ class Eventos(APIView):
             return Response(lista, status=status.HTTP_200_OK)
         if(campo != ''):
             for elem in lista:
-                if (unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(elem[campo]).casefold())):
-                    resultado.append(elem)
-                
+                if (campo in elem.keys()):
+                    if (unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(elem[campo]).casefold())):
+                        resultado.append(elem)
+                else:
+                    return Response(status=404)
         else:
             for elem in lista:
                 for v in elem.items():
                     if(unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(v).casefold())):
                         resultado.append(elem)
                         break
-        return Response(resultado,status=status.HTTP_200_OK)
+        if(not resultado):
+            return Response(status= status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(resultado,status=status.HTTP_200_OK)
 
 class EventosPaginacion(APIView):
     @swagger_auto_schema(operation_description="Devuelve todos los eventos divididos en páginas de tamaño LIMIT y saltando SKIP páginas.",
@@ -187,13 +195,8 @@ class EventosPaginacion(APIView):
             skip = int(self.kwargs.get("skip"))
         except:
             skip = 0
-        http = urllib3.PoolManager()
-        r = http.request('GET',
-        'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
-        fields={'resource_id':'7f96bcbb-020b-449d-9277-1d86bd11b827'}
-        )
 
-        datos = json.loads(r.data)
+        datos = json.loads(cargar_url(url_eventos))
         numDatos = len(datos['result']['records'])
         res = []
         if skip+limit > numDatos:
@@ -206,26 +209,34 @@ class EventosPaginacion(APIView):
 
 class Bicis(APIView):
     
-    def get(self, request, latitud, longitud, rango):
-        http = urllib3.PoolManager()
-        r = http.request(
-            'GET', 
-            'https://datosabiertos.malaga.eu/recursos/transporte/trafico/da_carrilesBici-25830.geojson'
-        )
-        
-        lista = json.loads(r.data)['features']
-        latitud = float(latitud)
-        longitud = float(longitud)
-        rango = float(rango)
-
-        resultado = []
+    
+    def get_object(self, request, pk):
+        lista = json.loads(cargar_url(url_bicis))['features']
         for elem in lista:
-            if(elem['geometry']['type']=="Point"):
-                if(comprobar_distancia(elem['geometry']['coordinates'][0], latitud, elem['geometry']['coordinates'][1], longitud, rango)):
-                    resultado.append(elem)
-            else:
-                for punto in elem['geometry']['coordinates']:
-                    if(comprobar_distancia(punto[0], latitud, punto[1], longitud, rango)):
+            if (pk == elem['id']):
+                return Response(elem, status=200)
+        return Response(status=404)
+    
+    @swagger_auto_schema(operation_description="Consulta sobre los objetos que esten a una distancia menor de RANGO desde un punto de latitud LATITUD y longitud LONGITUD",
+                         responses={200: 'Todo correcto', 404:'Not found'} )
+    def get(self, request, latitud=None, longitud=None, rango=None, pk=None):
+        if pk:
+             return self.get_object(request, pk)
+        else:
+         
+            lista = json.loads(cargar_url(url_bicis))['features']
+            latitud = float(latitud)
+            longitud = float(longitud)
+            rango = float(rango)
+
+            resultado = []
+            for elem in lista:
+                if(elem['geometry']['type']=="Point"):
+                    if(comprobar_distancia(elem['geometry']['coordinates'][0], latitud, elem['geometry']['coordinates'][1], longitud, rango)):
                         resultado.append(elem)
-                        break
-        return Response(resultado,status=status.HTTP_200_OK)
+                else:
+                    for punto in elem['geometry']['coordinates']:
+                        if(comprobar_distancia(punto[0], latitud, punto[1], longitud, rango)):
+                            resultado.append(elem)
+                            break
+            return Response(resultado,status=status.HTTP_200_OK)
