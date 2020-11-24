@@ -4,6 +4,7 @@ from .models import Publicacion, Usuario, Graffiti, Comentario
 
 class UsuarioSerializer(serializers.DocumentSerializer):
     class Meta:
+        ref_name = 'Usuario'
         model = Usuario
         fields = '__all__'
 
@@ -26,6 +27,8 @@ class ComentarioSerializer(serializers.EmbeddedDocumentSerializer):
         return super(ComentarioSerializer, self).to_representation(instance)
 
 class PublicacionSerializer(serializers.DocumentSerializer):
+    listaComentarios = ComentarioSerializer(many=True)
+    listaGraffitis = GraffitiSerializer(many=True)
     class Meta:
         model = Publicacion
         fields = '__all__'
