@@ -85,7 +85,7 @@ def pnpoly(nvert, vertx, verty, testx, testy):
     return c
 
 class Eventos(APIView):
-    def get(self, request, contenido,campo=''):
+    def get(self, request, contenido='',campo=''):
         http = urllib3.PoolManager()
         r = http.request('GET',
         'https://datosabiertos.malaga.eu/api/3/action/datastore_search',
@@ -96,6 +96,10 @@ class Eventos(APIView):
         # lista = y['result']['records']
         resultado = []
         c= str(contenido)
+
+
+        if(campo=='' and contenido==''):
+            return Response(json.dump, status=status.HTTP_200_OK)
         if(campo != ''):
             for elem in lista:
                 if (unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(elem[campo]).casefold())):
