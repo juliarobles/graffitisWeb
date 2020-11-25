@@ -1,8 +1,9 @@
 from django.conf.urls import url,include
 from rest_framework import routers
-from .views import index, PublicacionViewSet, UsuarioViewSet
+from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view
 from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail, ComentarioDetail, PublicacionLike, UsuarioFollow, PublicacionList, UsuarioList, ComentarioList
 from .apiviews import UsuarioFilterName, PublicacionFilterAuthor
+from django.urls import path
 # De momento no usamos routers
 # --------------------------------------
 #from django.urls import url_include
@@ -27,4 +28,9 @@ urlpatterns = [
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/(?P<cpk>[a-zA-Z0-9-]+)$', ComentarioDetail.as_view()),
     url(r'^usuarios/username/(?P<username>[a-zA-Z0-9-]+)/$', UsuarioFilterName.as_view()),
     url(r'^publicaciones/autor/(?P<author>[a-zA-Z0-9-]+)/$', PublicacionFilterAuthor.as_view()),
+
+
+
+    # url(r'^html/publicaciones/', list_publicaciones_views),
+    path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
 ]

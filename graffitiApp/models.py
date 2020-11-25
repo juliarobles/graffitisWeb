@@ -1,5 +1,6 @@
 from mongoengine import Document, EmbeddedDocument, fields, CASCADE
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 class Usuario(Document):
     usuario = fields.StringField(required=True, max_length=30)
@@ -36,6 +37,10 @@ class Publicacion(Document):
     meGusta = fields.ListField(fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE))
     creador = fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE, required=True)
     listaGraffitis = fields.EmbeddedDocumentListField(Graffiti, required=True)
+
+    def getDetailURL(self):
+        return reverse('publicacion-detail', args={str(self.id)})
+
 
     #def __str__(self):
     #    return self.titulo

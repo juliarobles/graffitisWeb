@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from rest_framework import serializers
 from rest_framework_mongoengine import viewsets
 from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer
 from .models import Publicacion, Usuario, Graffiti
 from django.http import HttpResponse
+from bson import ObjectId
 
 # Create your views here.
 
@@ -35,3 +37,22 @@ class GraffitiViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Graffiti.objects.all()
+
+def base_view(request):
+    return render(request, 'graffiti_list.html')
+
+def list_publicaciones_views(request):
+    publicaciones = Publicacion.objects.all()
+    context = {
+        "publicaciones": publicaciones
+    }
+    return render(request, 'publicaciones_list.html', context=context)
+
+def publicaciones_detail_view(request, pk):
+    pk = ObjectId(pk)
+    publicacion = Publicacion.objects.get(pk=pk)
+    context = {
+        "publicacion": publicacion,
+        "meGusta": len(publicacion.meGusta)
+    }
+    return render(request, 'publicacion_detail.html', context=context)

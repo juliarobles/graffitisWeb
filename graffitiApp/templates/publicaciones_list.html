@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Lista Publicaciones{% endblock %}
+{%block body %}
+    <h1>Lista de Publicaciones</h1>
+    <ul>
+        {% for p in publicaciones %}
+            <li>{{ p.titulo }} <a href="{{ p.getDetailURL}}">Detalles</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
