@@ -1,6 +1,6 @@
 from django.conf.urls import url,include
 from rest_framework import routers
-from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view
+from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view, usuarios_list, usuarios_detail
 from .apiviews import PublicacionDetail, UsuarioDetail, GraffitiList, GraffitiDetail, ComentarioDetail, PublicacionLike, UsuarioFollow, PublicacionList, UsuarioList, ComentarioList
 from .apiviews import UsuarioFilterName, PublicacionFilterAuthor
 from django.urls import path
@@ -31,6 +31,8 @@ urlpatterns = [
 
 
 
-    # url(r'^html/publicaciones/', list_publicaciones_views),
+    path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
+    path('html/usuarios', usuarios_list, name='usuarios-list'),
+    path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
 ]
