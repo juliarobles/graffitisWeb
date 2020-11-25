@@ -32,6 +32,8 @@ class Usuario(Document):
     
     # def __str__(self):
     #     return 
+    def getDetailURL(self):
+        return reverse('usuarios-detail', args={str(self.id)})
 
 class Graffiti(EmbeddedDocument):
     _id = fields.ObjectIdField(required=True, default=lambda: fields.ObjectId())

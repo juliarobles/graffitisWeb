@@ -56,3 +56,21 @@ def publicaciones_detail_view(request, pk):
         "meGusta": len(publicacion.meGusta)
     }
     return render(request, 'publicacion_detail.html', context=context)
+
+def usuarios_list(request):
+    usuarios = Usuario.objects.all()
+    context = {
+        "usuarios": usuarios
+    }
+    return render(request, 'usuarios_list.html', context=context)
+
+def usuarios_detail(request, pk):
+    pk = ObjectId(pk)
+    usuario = Usuario.objects.get(pk=pk)
+    seguidores = Usuario.objects.filter(listaSeguimiento__contains=usuario)
+    context = {
+        "usuario": usuario,
+        "seguidos": len(usuario.listaSeguimiento),
+        "seguidores": len(seguidores)
+    }
+    return render(request, 'usuarios_detail.html', context=context)

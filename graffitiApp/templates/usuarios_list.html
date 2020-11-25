@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Lista Usuarios{% endblock %}
+
+{% block body %}
+    <h1>Lista de Usuarios</h1>
+    <ul>
+        {%for usuario in usuarios %}
+            <li><a href="{{usuario.getDetailURL}}">{{usuario.usuario}}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

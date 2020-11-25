@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Detalles Usuario{% endblock %}
+
+{% block body %}
+    <h1>Detalles de Usuario</h1>
+    <ul>
+        <li>{{usuario.usuario}}</li>
+        <li><img src="{{usuario.imagen}}"></li>
+        <li>{{usuario.descripcion}}</li>
+        <li>Seguidos: {{seguidos}}</li>
+        <li>Seguidores: {{seguidores}}</li>
+    </ul>
+
+    <h1>Publicaciones</h1>
+    <ul>
+        {% for publicacion in usuario.listaPublicaciones %}
+            <li><a href="{{publicacion.getDetailURL}}">{{publicacion.titulo}}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

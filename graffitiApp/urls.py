@@ -32,4 +32,11 @@ urlpatterns = [
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/(?P<cpk>[a-zA-Z0-9-]+)$', ComentarioDetail.as_view()),
     url(r'^usuarios/username/(?P<username>[a-zA-Z0-9-]+)/$', UsuarioFilterName.as_view()),
     url(r'^publicaciones/(?P<campo>[a-zA-Z0-9-_]+)/(?P<contenido>[a-zA-Z0-9-_]+)$', PublicacionFiltrar.as_view())
+
+
+
+    path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
+    path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
+    path('html/usuarios', usuarios_list, name='usuarios-list'),
+    path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
 ]
