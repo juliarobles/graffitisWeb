@@ -150,7 +150,7 @@ SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 # Django configuration
 REST_FRAMEWORK = {
   'DEFAULT_PARSER_CLASSES': (
-    'rest_framework.renderers.JSONRenderer',
+    'rest_framework.parsers.JSONParser',
     'rest_framework_xml.parsers.XMLParser',
     'rest_framework_csv.parsers.CSVParser'
   ),

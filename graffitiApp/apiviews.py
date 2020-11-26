@@ -92,9 +92,14 @@ class PublicacionDetail(APIView):
     def put(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
-        serializer = PublicacionSerializer(publicacion, data=request.data)
+        publicacion.creador.listaPublicaciones.remove(publicacion)
+        
+        serializer = PublicacionSerializer(publicacion, data=request.data, partial=True)
+        
         if serializer.is_valid():
             serializer.save()
+            publicacion.creador.listaPublicaciones.append(publicacion)
+            publicacion.creador.save()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -204,6 +209,10 @@ class UsuarioDetail(APIView):
             serializer = UsuarioSerializer(usuario, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+    @swagger_auto_schema(operation_description="Actualiza al usuario especificado",
+                         responses={204: UsuarioSerializer},
+                         request_body=UsuarioSerializer)
     def put(self, request, pk):
         pk = ObjectId(pk)
         usuario = self.get_object(pk)
@@ -214,8 +223,7 @@ class UsuarioDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(operation_description="Borra al usuario especificado",
-                         responses={204: UsuarioSerializer},
-                         request_body=UsuarioSerializer)
+                         responses={204: 'Usuario eliminado'})
     def delete(self, request, pk):
         pk = ObjectId(pk)
         usuario = self.get_object(pk)
@@ -317,8 +325,7 @@ class ComentarioDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_description="Borra el comentario seleccionado.",
-                         responses={204: 'Response vacía', 404: 'Comentario o publicacion no encontrado'},
-                         request_body=ComentarioSerializer)
+                         responses={204: 'Response vacía', 404: 'Comentario o publicacion no encontrado'})
     def delete(self, request, pk, cpk):
         pk = ObjectId(pk)
         gpk = ObjectId(cpk)
@@ -401,8 +408,7 @@ class GraffitiDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_description="Borra el graffiti seleccionado.",
-                         responses={204: 'Response vacía'},
-                         request_body=GraffitiSerializer)
+                         responses={204: 'Response vacía'})
     def delete(self, request, pk, gpk):
         pk = ObjectId(pk)
         gpk = ObjectId(gpk)
