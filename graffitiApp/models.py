@@ -11,6 +11,23 @@ class Usuario(Document):
     listaComentariosPublicaciones = fields.ListField(fields.ReferenceField('Publicacion'))
     listaGraffitisPublicaciones = fields.ListField(fields.ReferenceField('Publicacion'))
 
+    def delete(self, *args, **kwargs):
+        for publicacion in self.listaComentariosPublicaciones:
+            comentarios = publicacion.listaComentarios
+            for comentario in comentarios:
+                if comentario.autor == self:
+                    publicacion.__class__.objects.update(pull__listaComentarios=comentario)
+            self.listaComentariosPublicaciones.remove(publicacion)
+
+        for publicacion in self.listaGraffitisPublicaciones:
+            graffitis = publicacion.listaGraffitis
+            for graffiti in graffitis:
+                if graffiti.autor == self:
+                    publicacion.__class__.objects.update(pull__listaGraffitis=graffiti)
+            self.listaGraffitisPublicaciones.remove(publicacion)
+
+        super().delete()
+    
     # def __str__(self):
     #     return 
 
@@ -41,6 +58,3 @@ class Publicacion(Document):
     #    return self.titulo
 
 Usuario.register_delete_rule(Usuario, "listaSeguimiento", CASCADE)
-Usuario.register_delete_rule(Publicacion, "listaComentariosPublicaciones", CASCADE)
-Usuario.register_delete_rule(Publicacion, "listaGraffitisPublicaciones", CASCADE)
-Usuario.register_delete_rule(Publicacion, "listaPublicaciones", CASCADE)
