@@ -27,7 +27,7 @@ def cargar_url(url):
     return r.data
      
 class CalidadDelAireTodo(APIView):
-    @swagger_auto_schema(operation_description="Devuelve todos los datos respecto a la calidad del aire que ofrece el ayuntamiento de Málaga. Esta consulta es muy ineficiente debido a la inmensa cantidad de datos ofrecidos, por lo que desaconsejamos su uso. En su lugar hay disponible la consulta por paginación.",
+    @swagger_auto_schema(operation_description="EVITAR SU USO. Devuelve todos los datos respecto a la calidad del aire que ofrece el ayuntamiento de Málaga. Esta consulta es muy ineficiente debido a la inmensa cantidad de datos ofrecidos, por lo que desaconsejamos su uso. En su lugar hay disponible la consulta por paginación.",
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}) 
     def get(self, request, pk=None):
         try:
@@ -40,37 +40,41 @@ class CalidadDelAireTodo(APIView):
 
 #skip va incluido y limit no
 class CalidadDelAirePaginacion(APIView):
-
     @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de forma paginada, en una página de tamaño LIMIT y saltando SKIP datos.",
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_paginacion")
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
-        try:
-            skip = int(self.kwargs.get("skip"))
-        except:
-            skip = 0
-            # @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de calidad del aire.",
-            #              responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}) 
-        try:
-            http = urllib3.PoolManager()
-            r = http.request('GET', urlCalidadDelAire)
-            datos = json.loads(r.data)
-        except:
-            return Response(status= status.HTTP_404_NOT_FOUND)
-        numDatos = len(datos['features'])
-        res = []
-        if skip+limit > numDatos:
-            limit = numDatos-skip
-        if skip < numDatos:
-            for i in range(skip, skip+limit):
-                res.append(datos['features'][i])
-        return Response(res, status=status.HTTP_200_OK)
+        skip = int(self.kwargs.get("skip"))
+        return getPaginacion(request, limit, skip)
 
+class CalidadDelAirePaginacion2(APIView):
+    @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de calidad del aire.",
+                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_paginacion2") 
+    def get(self, request, limit, skip=0):
+        limit = int(self.kwargs.get("limit"))
+        skip = 0
+        return getPaginacion(request, limit, skip)
+
+def getPaginacion(request, limit, skip): 
+    try:
+        http = urllib3.PoolManager()
+        r = http.request('GET', urlCalidadDelAire)
+        datos = json.loads(r.data)
+    except:
+        return Response(status= status.HTTP_404_NOT_FOUND)
+    numDatos = len(datos['features'])
+    res = []
+    if skip+limit > numDatos:
+        limit = numDatos-skip
+    if skip < numDatos:
+        for i in range(skip, skip+limit):
+            res.append(datos['features'][i])
+    return Response(res, status=status.HTTP_200_OK)
 
 #Esta función asume que cada coordenada esta contenida en una única zona
 #IMPORTANTE que si se pega una coordenada de google maps quitar espacio
 class CalidadDelAireCoordenadas(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de la zona en la que está contenida la coordenada dada (latitud,longitud). Si esa coordenada no se encuentra devuelve un objeto vacio.",
+    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de la zona en la que está contenida la coordenada dada (latitud,longitud). Si esa coordenada no se encuentra devuelve un objeto vacio. Ejemplo: http://127.0.0.1:8000/calidadDelAire/36.698981,-4.439564",
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_coordenadas") 
     def get(self, request, x, y):
         coordX = float(self.kwargs.get("x"))
@@ -119,7 +123,7 @@ def pnpoly(nvert, vertx, verty, testx, testy):
 
 
 class CalidadDelAireDistancia(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de las zonas cuyo centro estén a igual o menor distancia en kilometros (KM) de las coordenadas dadas (latitud,longitud). Si no se encuentran zonas devuelve un objeto vacio.",
+    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de las zonas cuyo centro estén a igual o menor distancia en kilometros (KM) de las coordenadas dadas (latitud,longitud). Si no se encuentran zonas devuelve un objeto vacio. Ejemplo: http://127.0.0.1:8000/calidadDelAire/36.698981,-4.439564&km=0.5",
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_distancia") 
     def get(self, request, x, y, km):
         coordX = float(self.kwargs.get("x"))
@@ -167,98 +171,133 @@ def calcularDistancia(lat1, lon1, lat2, lon2):
 class EventosID(APIView):
     def get_object(self, request, pk):
         lista = json.loads(cargar_url(url_eventos))['result']['records']
-
+        pk = int(pk)
         for elem in lista:
             if(elem['ID_ACTIVIDAD'] == pk):
                 return Response(elem, status=200)
         return Response(status=404)
-    @swagger_auto_schema(operation_description="Devuelve el evento de id PK. Si no hay devuelve error.",
+
+    @swagger_auto_schema(operation_description="Devuelve el evento de ID_ACTIVIDAD PK. Si no hay devuelve error.",
                          responses={200: 'Todo correcto', 404:'Elemento no existente'}, operation_id="eventos_id") 
     def get(self, request, pk):
         return self.get_object(request, pk)
 
 # URL: 'https://datosabiertos.malaga.eu/api/3/action/datastore_search'
-class Eventos(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en la propiedad CAMPO. En el caso de que no se pase ningún campo buscará la cadena en todos los campos del objeto. Si no se le pasa ningún parámetro devolverá todos los eventos. ",
+class EventosTodo(APIView):
+    @swagger_auto_schema(operation_description="Devuelve todos los eventos existentes en los datos del Ayuntamiento de Málaga",
+                         responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}, operation_id="eventos_list") 
+    def get(self, request, contenido='',campo=''):
+        return getEvento(request, contenido, campo)
+
+class EventosPropiedades(APIView):
+    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en la propiedad CAMPO. No utilizar tildes.",
                          responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}, operation_id="eventos_propiedades") 
     def get(self, request, contenido='',campo=''):
+        return getEvento(request, contenido, campo)
 
-        lista = json.loads(cargar_url(url_eventos))['result']['records']
-        resultado = []
-        c= str(contenido)
-  
-        
-        if(campo=='' and contenido==''):
-            return Response(lista, status=status.HTTP_200_OK)
-        if(campo != ''):
-            for elem in lista:
-                if (campo in elem.keys()):
-                    if (unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(elem[campo]).casefold())):
-                        resultado.append(elem)
-                else:
-                    return Response(status=404)
-        else:
-            for elem in lista:
-                for v in elem.items():
-                    if(unidecode.unidecode(c.casefold()) in unidecode.unidecode(str(v).casefold())):
-                        resultado.append(elem)
-                        break
-        if(not resultado):
-            return Response(status= status.HTTP_404_NOT_FOUND)
-        else:
-            return Response(resultado,status=status.HTTP_200_OK)
+class EventosContenido(APIView):
+    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en cualquiera de los campos del objeto. No utilizar tildes.",
+                         responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}, operation_id="eventos_contenido") 
+    def get(self, request, contenido='',campo=''):
+        return getEvento(request, contenido, campo)
+
+def getEvento(request, contenido, campo):
+    lista = json.loads(cargar_url(url_eventos))['result']['records']
+    resultado = []
+    c= str(contenido)
+
+    if(campo=='' and contenido==''):
+        return Response(lista, status=status.HTTP_200_OK)
+    if(campo != ''):
+        for elem in lista:
+            if (campo in elem.keys()):
+                if (unidecode.unidecode(c.upper()) in unidecode.unidecode(str(elem[campo]).upper())):
+                    resultado.append(elem)
+            else:
+                return Response(status=404)
+    else:
+        for elem in lista:
+            for v in elem.items():
+                if(unidecode.unidecode(c.upper()) in unidecode.unidecode(str(v).upper())):
+                    resultado.append(elem)
+                    break
+    if(not resultado):
+        return Response(status= status.HTTP_404_NOT_FOUND)
+    else:
+        return Response(resultado,status=status.HTTP_200_OK)
 
 class EventosPaginacion(APIView):
     @swagger_auto_schema(operation_description="Devuelve los eventos de forma paginada, en una página de tamaño LIMIT y saltando SKIP datos.",
                          responses={200: 'Todo correcto'}, operation_id="eventos_paginacion") 
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
+        skip = int(self.kwargs.get("skip"))
+        return getPaginacionEventos(request, limit, skip)
+
+class EventosPaginacion2(APIView):
+    @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de los eventos.",
+                         responses={200: 'Todo correcto'}, operation_id="eventos_paginacion2") 
+    def get(self, request, limit, skip=0):
+        limit = int(self.kwargs.get("limit"))
+        skip = 0
+        return getPaginacionEventos(request, limit, skip)
+
+def getPaginacionEventos(request, limit, skip):
+    datos = json.loads(cargar_url(url_eventos))
+    numDatos = len(datos['result']['records'])
+    res = []
+    if skip+limit > numDatos:
+        limit = numDatos-skip
+    if skip < numDatos:
+        for i in range(skip, skip+limit):
+            res.append(datos['result']['records'][i])
+    return Response(res, status=status.HTTP_200_OK)
+
+class BicisTodo(APIView):
+    @swagger_auto_schema(operation_description="Devuelve toda la información sobre los carriles bici de Málaga.",
+                         responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_lista")
+    def get(self, request, pk=None):
         try:
-            skip = int(self.kwargs.get("skip"))
+            datos = cargar_url(url_bicis)
+            lista = json.loads(datos)['features']
+            return Response(lista, status=200)
         except:
-            skip = 0
+            return Response(status=404)
 
-        datos = json.loads(cargar_url(url_eventos))
-        numDatos = len(datos['result']['records'])
-        res = []
-        if skip+limit > numDatos:
-            limit = numDatos-skip
-        if skip < numDatos:
-            for i in range(skip, skip+limit):
-                res.append(datos['result']['records'][i])
-        return Response(res, status=status.HTTP_200_OK)
-
-
-class Bicis(APIView):
-    
-    
-    def get_object(self, request, pk):
+class BicisID(APIView):
+    @swagger_auto_schema(operation_description="Devuelvo el carril bici según el id.",
+                         responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_id")
+    def get(self, request, id):
         lista = json.loads(cargar_url(url_bicis))['features']
+        print("que")
         for elem in lista:
-            if (pk == elem['id']):
+            if (id == elem['id']):
                 return Response(elem, status=200)
         return Response(status=404)
-    
-    @swagger_auto_schema(operation_description="Consulta sobre los objetos que esten a una distancia menor de RANGO desde un punto de latitud LATITUD y longitud LONGITUD",
-                         responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_propiedades")
-    def get(self, request, latitud=None, longitud=None, rango=None, pk=None):
-        if pk:
-             return self.get_object(request, pk)
-        else:
-         
-            lista = json.loads(cargar_url(url_bicis))['features']
-            latitud = float(latitud)
-            longitud = float(longitud)
-            rango = float(rango)
 
-            resultado = []
-            for elem in lista:
-                if(elem['geometry']['type']=="Point"):
-                    if(comprobar_distancia(elem['geometry']['coordinates'][0], latitud, elem['geometry']['coordinates'][1], longitud, rango)):
+class BicisRango(APIView):
+
+    @swagger_auto_schema(operation_description="Consulta sobre los objetos que esten a una distancia menor de RANGO desde un punto de latitud LATITUD y longitud LONGITUD.",
+                         responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_rango")
+    def get(self, request, latitud=None, longitud=None, rango=None):
+        try:
+            lista = json.loads(cargar_url(url_bicis))['features']
+        except:
+            return Response(status=404)
+        lista = json.loads(cargar_url(url_bicis))['features']
+        latitud = float(latitud)
+        longitud = float(longitud)
+        rango = float(rango)
+
+        resultado = []
+        for elem in lista:
+            if(elem['geometry']['type']=="Point"):
+                if(comprobar_distancia(elem['geometry']['coordinates'][0], latitud, elem['geometry']['coordinates'][1], longitud, rango)):
+                    resultado.append(elem)
+            else:
+                for punto in elem['geometry']['coordinates']:
+                    if(comprobar_distancia(punto[0], latitud, punto[1], longitud, rango)):
                         resultado.append(elem)
-                else:
-                    for punto in elem['geometry']['coordinates']:
-                        if(comprobar_distancia(punto[0], latitud, punto[1], longitud, rango)):
-                            resultado.append(elem)
-                            break
-            return Response(resultado,status=status.HTTP_200_OK)
+                        break
+        return Response(resultado,status=status.HTTP_200_OK)
+
