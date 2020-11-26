@@ -205,7 +205,7 @@ class UsuarioDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-    @swagger_auto_schema(operation_description="Borra al usuario especificado",
+    @swagger_auto_schema(operation_description="Actualiza al usuario especificado",
                          responses={204: UsuarioSerializer},
                          request_body=UsuarioSerializer)
     def put(self, request, pk):
