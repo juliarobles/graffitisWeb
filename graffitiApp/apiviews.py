@@ -93,12 +93,8 @@ class PublicacionDetail(APIView):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
         publicacion.creador.listaPublicaciones.remove(publicacion)
-
-
+        
         serializer = PublicacionSerializer(publicacion, data=request.data, partial=True)
-        
-        
-        
         
         if serializer.is_valid():
             serializer.save()
@@ -329,8 +325,7 @@ class ComentarioDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_description="Borra el comentario seleccionado.",
-                         responses={204: 'Response vacía', 404: 'Comentario o publicacion no encontrado'},
-                         request_body=ComentarioSerializer)
+                         responses={204: 'Response vacía', 404: 'Comentario o publicacion no encontrado'})
     def delete(self, request, pk, cpk):
         pk = ObjectId(pk)
         gpk = ObjectId(cpk)
@@ -413,8 +408,7 @@ class GraffitiDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_description="Borra el graffiti seleccionado.",
-                         responses={204: 'Response vacía'},
-                         request_body=GraffitiSerializer)
+                         responses={204: 'Response vacía'})
     def delete(self, request, pk, gpk):
         pk = ObjectId(pk)
         gpk = ObjectId(gpk)
