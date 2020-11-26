@@ -27,7 +27,7 @@ class ComentarioSerializer(serializers.EmbeddedDocumentSerializer):
         return super(ComentarioSerializer, self).to_representation(instance)
 
 class PublicacionSerializer(serializers.DocumentSerializer):
-    listaComentarios = ComentarioSerializer(many=True)
+    listaComentarios = ComentarioSerializer(many=True, required=False)
     listaGraffitis = GraffitiSerializer(many=True)
     class Meta:
         model = Publicacion
