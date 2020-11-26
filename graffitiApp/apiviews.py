@@ -218,7 +218,7 @@ class UsuarioDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(operation_description="Borra al usuario especificado",
-                         responses={204: UsuarioSerializer})
+                         responses={204: 'Usuario eliminado'})
     def delete(self, request, pk):
         pk = ObjectId(pk)
         usuario = self.get_object(pk)
