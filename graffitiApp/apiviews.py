@@ -40,7 +40,8 @@ class PublicacionList(APIView):
     @swagger_auto_schema(responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, 
                          request_body=PublicacionSerializer)
     def post(self, request, pk=None):
-        """Permite crear una nueva publicacion"""
+        """Permite crear una nueva publicacion, que deberá seguir el formato especificado. 
+        Los cambos listaComentarios y meGusta deberán dejarse como listas vacías([]), mínimo deberá contener un graffiti y tanto el autor del graffiti como el creador de la publicación deberán ser identificadores de usuarios existentes en el sistema (Lo lógico es que sea el id del mismo usuario ya que es este el que está creando la publicación)."""
         serializer = PublicacionSerializer(data=request.data)
         if serializer.is_valid():
             publicacion = serializer.save() # Guardar la publicacion
@@ -85,7 +86,7 @@ class PublicacionDetail(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="Modifica una publicación existente.",
+    @swagger_auto_schema(operation_description="Modifica una publicación existente. Para ello es recomendable que solo se incluyan los campos que van a ser modificados. NO modificar listaComentarios, listaGraffitis y meGusta ya que existen métodos específicos para ello que aseguran mantener la consistencia del sistema.",
                          request_body=PublicacionSerializer,
                          responses={202: "Modificación aceptada",
                                     400: "Error y sus causas"})
@@ -463,7 +464,7 @@ class UsuarioFilterName(APIView):
         return Response({"error":"No se ha proporcionado un username"}, status=status.HTTP_400_BAD_REQUEST)
 
 class PublicacionFilterAuthor(APIView):
-    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada",
+    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada.",
                             responses={200: 'OK', 400: 'Error con la cadena enviada'})
     def get(self, request, author):
         if author:
