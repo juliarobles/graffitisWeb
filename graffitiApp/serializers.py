@@ -32,3 +32,6 @@ class PublicacionSerializer(serializers.DocumentSerializer):
     class Meta:
         model = Publicacion
         fields = '__all__'
+
+    def create(self, validated_data):
+        return Publicacion.objects.create(**validated_data)
