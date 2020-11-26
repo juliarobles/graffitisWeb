@@ -92,7 +92,7 @@ class PublicacionDetail(APIView):
     def put(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
-        serializer = PublicacionSerializer(publicacion, data=request.data)
+        serializer = PublicacionSerializer(publicacion, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
