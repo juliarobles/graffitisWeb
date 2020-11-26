@@ -92,9 +92,18 @@ class PublicacionDetail(APIView):
     def put(self, request, pk):
         pk = ObjectId(pk)
         publicacion = self.get_object(pk)
+        publicacion.creador.listaPublicaciones.remove(publicacion)
+
+
         serializer = PublicacionSerializer(publicacion, data=request.data, partial=True)
+        
+        
+        
+        
         if serializer.is_valid():
             serializer.save()
+            publicacion.creador.listaPublicaciones.append(publicacion)
+            publicacion.creador.save()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
