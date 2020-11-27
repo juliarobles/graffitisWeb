@@ -1,4 +1,4 @@
-from mongoengine import Document, EmbeddedDocument, fields, CASCADE
+from mongoengine import Document, EmbeddedDocument, fields, CASCADE, DO_NOTHING, NULLIFY, DENY, PULL
 from django.contrib.auth.models import User
 from django.urls import reverse
 
@@ -50,10 +50,10 @@ class Publicacion(Document):
     localizacion = fields.StringField(max_length=50, required=True)
     tematica = fields.ListField(fields.StringField(max_length=30))
     autor = fields.StringField(max_length=50)
-    listaComentarios = fields.EmbeddedDocumentListField(Comentario)
-    meGusta = fields.ListField(fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE))
-    creador = fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE, required=True)
-    listaGraffitis = fields.EmbeddedDocumentListField(Graffiti, required=True)
+    listaComentarios = fields.EmbeddedDocumentListField(Comentario) # Se borra a mano
+    meGusta = fields.ListField(fields.ReferenceField(Usuario, reverse_delete_rule=PULL)) # Si se borra usuario de like -> se quita
+    creador = fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE, required=True) # Si se borra creador -> referencia a NULL
+    listaGraffitis = fields.EmbeddedDocumentListField(Graffiti, required=True) # Se borra a mano
 
     def getDetailURL(self):
         return reverse('publicacion-detail', args={str(self.id)})
@@ -62,4 +62,4 @@ class Publicacion(Document):
     #def __str__(self):
     #    return self.titulo
 
-Usuario.register_delete_rule(Usuario, "listaSeguimiento", CASCADE)
+# Usuario.register_delete_rule(Usuario, "listaSeguimiento", CASCADE)
