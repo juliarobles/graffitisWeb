@@ -61,5 +61,6 @@ class Publicacion(Document):
 
     #def __str__(self):
     #    return self.titulo
-
-# Usuario.register_delete_rule(Usuario, "listaSeguimiento", CASCADE)
+# USUARIO delete rules
+# Si se borra un seguidor -> Se quita de las listas de seguidos
+Usuario.register_delete_rule(Usuario, "listaSeguimiento", PULL)
