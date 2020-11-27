@@ -1,0 +1,12 @@
+
+{% url 'inicio' as url_inicio %}
+{% url 'usuarios-list' as url_lista_usuarios %}
+{% url 'publicaciones-list' as url_lista_publicaciones %}
+{% url 'eventos-list' as url_lista_eventos %}
+
+<ul>
+    <li><a href="{{url_inicio}}">Inicio</a></li>
+    <li><a href="{{url_lista_usuarios}}">Lista usuarios</a></li>
+    <li><a href="{{url_lista_publicaciones}}">Lista publicaciones</a></li>
+    <li><a href="{{url_lista_eventos}}">Lista eventos</a></li>
+</ul> 

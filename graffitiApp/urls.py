@@ -17,6 +17,9 @@ from django.urls import path
 # --------------------------------------
 
 urlpatterns = [
+
+
+    
     # url('', include(router.urls)), 
     url(r'^index', index),
     url(r'^publicaciones/$', PublicacionList.as_view()),
@@ -35,6 +38,9 @@ urlpatterns = [
 
 
 
+    path('inicio/', inicio, name='inicio'),
+    path('html/eventos/', eventos_list ,name='eventos-list'),
+    path('html/eventos/{int:ID_ACTIVIDAD}', eventos_list ,name='eventos-details'),
     path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
     path('html/usuarios', usuarios_list, name='usuarios-list'),

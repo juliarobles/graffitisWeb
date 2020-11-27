@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'graffitiApp',
     'ayuntamientoApp'
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [

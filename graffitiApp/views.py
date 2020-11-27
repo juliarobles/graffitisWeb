@@ -5,6 +5,10 @@ from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSeria
 from .models import Publicacion, Usuario, Graffiti
 from django.http import HttpResponse
 from bson import ObjectId
+from django.template.loader import get_template
+from django.template import Context
+import urllib3, json
+
 
 # Create your views here.
 
@@ -12,6 +16,24 @@ from bson import ObjectId
 def index(request):
         return HttpResponse('Success')
 
+# Prueba mover a app cliente
+def inicio(request):
+    t = get_template('inicio.html')
+    res = t.render()
+    return HttpResponse(res)
+
+def eventos_list(request):
+    http = urllib3.PoolManager()
+    r = http.request(
+        'GET',
+        'http://127.0.0.1:8000/eventos/'
+    )
+
+    plt = get_template("eventos_list.html")
+    dic={'eventos':json.loads(r.data)}
+    res = plt.render(dic)
+    return HttpResponse(res)
+# Fin prueba
 
 class PublicacionViewSet(viewsets.ModelViewSet):
 

@@ -1,0 +1,19 @@
+
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Eventos
+{% endblock title %}
+    
+
+{% block body %}
+    <ul>
+        {% for evento  in eventos %}
+        <li>
+           <a href={% url 'eventos-details' evento.ID_ACTIVIDAD%}></a> Nombre: {{evento.NOMBRE}}
+        </li> 
+        {% endfor %}
+    </ul>
+{% endblock body %}
+    
