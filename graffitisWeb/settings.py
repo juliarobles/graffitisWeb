@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django_mongoengine.mongo_auth',
     'django_mongoengine.mongo_admin',
     'drf_yasg',
-    'graffitiApp'
+    'graffitiApp', 
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [

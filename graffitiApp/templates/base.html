@@ -6,6 +6,9 @@
     <title>{% block title %}Graffitis Web{% endblock %}</title>
 </head>
 <body>
+    {% load static %}
+    {% include "navbar.html" %}
+
     {% block body %}
         <h1>Contenido de la Pagina</h1>
     {% endblock %}
