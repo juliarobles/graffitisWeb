@@ -139,11 +139,17 @@ class PublicacionLike(APIView):
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},
-                         request_body=UsuarioIdSerializer)
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             required=['usuario_id'],
+                             properties={
+                                 'usuario_id': openapi.Schema(type=openapi.TYPE_STRING)
+                             }
+                         ))
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
-        if request.data['usuario']:
-            usuario = UsuarioDetail.get_object(request, request.data['usuario'])
+        if request.data['usuario_id']:
+            usuario = UsuarioDetail.get_object(request, request.data['usuario_id'])
             if usuario not in publicacion.meGusta: # like de la publicacion
                 publicacion.meGusta.append(usuario)
             else: # quitar dislike de la publicacion
@@ -241,11 +247,17 @@ class UsuarioFollow(APIView):
                          responses={200: UsuarioSerializer,
                                     403: 'Un usuario no puede seguirse a si mismo',
                                     404: 'Not found'},
-                         request_body=UsuarioIdSerializer)
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             required=['usuario_id'],
+                             properties={
+                                 'usuario_id': openapi.Schema(type=openapi.TYPE_STRING)
+                             }
+                         ))
     def post(self, request, pk):
         usuario = UsuarioDetail.get_object(request, pk)
-        if request.data['usuario']:
-            seguir = UsuarioDetail.get_object(request, request.data['usuario'])
+        if request.data['usuario_id']:
+            seguir = UsuarioDetail.get_object(request, request.data['usuario_id'])
             if usuario == seguir:
                 return Response(data={"error": "Un usuario no puede seguirse asi mismo"},status=status.HTTP_403_FORBIDDEN)
 
