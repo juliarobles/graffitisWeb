@@ -28,7 +28,8 @@ def cargar_url(url):
      
 class CalidadDelAireTodo(APIView):
     @swagger_auto_schema(operation_description="EVITAR SU USO. Devuelve todos los datos respecto a la calidad del aire que ofrece el ayuntamiento de Málaga. Esta consulta es muy ineficiente debido a la inmensa cantidad de datos ofrecidos, por lo que desaconsejamos su uso. En su lugar hay disponible la consulta por paginación.",
-                         responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}) 
+                         responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, 
+                         deprecated=True) 
     def get(self, request, pk=None):
         try:
             http = urllib3.PoolManager()
