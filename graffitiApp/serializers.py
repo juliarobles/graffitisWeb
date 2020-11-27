@@ -8,6 +8,12 @@ class UsuarioSerializer(serializers.DocumentSerializer):
         model = Usuario
         fields = '__all__'
 
+class UsuarioIdSerializer(serializers.DocumentSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['usuario']
+
+
 class GraffitiSerializer(serializers.EmbeddedDocumentSerializer):
     class Meta:
         model = Graffiti

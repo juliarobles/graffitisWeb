@@ -11,7 +11,7 @@ from rest_framework.parsers import JSONParser
 from bson import ObjectId
 from django.http import Http404
 from .models import Publicacion, Usuario, Graffiti
-from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
+from .serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer, UsuarioIdSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -139,7 +139,7 @@ class PublicacionLike(APIView):
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},
-                         request_body=UsuarioSerializer)
+                         request_body=UsuarioIdSerializer)
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         if request.data['usuario']:
@@ -241,7 +241,7 @@ class UsuarioFollow(APIView):
                          responses={200: UsuarioSerializer,
                                     403: 'Un usuario no puede seguirse a si mismo',
                                     404: 'Not found'},
-                         request_body=UsuarioSerializer)
+                         request_body=UsuarioIdSerializer)
     def post(self, request, pk):
         usuario = UsuarioDetail.get_object(request, pk)
         if request.data['usuario']:
