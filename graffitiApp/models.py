@@ -52,7 +52,7 @@ class Publicacion(Document):
     autor = fields.StringField(max_length=50)
     listaComentarios = fields.EmbeddedDocumentListField(Comentario) # Se borra a mano
     meGusta = fields.ListField(fields.ReferenceField(Usuario, reverse_delete_rule=PULL)) # Si se borra usuario de like -> se quita
-    creador = fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE, required=True) # Si se borra creador -> referencia a NULL
+    creador = fields.ReferenceField(Usuario, reverse_delete_rule=CASCADE, required=True) # Si se borra creador -> se borran sus publicaciones
     listaGraffitis = fields.EmbeddedDocumentListField(Graffiti, required=True) # Se borra a mano
 
     def getDetailURL(self):
