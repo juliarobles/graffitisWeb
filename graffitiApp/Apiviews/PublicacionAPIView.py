@@ -11,7 +11,7 @@ from rest_framework.parsers import JSONParser
 from bson import ObjectId
 from django.http import Http404
 from graffitiApp.models import Publicacion, Usuario, Graffiti
-from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer, UsuarioIdSerializer
+from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
 from graffitiApp.Apiviews.UserAPIView import UsuarioDetail
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -165,7 +165,12 @@ class PublicacionLike(APIView):
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},
-                         request_body=UsuarioIdSerializer)
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             properties={
+                                 'usuario': openapi.Schema(type=openapi.TYPE_STRING),
+                             }
+                         ),)
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         if request.data['usuario']:
