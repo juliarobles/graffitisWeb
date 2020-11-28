@@ -41,7 +41,7 @@ class CalidadDelAireTodo(APIView):
 
 #skip va incluido y limit no
 class CalidadDelAirePaginacion(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de forma paginada, en una página de tamaño LIMIT y saltando SKIP datos.",
+    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de forma paginada, en una página de tamaño LIMIT y saltando SKIP datos. \n Ejemplo: limit = 2 \n skip = 1 \n http://127.0.0.1:8000/calidadDelAire/limit=2&skip=1",
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_paginacion")
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
@@ -49,7 +49,7 @@ class CalidadDelAirePaginacion(APIView):
         return getPaginacion(request, limit, skip)
 
 class CalidadDelAirePaginacion2(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de calidad del aire.",
+    @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de calidad del aire. \n Ejemplo: limit = 2 \n http://127.0.0.1:8000/calidadDelAire/limit=2",
                           responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_paginacion2") 
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
@@ -75,7 +75,7 @@ def getPaginacion(request, limit, skip):
 #Esta función asume que cada coordenada esta contenida en una única zona
 #IMPORTANTE que si se pega una coordenada de google maps quitar espacio
 class CalidadDelAireCoordenadas(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de la zona en la que está contenida la coordenada dada (latitud,longitud). Si esa coordenada no se encuentra devuelve un objeto vacio. Ejemplo: http://127.0.0.1:8000/calidadDelAire/36.698981,-4.439564",
+    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de la zona en la que está contenida la coordenada dada (latitud,longitud). Si esa coordenada no se encuentra devuelve un objeto vacio. Ejemplo: http://127.0.0.1:8000/calidadDelAire/36.698981,-4.439564 \n Nota: el ayuntamiento devuelve las coordenadas de la forma (y,x)" ,
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_coordenadas") 
     def get(self, request, x, y):
         coordX = float(self.kwargs.get("x"))
@@ -124,7 +124,7 @@ def pnpoly(nvert, vertx, verty, testx, testy):
 
 
 class CalidadDelAireDistancia(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de las zonas cuyo centro estén a igual o menor distancia en kilometros (KM) de las coordenadas dadas (latitud,longitud). Si no se encuentran zonas devuelve un objeto vacio. Ejemplo: http://127.0.0.1:8000/calidadDelAire/36.698981,-4.439564&km=0.5",
+    @swagger_auto_schema(operation_description="Devuelve los datos de calidad del aire de las zonas cuyo centro estén a igual o menor distancia en kilometros (KM) de las coordenadas dadas (latitud,longitud). Si no se encuentran zonas devuelve un objeto vacio. Ejemplo: http://127.0.0.1:8000/calidadDelAire/36.698981,-4.439564&km=0.5 \n Nota: el ayuntamiento devuelve las coordenadas de la forma (y,x)",
                          responses={200: 'Todo correcto', 404: 'Recurso no encontrado'}, operation_id="calidadDelAire_distancia") 
     def get(self, request, x, y, km):
         coordX = float(self.kwargs.get("x"))
@@ -178,26 +178,26 @@ class EventosID(APIView):
                 return Response(elem, status=200)
         return Response(status=404)
 
-    @swagger_auto_schema(operation_description="Devuelve el evento de ID_ACTIVIDAD PK. Si no hay devuelve error.",
+    @swagger_auto_schema(operation_description="Devuelve el evento de ID_ACTIVIDAD PK. Si no hay devuelve error. \n Ejemplo: id = 100195 \n http://127.0.0.1:8000/eventosID/100195",
                          responses={200: 'Todo correcto', 404:'Elemento no existente'}, operation_id="eventos_id") 
     def get(self, request, pk):
         return self.get_object(request, pk)
 
 # URL: 'https://datosabiertos.malaga.eu/api/3/action/datastore_search'
 class EventosTodo(APIView):
-    @swagger_auto_schema(operation_description="Devuelve todos los eventos existentes en los datos del Ayuntamiento de Málaga",
+    @swagger_auto_schema(operation_description="Devuelve todos los eventos existentes en los datos del Ayuntamiento de Málaga \n Ejemplo: http://127.0.0.1:8000/eventos/",
                          responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}, operation_id="eventos_list") 
     def get(self, request, contenido='',campo=''):
         return getEvento(request, contenido, campo)
 
 class EventosPropiedades(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en la propiedad CAMPO. No utilizar tildes.",
+    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en la propiedad CAMPO. No utilizar tildes. \n Ejemplo : \n campo = NOMBRE \n contenido = rom \n http://127.0.0.1:8000/eventos/NOMBRE/rom",
                          responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}, operation_id="eventos_propiedades") 
     def get(self, request, contenido='',campo=''):
         return getEvento(request, contenido, campo)
 
 class EventosContenido(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en cualquiera de los campos del objeto. No utilizar tildes.",
+    @swagger_auto_schema(operation_description="Devuelve los eventos que contengan la subcadena CONTENIDO en cualquiera de los campos del objeto. No utilizar tildes. \n Ejemplo: \n contenido = rom \n http://127.0.0.1:8000/eventos/rom ",
                          responses={200: 'Todo correcto', 404: 'Campo o contenido no existente'}, operation_id="eventos_contenido") 
     def get(self, request, contenido='',campo=''):
         return getEvento(request, contenido, campo)
@@ -228,7 +228,7 @@ def getEvento(request, contenido, campo):
         return Response(resultado,status=status.HTTP_200_OK)
 
 class EventosPaginacion(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los eventos de forma paginada, en una página de tamaño LIMIT y saltando SKIP datos.",
+    @swagger_auto_schema(operation_description="Devuelve los eventos de forma paginada, en una página de tamaño LIMIT y saltando SKIP datos. \n Ejemplo: \n limit = 2 \n skip = 1 \n http://127.0.0.1:8000/eventos/limit=2&skip=1",
                          responses={200: 'Todo correcto'}, operation_id="eventos_paginacion") 
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
@@ -236,7 +236,7 @@ class EventosPaginacion(APIView):
         return getPaginacionEventos(request, limit, skip)
 
 class EventosPaginacion2(APIView):
-    @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de los eventos.",
+    @swagger_auto_schema(operation_description="Devuelve los LIMIT primeros datos de los eventos. \n Ejemplo: limit = 2 \n http://127.0.0.1:8000/eventos/limit=2",
                          responses={200: 'Todo correcto'}, operation_id="eventos_paginacion2") 
     def get(self, request, limit, skip=0):
         limit = int(self.kwargs.get("limit"))
@@ -255,7 +255,7 @@ def getPaginacionEventos(request, limit, skip):
     return Response(res, status=status.HTTP_200_OK)
 
 class BicisTodo(APIView):
-    @swagger_auto_schema(operation_description="Devuelve toda la información sobre los carriles bici de Málaga.",
+    @swagger_auto_schema(operation_description="Devuelve toda la información sobre los carriles bici de Málaga. \n Ejemplo: http://127.0.0.1:8000/bicis/",
                          responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_lista")
     def get(self, request, pk=None):
         try:
@@ -266,7 +266,7 @@ class BicisTodo(APIView):
             return Response(status=404)
 
 class BicisID(APIView):
-    @swagger_auto_schema(operation_description="Devuelvo el carril bici según el id.",
+    @swagger_auto_schema(operation_description="Devuelvo el carril bici según el id. \n Ejemplo: id = da_carrilesBici.fid--6a251225_176106c6f0c_-3878 \n http://127.0.0.1:8000/eventosID/bicis/da_carrilesBici.fid--6a251225_176106c6f0c_-3878",
                          responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_id")
     def get(self, request, id):
         lista = json.loads(cargar_url(url_bicis))['features']
