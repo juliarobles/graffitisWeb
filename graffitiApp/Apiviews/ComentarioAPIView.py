@@ -51,8 +51,9 @@ class ComentarioList(APIView):
         if serializer.is_valid():
             publicacion.listaComentarios.append(serializer.save())
             publicacion.save()
-            serializer.instance.autor.listaComentariosPublicaciones.append(publicacion)
-            serializer.instance.autor.save()
+            if(publicacion not in serializer.instance.autor.listaComentariosPublicaciones):
+                serializer.instance.autor.listaComentariosPublicaciones.append(publicacion)
+                serializer.instance.autor.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
