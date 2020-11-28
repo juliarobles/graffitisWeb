@@ -11,7 +11,7 @@ from rest_framework.parsers import JSONParser
 from bson import ObjectId
 from django.http import Http404
 from graffitiApp.models import Publicacion, Usuario, Graffiti
-from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer, UsuarioIdSerializer
+from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
 from graffitiApp.Apiviews.UserAPIView import UsuarioDetail
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -39,7 +39,23 @@ class PublicacionList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, 
-                         request_body=PublicacionSerializer)
+                         request_body=openapi.Schema(
+                                type=openapi.TYPE_OBJECT,
+                                properties={
+                                    'titulo': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'descripcion': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'localizacion': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'tematica': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_STRING)),
+                                    'autor': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'creador': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'listaGraffitis': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_OBJECT, properties={
+                                        'imagen': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'estado': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'fechaCaptura':openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATE),
+                                        'autor': openapi.Schema(type=openapi.TYPE_STRING)}))
+                                }
+                            ),
+                            )
     def post(self, request, pk=None):
         """Permite crear una nueva publicacion, que deberá seguir el formato especificado. 
         Los cambos listaComentarios y meGusta deberán dejarse como listas vacías([]), mínimo deberá contener un graffiti y tanto el autor del graffiti como el creador de la publicación deberán ser identificadores de usuarios existentes en el sistema (Lo lógico es que sea el id del mismo usuario ya que es este el que está creando la publicación)."""
@@ -149,7 +165,12 @@ class PublicacionLike(APIView):
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},
-                         request_body=UsuarioIdSerializer)
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             properties={
+                                 'usuario': openapi.Schema(type=openapi.TYPE_STRING),
+                             }
+                         ),)
     def post(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         if request.data['usuario']:

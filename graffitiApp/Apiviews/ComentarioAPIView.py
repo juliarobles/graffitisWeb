@@ -12,7 +12,7 @@ from bson import ObjectId
 from django.http import Http404
 from graffitiApp.models import Publicacion, Usuario, Graffiti
 from graffitiApp.Apiviews.PublicacionAPIView import PublicacionDetail
-from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer, UsuarioIdSerializer
+from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
