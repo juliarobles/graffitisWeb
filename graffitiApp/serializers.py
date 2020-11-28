@@ -53,8 +53,8 @@ class PublicacionSerializer(serializers.DocumentSerializer):
         instance.localizacion = validated_data.get('localizacion', instance.localizacion)
         instance.tematica = validated_data.get('tematica', instance.tematica)
         instance.autor = validated_data.get('autor', instance.autor)
-        instance.meGusta = validated_data.get('meGusta', instance.meGusta)
-        instance.creador = validated_data.get('creador', instance.creador)
+        #instance.meGusta = validated_data.get('meGusta', instance.meGusta)
+        #instance.creador = validated_data.get('creador', instance.creador)
         instance.save()
 
         return instance

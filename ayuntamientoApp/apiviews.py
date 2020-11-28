@@ -266,7 +266,7 @@ class BicisTodo(APIView):
             return Response(status=404)
 
 class BicisID(APIView):
-    @swagger_auto_schema(operation_description="Devuelvo el carril bici según el id. \n Ejemplo: id = da_carrilesBici.fid--6a251225_176106c6f0c_-3878 \n http://127.0.0.1:8000/eventosID/bicis/da_carrilesBici.fid--6a251225_176106c6f0c_-3878",
+    @swagger_auto_schema(operation_description="Devuelvo el carril bici según el id. \n Ejemplo: id = da_carrilesBici.fid--6a251225_176106c6f0c_-3878 \n http://127.0.0.1:8000/bicis/da_carrilesBici.fid--6a251225_1761094a9bf_7266 \n (Nota: las ids cambian constantemente por lo que este ejemplo puede no funcionar, lo recomendable es coger el primer id de la consulta /bicis para probar esta consulta)",
                          responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_id")
     def get(self, request, id):
         lista = json.loads(cargar_url(url_bicis))['features']
@@ -278,7 +278,7 @@ class BicisID(APIView):
 
 class BicisRango(APIView):
 
-    @swagger_auto_schema(operation_description="Consulta sobre los objetos que esten a una distancia menor de RANGO desde un punto de latitud LATITUD y longitud LONGITUD.",
+    @swagger_auto_schema(operation_description="Consulta sobre los objetos que esten a una distancia menor de RANGO desde un punto de latitud LATITUD y longitud LONGITUD.\n Rango es la distancia a la que busca los puntos, si la diferencia (en valor absoluto) entre el punto que pones en la url y los puntos de los carriles bici es menor que el rango entonces está dentro de este. \nEjemplo: \nhttp://localhost:8000/bicis/371516.17325603,4065461.06099268&rango=1",
                          responses={200: 'Todo correcto', 404:'Not found'}, operation_id="bicis_rango")
     def get(self, request, latitud=None, longitud=None, rango=None):
         try:

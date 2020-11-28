@@ -28,7 +28,6 @@ class PublicacionList(APIView):
     @swagger_auto_schema(operation_description="Devuelve todos las publicaciones. \n Ejemplo: http://127.0.0.1:8000/publicaciones/",
                          responses={'200': PublicacionSerializer(many=True)})
     def get(self, request, pk=None):
-        """Devuelve todas las publicaciones o una publicacion en concreto si hay un id en la url"""
         if pk: 
             pk = ObjectId(pk)
             publicacion = self.get_object(pk)
@@ -39,7 +38,7 @@ class PublicacionList(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description='Crea una publicación. Mínimo deberá contener un graffiti y tanto el autor del graffiti como el creador de la publicación deberán ser identificadores de usuarios existentes en el sistema (Lo lógico es que sea el id del mismo usuario ya que es este el que está creando la publicación). \n Ejemplo: \n{\n"titulo": "Primer graffiti",\n"descripcion": "El primero de todos",\n"localizacion": "Malaga",\n"tematica": [\n"Perros",\n"Callejón"\n],\n"autor": "Marquitos",\n"creador": "5fbaaade48f5052d28f3dffa",\n"listaGraffitis": [\n {\n "imagen": "https://www.hola.com/imagenes/estar-bien/20190820147813/razas-perros-pequenos-parecen-grandes/0-711-550/razas-perro-pequenos-grandes-m.jpg",\n"estado": "perfecto",\n "fechaCaptura": "2020-11-26",\n "autor": "5fbaaa1c875f83f6d3cb9a9d"\n}\n]\n}',
+    @swagger_auto_schema(operation_description='Crea una publicación. Mínimo deberá contener un graffiti y tanto el autor del graffiti como el creador de la publicación deberán ser identificadores de usuarios existentes en el sistema (Lo lógico es que sea el id del mismo usuario ya que es este el que está creando la publicación). \n Ejemplo: \n{\n"titulo": "Segundo graffiti",\n"descripcion": "El segundo de todos",\n"localizacion": "Malaga",\n"tematica": [\n"Perritos",\n"Calle"\n],\n"autor": "Marquitos",\n"creador": "5fbaaa1c875f83f6d3cb9a9d",\n"listaGraffitis": [\n {\n "imagen": "https://www.hola.com/imagenes/estar-bien/20190820147813/razas-perros-pequenos-parecen-grandes/0-711-550/razas-perro-pequenos-grandes-m.jpg",\n"estado": "perfecto",\n "fechaCaptura": "2020-11-26",\n "autor": "5fbaaa1c875f83f6d3cb9a9d"\n}\n]\n}',
                          responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, 
                          request_body=openapi.Schema(
                                 type=openapi.TYPE_OBJECT,
@@ -105,7 +104,7 @@ class PublicacionDetail(APIView):
             serializer = PublicacionSerializer(publicacion, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description='Modifica una publicación existente. \n Ejemplo: id = 5fbab0abbcbecf56728297aa \n data = \n {\n"titulo": "Titulo",\n  "descripcion": "Descripcion",\n  "localizacion": "Localizacion",\n  "tematica": [\n"Gato"\n],\n  "autor": "Marco"\n}',
+    @swagger_auto_schema(operation_description='Modifica una publicación existente. Solo se permiten modificar los campos que aparecen en el request body. El resto no está permitido.\n Ejemplo: id = 5fbab0abbcbecf56728297aa \n data = \n {\n"titulo": "Titulo",\n  "descripcion": "Descripcion",\n  "localizacion": "Localizacion",\n  "tematica": [\n"Gato"\n],\n  "autor": "Marco"\n}',
                          request_body=openapi.Schema(
                              type=openapi.TYPE_OBJECT,
                              properties={
@@ -163,7 +162,7 @@ class PublicacionLike(APIView):
         serializer = UsuarioSerializer(publicacion.meGusta, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description='El usuario cuyo nombre sea pasado como parametro pasará a dar me gusta a la publicación actual. Si ya le había dado me gusta, se quitará el me gusta  \n Ejemplo : \n id = 5fbab37bbcbecf56728297b0 \n data = \n{\n "usuario": "5fbaaa1c875f83f6d3cb9a9d"\n}\n',
+    @swagger_auto_schema(operation_description='El usuario cuyo id sea pasado como parametro pasará a dar me gusta a la publicación actual. Si ya le había dado me gusta, se quitará el me gusta  \n Ejemplo : \n id = 5fbab37bbcbecf56728297b0 \n data = \n{\n "usuario": "5fbaaa1c875f83f6d3cb9a9d"\n}\n',
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},

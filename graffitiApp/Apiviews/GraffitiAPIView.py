@@ -85,7 +85,7 @@ class GraffitiDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_description="Borra el graffiti seleccionado. \n Ejemplo : \n id = 5fbab37bbcbecf56728297b0 \n gpk = 5fbab37bbcbecf56728297ae",
-                         responses={204: 'Response vacía'})
+                         responses={204: 'Response vacía', 500: 'Una publicación debe tener al menos un graffiti'})
     def delete(self, request, pk, gpk):
         pk = ObjectId(pk)
         gpk = ObjectId(gpk)
