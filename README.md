@@ -1,4 +1,4 @@
-# API Rest para GraffitiApp
+# API Rest para GraffitiApp (Grupo C4)
 Esta API es parte de un proyecto evaluable para la asignatura de **Ingeniería Web** en la **Universidad de Málaga**.
 
 Actualmente, nuestra API alberga diversos métodos encargados de consultar, crear, modificar y eliminar información relativa a:
