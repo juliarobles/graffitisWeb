@@ -17,12 +17,6 @@ class UsuarioSerializer(serializers.DocumentSerializer):
         instance.save()
         return instance
 
-class UsuarioIdSerializer(serializers.DocumentSerializer):
-    class Meta:
-        model = Usuario
-        fields = ['usuario']
-
-
 class GraffitiSerializer(serializers.EmbeddedDocumentSerializer):
     class Meta:
         model = Graffiti
