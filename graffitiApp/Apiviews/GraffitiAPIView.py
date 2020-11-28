@@ -27,7 +27,7 @@ class GraffitiList(APIView):
         except Publicacion.DoesNotExist:  #esto
             raise Http404
     
-    @swagger_auto_schema(operation_description="Devuelve los graffitis o un graffiti concreto de la publicación seleccionada",
+    @swagger_auto_schema(operation_description="Devuelve los graffitis. \n Ejemplo: id = 5fbab37bbcbecf56728297b0",
                          responses={200: GraffitiSerializer, 404: 'Publicacion o Graffiti no encontrado'})
     def get(self, request, pk, gpk=None):
         if gpk: 
@@ -42,7 +42,7 @@ class GraffitiList(APIView):
             serializer = GraffitiSerializer(graffiti, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="Crea un nuevo graffiti, pasado mediante la petición, para la publicación seleccionada.",
+    @swagger_auto_schema(operation_description='Crea un nuevo graffiti, pasado mediante la petición, para la publicación seleccionada. \n Ejemplo: id = 5fbab37bbcbecf56728297b0\n data = \n {\n  "imagen": "https://cflvdg.avoz.es/default/2019/06/12/00121560338701711998500/Foto/i11j9026.jpg",\n"estado": "ok",\n  "fechaCaptura": "2020-11-28",\n  "autor": "5fbaaa1c875f83f6d3cb9a9d"\n}\n',
                          responses={201: GraffitiSerializer,
                                     400: 'Causas del error',
                                     404: 'Publicacion no encontrada'},
@@ -69,7 +69,7 @@ class GraffitiDetail(APIView):
         except Publicacion.DoesNotExist:  #esto
             raise Http404
     
-    @swagger_auto_schema(operation_description="Devuelve un graffiti de la publicación seleccionada según el id.",
+    @swagger_auto_schema(operation_description="Devuelve un graffiti de la publicación seleccionada según el id. \n Ejemplo : \n id = 5fbab37bbcbecf56728297b0 \n gpk = 5fbab37bbcbecf56728297ae",
                          responses={200: GraffitiSerializer}) 
     def get(self, request, pk, gpk=None):
         if gpk: 
@@ -84,7 +84,7 @@ class GraffitiDetail(APIView):
             serializer = GraffitiSerializer(graffiti, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="Borra el graffiti seleccionado.",
+    @swagger_auto_schema(operation_description="Borra el graffiti seleccionado. \n Ejemplo : \n id = 5fbab37bbcbecf56728297b0 \n gpk = 5fbab37bbcbecf56728297ae",
                          responses={204: 'Response vacía'})
     def delete(self, request, pk, gpk):
         pk = ObjectId(pk)
@@ -98,7 +98,7 @@ class GraffitiDetail(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(operation_description="Modifica un graffiti ya existente.",
+    @swagger_auto_schema(operation_description='Modifica un graffiti ya existente. \n Ejemplo : \n id = 5fbab37bbcbecf56728297b0 \n gpk = 5fbab37bbcbecf56728297ae \n data = \n {\n "imagen": "https://cflvdg.avoz.es/default/2019/06/12/00121560338701711998500/Foto/i11j9026.jpg",\n "estado": "perfecto",\n   "fechaCaptura": "2020-11-28",\n   "autor": "5fbaaade48f5052d28f3dffa"\n }\n ',
                          responses={202: GraffitiSerializer, 
                                     400: 'Bad request y causas del error'},
                          request_body=GraffitiSerializer)
