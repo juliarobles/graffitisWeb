@@ -101,14 +101,14 @@ class UsuarioDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UsuarioFollow(APIView):
-    @swagger_auto_schema(operation_description="Se devuelven todos los usuarios a los que el usuario actual sigue.",
+    @swagger_auto_schema(operation_description="Se devolverán todos los usuarios seguidos por el usuario actual.",
                          responses={200: UsuarioSerializer(many=True)})
     def get(self, request, pk):
         usuario = UsuarioDetail.get_object(request, pk)
         serializer = UsuarioSerializer(usuario.listaSeguimiento, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="El usuario actual seguirá al usuario pasado en la petición.",
+    @swagger_auto_schema(operation_description="El usuario actual seguirá al usuario con el nombre de usuario pasado en la petición.",
                          responses={200: UsuarioSerializer,
                                     403: 'Un usuario no puede seguirse a si mismo',
                                     404: 'Not found'},

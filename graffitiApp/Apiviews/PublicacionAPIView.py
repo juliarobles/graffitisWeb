@@ -12,6 +12,7 @@ from bson import ObjectId
 from django.http import Http404
 from graffitiApp.models import Publicacion, Usuario, Graffiti
 from graffitiApp.serializers import PublicacionSerializer, UsuarioSerializer, GraffitiSerializer, ComentarioSerializer, UsuarioIdSerializer
+from graffitiApp.Apiviews.UserAPIView import UsuarioDetail
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -137,14 +138,14 @@ class PublicacionDetail(APIView):
 
 
 class PublicacionLike(APIView):
-    @swagger_auto_schema(operation_description="Devuelve a todos los usuarios a los que les guste la publicacion.",
+    @swagger_auto_schema(operation_description="Devuelve a todos los usuarios que hayan dado like a la publicacion actual.",
                          responses={200:UsuarioSerializer(many=True), '404':'Publicacion no encontrada'})
     def get(self, request, pk):
         publicacion = PublicacionDetail.get_object(request, pk)
         serializer = UsuarioSerializer(publicacion.meGusta, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="El usuario pasado como parametro pasará a dar me gusta a la publicación.",
+    @swagger_auto_schema(operation_description="El usuario cuyo nombre sea pasado como parametro pasará a dar me gusta a la publicación actual.",
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},
