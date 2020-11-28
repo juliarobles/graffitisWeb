@@ -8,6 +8,14 @@ class UsuarioSerializer(serializers.DocumentSerializer):
         model = Usuario
         fields = '__all__'
 
+    def update(self, instance, validated_data):
+        instance.usuario = validated_data.get('usuario', instance.usuario)
+        instance.password = validated_data.get('password', instance.password)
+        instance.imagen = validated_data.get('imagen', instance.imagen)
+        instance.descripcion = validated_data.get('descripcion', instance.descripcion)
+        instance.save()
+        return instance
+
 class UsuarioIdSerializer(serializers.DocumentSerializer):
     class Meta:
         model = Usuario

@@ -18,14 +18,12 @@ class Usuario(Document):
             for comentario in comentarios:
                 if comentario.autor == self:
                     publicacion.__class__.objects.update(pull__listaComentarios=comentario)
-            self.listaComentariosPublicaciones.remove(publicacion)
 
         for publicacion in self.listaGraffitisPublicaciones:
             graffitis = publicacion.listaGraffitis
             for graffiti in graffitis:
                 if graffiti.autor == self:
                     publicacion.__class__.objects.update(pull__listaGraffitis=graffiti)
-            self.listaGraffitisPublicaciones.remove(publicacion)
 
         super().delete()
     
