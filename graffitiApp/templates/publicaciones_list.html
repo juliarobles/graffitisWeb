@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Lista Publicaciones{% endblock %}
+{%block body %}
+    <div class="p-5"><h1>Lista de publicaciones</h1></div>
+    <div class="table-responsive  table-hover" style="padding-left:40px;">
+    <table class="table" style="width:2000px;">
+        <thead>
+          <tr>
+            <th>Titulo</th>
+            <th>Descripci&oacute;n</th>
+            <th>Localizaci&oacute;n</th>
+            <th>Tem&aacute;tica</th>
+            <th>Autor</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for p in publicaciones %}
+                <tr class="clickable" onclick="window.location='{{p.getDetailURL}}'">
+                    <td class="w-5">{{p.titulo}}</td>
+                    <td>{{p.descripcion}}</td>
+                    <td>{{p.localizacion}}</td>
+                    <td>{{p.tematica}}</td>
+                    <td>{{p.autor}}</td>
+                </tr>        
+            {% endfor %}
+        </body>
+      </table>    
+    </div>
+    <button class="ml-5 btn btn-success">Subir graffiti</button>    
+{% endblock %}
