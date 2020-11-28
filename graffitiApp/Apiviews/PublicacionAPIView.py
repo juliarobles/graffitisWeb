@@ -194,3 +194,43 @@ class PublicacionFilterAuthor(APIView):
             serializer = PublicacionSerializer(publicaciones, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"error":"No se ha proporcionado un autor"}, status=status.HTTP_400_BAD_REQUEST)
+
+class PublicacionFiltrar(APIView):
+    @swagger_auto_schema(responses={200: 'OK', 404: 'Campo no existente/vacio o contenido vacio'}, operation_id="publicaciones_filtrar")
+    
+    def get(self, request, campo, contenido):
+        """Devuelve las publicaciones que contengan la subcadena CONTENIDO en la propiedad CAMPO. 
+        Campos permitidos: titulo, descripcion, creador, autor, localizacion, tematica. 
+        En el caso de el creador y la localización la busqueda será EXACTA. 
+        No utilizar tildes. 
+        Si no encuentra ninguna publicación que corresponda con CONTENIDO, devuelve una lista vacia."""
+        
+        resultado = []
+        print("hor")
+
+        if(campo=='' and contenido==''):
+            return Response(status= status.HTTP_404_NOT_FOUND)
+        else:
+            try:
+                publicaciones = filtrarPor(campo, contenido)
+                serializer = PublicacionSerializer(publicaciones, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(status= status.HTTP_404_NOT_FOUND) 
+            
+
+def filtrarPor(campo, contenido):
+    if(campo.lower() == "titulo"):
+        return Publicacion.objects.filter(titulo__icontains=contenido)
+    elif (campo.lower() == "descripcion"):
+        return Publicacion.objects.filter(descripcion__icontains=contenido)
+    elif (campo.lower() == "creador"):
+        return Publicacion.objects.filter(creador__iexact=contenido)
+    elif (campo.lower() == "localizacion"):
+        return Publicacion.objects.filter(localizacion__iexact=contenido)
+    elif (campo.lower() == "autor"):
+        return Publicacion.objects.filter(autor__icontains=contenido)
+    elif (campo.lower() == "tematica"):
+        return Publicacion.objects.filter(tematica__icontains=contenido)
+    else:
+        return -1
