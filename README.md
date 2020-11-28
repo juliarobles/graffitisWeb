@@ -40,6 +40,14 @@ Para poder ejecutar nuestra API en su propia máquina, solo tiene que seguir est
  ```
 Y con eso, tenemos todo a punto para ejecutar la aplicación.
 
+Nota: Es probable que antes de poder ejecutar la aplicación sea necesario migrar las colecciones que trae Django por defecto para terminar de inicializar la base de datos. 
+En este caso usar:
+``` shell
+python manage.py makemigrations
+python manage.py migrate
+ ```
+
+
 ## Puesta en marcha del servicio
 Para ello, solo hemos de realizar dos tareas:
  1. Poner en marcha la base de datos.
