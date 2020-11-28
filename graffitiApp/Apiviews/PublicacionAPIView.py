@@ -186,32 +186,34 @@ class PublicacionLike(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    
-class PublicacionFilterAuthor(APIView):
-    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada. \n Ejemplo: \n autor = Sonche",
-                            responses={200: 'OK', 400: 'Error con la cadena enviada'})
-    def get(self, request, author):
-        if author:
-            publicaciones = Publicacion.objects.filter(autor__contains=author)
-            serializer = PublicacionSerializer(publicaciones, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({"error":"No se ha proporcionado un autor"}, status=status.HTTP_400_BAD_REQUEST)
+
+# url(r'^publicaciones/autor/(?P<author>[a-zA-Z0-9-]+)/$', PublicacionFilterAuthor.as_view()),
+# class PublicacionFilterAuthor(APIView):
+#     @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada. \n Ejemplo: \n autor = Sonche",
+#                             responses={200: 'OK', 400: 'Error con la cadena enviada'})
+#     def get(self, request, author):
+#         if author:
+#             publicaciones = Publicacion.objects.filter(autor__contains=author)
+#             serializer = PublicacionSerializer(publicaciones, many=True)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response({"error":"No se ha proporcionado un autor"}, status=status.HTTP_400_BAD_REQUEST)
 
 class PublicacionFiltrar(APIView):
-    @swagger_auto_schema(responses={200: 'OK', 404: 'Campo no existente/vacio o contenido vacio'}, operation_id="publicaciones_filtrar")
+    @swagger_auto_schema(responses={200: 'OK', 400: 'Error con la cadena enviada', 404: 'Error'}, operation_id="publicaciones_filtrar")
     
     def get(self, request, campo, contenido):
         """Devuelve las publicaciones que contengan la subcadena CONTENIDO en la propiedad CAMPO. 
         Campos permitidos: titulo, descripcion, creador, autor, localizacion, tematica. 
         En el caso de el creador y la localización la busqueda será EXACTA. 
         No utilizar tildes. 
-        Si no encuentra ninguna publicación que corresponda con CONTENIDO, devuelve una lista vacia."""
+        Si no encuentra ninguna publicación que corresponda con CONTENIDO, devuelve una lista vacia.
+        Ejemplo: \n campo = autor \n contenido = Marq"""
         
         resultado = []
         print("hor")
 
         if(campo=='' and contenido==''):
-            return Response(status= status.HTTP_404_NOT_FOUND)
+            return Response({"error":"No se ha proporcionado campo o contenido"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             try:
                 publicaciones = filtrarPor(campo, contenido)

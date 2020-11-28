@@ -3,7 +3,7 @@ from rest_framework import routers
 from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view
 #API Views
 from .Apiviews.UserAPIView import UsuarioFollow, UsuarioFollowers, UsuarioList, UsuarioDetail, UsuarioFilterName
-from .Apiviews.PublicacionAPIView import PublicacionDetail, PublicacionList, PublicacionLike, PublicacionFilterAuthor , PublicacionFiltrar
+from .Apiviews.PublicacionAPIView import PublicacionDetail, PublicacionList, PublicacionLike, PublicacionFiltrar
 from .Apiviews.GraffitiAPIView import GraffitiList, GraffitiDetail
 from .Apiviews.ComentarioAPIView import ComentarioList, ComentarioDetail
 from django.urls import path
@@ -31,6 +31,5 @@ urlpatterns = [
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/$', ComentarioList.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/(?P<cpk>[a-zA-Z0-9-]+)$', ComentarioDetail.as_view()),
     url(r'^usuarios/username/(?P<username>[a-zA-Z0-9-]+)/$', UsuarioFilterName.as_view()),
-    url(r'^publicaciones/autor/(?P<author>[a-zA-Z0-9-]+)/$', PublicacionFilterAuthor.as_view()),
     url(r'^publicaciones/(?P<campo>[a-zA-Z0-9-_]+)/(?P<contenido>[a-zA-Z0-9-_]+)$', PublicacionFiltrar.as_view())
 ]
