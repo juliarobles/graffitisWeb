@@ -39,7 +39,17 @@ class UsuarioList(APIView):
     @swagger_auto_schema(operation_description="Crea un nuevo usuario.",
                          responses={201: UsuarioSerializer,
                                     400: 'Causas del error'},
-                         request_body=UsuarioSerializer)
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             properties={
+                                 'usuario': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'nombre': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'email': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'password': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'imagen': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'descripcion': openapi.Schema(type=openapi.TYPE_STRING),
+                             }
+                         ),)
     def post(self, request, pk=None):
         serializer = UsuarioSerializer(data=request.data)
         if serializer.is_valid():
