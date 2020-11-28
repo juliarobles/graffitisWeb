@@ -188,7 +188,7 @@ class PublicacionLike(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
 class PublicacionFilterAuthor(APIView):
-    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada.",
+    @swagger_auto_schema(operation_description="Devuelve todas las publicaciones cuyo autor contenga la cadena de texto proporcionada. \n Ejemplo: \n autor = Sonche",
                             responses={200: 'OK', 400: 'Error con la cadena enviada'})
     def get(self, request, author):
         if author:
