@@ -87,7 +87,16 @@ class PublicacionDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_description="Modifica una publicación existente. Para ello es recomendable que solo se incluyan los campos que van a ser modificados. NO modificar listaComentarios, listaGraffitis y meGusta ya que existen métodos específicos para ello que aseguran mantener la consistencia del sistema.",
-                         request_body=PublicacionSerializer,
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             properties={
+                                 'titulo': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'descripcion': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'localizacion': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'tematica': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_STRING)),
+                                 'autor': openapi.Schema(type=openapi.TYPE_STRING),
+                             }
+                         ),
                          responses={202: "Modificación aceptada",
                                     400: "Error y sus causas"})
     def put(self, request, pk):
@@ -219,11 +228,19 @@ class UsuarioDetail(APIView):
 
     @swagger_auto_schema(operation_description="Actualiza al usuario especificado",
                          responses={204: UsuarioSerializer},
-                         request_body=UsuarioSerializer)
+                         request_body=openapi.Schema(
+                             type=openapi.TYPE_OBJECT,
+                             properties={
+                                 'usuario': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'password': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'imagen': openapi.Schema(type=openapi.TYPE_STRING),
+                                 'descripcion': openapi.Schema(type=openapi.TYPE_STRING)
+                             }
+                         ))
     def put(self, request, pk):
         pk = ObjectId(pk)
         usuario = self.get_object(pk)
-        serializer = UsuarioSerializer(usuario, data=request.data)
+        serializer = UsuarioSerializer(usuario, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
