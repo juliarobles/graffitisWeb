@@ -27,7 +27,7 @@ class ComentarioList(APIView):
         except Publicacion.DoesNotExist:
             raise Http404
     
-    @swagger_auto_schema(operation_description="Devuelve todos los comentarios realizados en la publicación actual.",
+    @swagger_auto_schema(operation_description="Devuelve todos los comentarios de la publicación pasada por id. \n Ejemplo: id = 5fbab37bbcbecf56728297b0",
                          responses={200: ComentarioSerializer(many=True), 404:'Publicacion o Comentario no encontrado'})
     def get(self, request, pk, cpk=None):
         pk = ObjectId(pk)
@@ -40,7 +40,7 @@ class ComentarioList(APIView):
             serializer = ComentarioSerializer(comentario, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="Crea un nuevo comentario, pasado mediante la petición, para la publicación seleccionada.",
+    @swagger_auto_schema(operation_description='Crea un nuevo comentario, pasado mediante la petición, para la publicación seleccionada. \n Ejemplo: id = 5fbab37bbcbecf56728297b0 \n data = \n {\n"texto": "Comentario",\n  "autor": "5fbaaa1c875f83f6d3cb9a9d"\n}\n',
                          responses={201: ComentarioSerializer,
                                     400: 'Causas del error',
                                     404: 'Publicacion no encontrada'},
@@ -68,7 +68,7 @@ class ComentarioDetail(APIView):
         except Publicacion.DoesNotExist:
             raise Http404
     
-    @swagger_auto_schema(operation_description="Devuelve un comentario de la publicación actual según el id.",
+    @swagger_auto_schema(operation_description="Devuelve un comentario de la publicación actual según el id.\n Ejemplo: \n id = 5fbab37bbcbecf56728297b0 \n cpk = 5fbab37bbcbecf56728297ab ",
                          responses={200: ComentarioSerializer(many=True)})
     def get(self, request, pk, cpk=None):
         pk = ObjectId(pk)
@@ -81,7 +81,7 @@ class ComentarioDetail(APIView):
             serializer = ComentarioSerializer(comentario, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="Borra el comentario seleccionado.",
+    @swagger_auto_schema(operation_description="Borra el comentario seleccionado. Esto provocará cambios en algunos datos del usuario. \n Ejemplo: \n id = 5fbab37bbcbecf56728297b0 \n cpk = 5fbab37bbcbecf56728297ab ",
                          responses={204: 'Response vacía', 404: 'Comentario o publicacion no encontrado'})
     def delete(self, request, pk, cpk):
         pk = ObjectId(pk)
