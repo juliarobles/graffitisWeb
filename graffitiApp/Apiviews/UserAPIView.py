@@ -68,7 +68,7 @@ class UsuarioDetail(APIView):
         except Usuario.DoesNotExist:
             raise Http404
         
-    @swagger_auto_schema(operation_description="Devuelve un usuario según el id. \n Ejemplo: http://127.0.0.1:8000/usuarios/5fbaabbb48f5052d28f3dffb/ ",
+    @swagger_auto_schema(operation_description="Devuelve un usuario según el id. \n Ejemplo: id= 5fbaabbb48f5052d28f3dffb",
                          responses={200: UsuarioSerializer(many=True)})
     def get(self, request, pk=None):
         if pk: 
@@ -156,7 +156,7 @@ class UsuarioFollowers(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UsuarioFilterName(APIView):
-    @swagger_auto_schema(operation_description="Devuelve todos los usuarios que contengan en su nombre una cadena de texto.",
+    @swagger_auto_schema(operation_description='Devuelve todos los usuarios que contengan en su nombre una cadena de texto. \n Ejemplo: id = Sky',
                             responses={200: 'OK', 400: 'Error en la cadena enviada'})
     def get(self, request, username):
         if username:
