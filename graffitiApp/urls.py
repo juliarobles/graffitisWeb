@@ -2,10 +2,10 @@ from django.conf.urls import url,include
 from rest_framework import routers
 from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view
 #API Views
-from graffitiApp.Apiviews.UserAPIView import UsuarioFollow, UsuarioList, UsuarioDetail, UsuarioFilterName
-from graffitiApp.Apiviews.PublicacionAPIView import PublicacionDetail, PublicacionList, PublicacionLike, PublicacionFilterAuthor 
-from graffitiApp.Apiviews.GraffitiAPIView import GraffitiList, GraffitiDetail
-from graffitiApp.Apiviews.ComentarioAPIView import ComentarioList, ComentarioDetail
+from .Apiviews.UserAPIView import UsuarioFollow, UsuarioList, UsuarioDetail, UsuarioFilterName
+from .Apiviews.PublicacionAPIView import PublicacionDetail, PublicacionList, PublicacionLike, PublicacionFilterAuthor 
+from .Apiviews.GraffitiAPIView import GraffitiList, GraffitiDetail
+from .Apiviews.ComentarioAPIView import ComentarioList, ComentarioDetail
 from django.urls import path
 # De momento no usamos routers
 # --------------------------------------
