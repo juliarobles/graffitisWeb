@@ -39,7 +39,23 @@ class PublicacionList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={'201':'Publicacion creada', '400': 'Peticion mal formada'}, 
-                         request_body=PublicacionSerializer)
+                         request_body=openapi.Schema(
+                                type=openapi.TYPE_OBJECT,
+                                properties={
+                                    'titulo': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'descripcion': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'localizacion': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'tematica': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_STRING)),
+                                    'autor': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'creador': openapi.Schema(type=openapi.TYPE_STRING),
+                                    'listaGraffitis': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_OBJECT, properties={
+                                        'imagen': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'estado': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'fechaCaptura':openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATE),
+                                        'autor': openapi.Schema(type=openapi.TYPE_STRING)}))
+                                }
+                            ),
+                            )
     def post(self, request, pk=None):
         """Permite crear una nueva publicacion, que deberá seguir el formato especificado. 
         Los cambos listaComentarios y meGusta deberán dejarse como listas vacías([]), mínimo deberá contener un graffiti y tanto el autor del graffiti como el creador de la publicación deberán ser identificadores de usuarios existentes en el sistema (Lo lógico es que sea el id del mismo usuario ya que es este el que está creando la publicación)."""
