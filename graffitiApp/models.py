@@ -4,10 +4,13 @@ from django.urls import reverse
 
 class Usuario(Document):
     usuario = fields.StringField(required=True, max_length=30)
+    email = fields.EmailField(required=True, max_length=150)
+    nombre = fields.StringField(max_length=50)
     password = fields.StringField(required=True, min_length=8)
     imagen = fields.URLField(required=False)
     descripcion = fields.StringField(max_length=500)
-    listaSeguimiento = fields.ListField(fields.ReferenceField('Usuario'))
+    listaSeguidores = fields.ListField(fields.ReferenceField('Usuario'))
+    listaSeguidos = fields.ListField(fields.ReferenceField('Usuario'))
     listaPublicaciones = fields.ListField(fields.ReferenceField('Publicacion'))
     listaComentariosPublicaciones = fields.ListField(fields.ReferenceField('Publicacion'))
     listaGraffitisPublicaciones = fields.ListField(fields.ReferenceField('Publicacion'))
@@ -60,5 +63,8 @@ class Publicacion(Document):
     #def __str__(self):
     #    return self.titulo
 # USUARIO delete rules
+# Si se borra un seguidor -> Se quita de las listas de seguidores
+Usuario.register_delete_rule(Usuario, "listaSeguidores", PULL)
+
 # Si se borra un seguidor -> Se quita de las listas de seguidos
-Usuario.register_delete_rule(Usuario, "listaSeguimiento", PULL)
+Usuario.register_delete_rule(Usuario, "listaSeguidos", PULL)

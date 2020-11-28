@@ -145,7 +145,7 @@ class PublicacionLike(APIView):
         serializer = UsuarioSerializer(publicacion.meGusta, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="El usuario cuyo nombre sea pasado como parametro pasará a dar me gusta a la publicación actual.",
+    @swagger_auto_schema(operation_description="El usuario cuyo nombre sea pasado como parametro pasará a dar me gusta a la publicación actual. Si ya le había dado me gusta, se quitará el me gusta",
                          responses={200: UsuarioSerializer,
                                     400: 'Bad request',
                                     404: 'Publicacion no encontrada'},

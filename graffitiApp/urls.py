@@ -2,7 +2,7 @@ from django.conf.urls import url,include
 from rest_framework import routers
 from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view
 #API Views
-from .Apiviews.UserAPIView import UsuarioFollow, UsuarioList, UsuarioDetail, UsuarioFilterName
+from .Apiviews.UserAPIView import UsuarioFollow, UsuarioFollowers, UsuarioList, UsuarioDetail, UsuarioFilterName
 from .Apiviews.PublicacionAPIView import PublicacionDetail, PublicacionList, PublicacionLike, PublicacionFilterAuthor 
 from .Apiviews.GraffitiAPIView import GraffitiList, GraffitiDetail
 from .Apiviews.ComentarioAPIView import ComentarioList, ComentarioDetail
@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^usuarios/$', UsuarioList.as_view()),
     url(r'^usuarios/(?P<pk>[a-zA-Z0-9-]+)/$', UsuarioDetail.as_view()),
     url(r'^usuarios/(?P<pk>[a-zA-Z0-9-]+)/follow$', UsuarioFollow.as_view()),
+    url(r'^usuarios/(?P<pk>[a-zA-Z0-9-]+)/followers$', UsuarioFollowers.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffitis/$', GraffitiList.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/graffitis/(?P<gpk>[a-zA-Z0-9-]+)$', GraffitiDetail.as_view()),
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/$', ComentarioList.as_view()),

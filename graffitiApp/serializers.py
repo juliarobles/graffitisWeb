@@ -10,6 +10,7 @@ class UsuarioSerializer(serializers.DocumentSerializer):
 
     def update(self, instance, validated_data):
         instance.usuario = validated_data.get('usuario', instance.usuario)
+        instance.usuario = validated_data.get('nombre', instance.nombre)
         instance.password = validated_data.get('password', instance.password)
         instance.imagen = validated_data.get('imagen', instance.imagen)
         instance.descripcion = validated_data.get('descripcion', instance.descripcion)

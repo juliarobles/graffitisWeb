@@ -3,10 +3,13 @@
     "$oid": "5fbaaa1c875f83f6d3cb9a9d"
   },
   "usuario": "WhatsBoy",
+  "email": "whatsboy@gmail.com",
+  "nombre": "WhatsappBoy",
   "password": "whatsappwhatsapp",
   "imagen": "https://as.com/meristation/imagenes/2019/06/10/betech/,1560195710_365328_1560195771_noticia_normal.jpg",
   "descripcion": "Me gusta whatsapp",
-  "listaSeguimiento": [],
+  "listaSeguidores": [],
+  "listaSeguidos": [],
   "listaPublicaciones": [
     {
       "$oid": "5fbab0abbcbecf56728297aa"
@@ -33,10 +36,13 @@
     "$oid": "5fbaaade48f5052d28f3dffa"
   },
   "usuario": "LuminousSky",
+  "email": "cielito@gmail.com",
+  "nombre": "Sky",
   "password": "cielocielo",
   "imagen": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.larioja.com%2Fvivir%2Fcielo-azul-20200216000525-ntrc.html&psig=AOvVaw3c_VS66Y2XPome-dzv_ezf&ust=1606155341272000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIiJ1Ybhlu0CFQAAAAAdAAAAABAO",
   "descripcion": "El universo...",
-  "listaSeguimiento": [],
+  "listaSeguidores": [],
+  "listaSeguidos": [],
   "listaPublicaciones": [
     {
       "$oid": "5fbab37bbcbecf56728297b0"
@@ -60,10 +66,13 @@
     "$oid": "5fbaabbb48f5052d28f3dffb"
   },
   "usuario": "Vacio",
+  "email": "vacio@gmail.com",
+  "nombre": "Vacio",
   "password": "vaciovacio",
   "imagen": "https://cdn.mos.cms.futurecdn.net/fvwERvZArRTyLWuMK48YuH-1200-80.jpg",
   "descripcion": "Me gusta whatsapp",
-  "listaSeguimiento": [],
+  "listaSeguidores": [],
+  "listaSeguidos": [],
   "listaPublicaciones": [
     {
       "$oid": "5fbab421bcbecf56728297b2"

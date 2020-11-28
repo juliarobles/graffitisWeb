@@ -101,14 +101,14 @@ class UsuarioDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UsuarioFollow(APIView):
-    @swagger_auto_schema(operation_description="Se devolverán todos los usuarios seguidos por el usuario actual.",
+    @swagger_auto_schema(operation_description="Se devolverán todos los usuarios seguidos por el usuario actual (id de la url).",
                          responses={200: UsuarioSerializer(many=True)})
     def get(self, request, pk):
         usuario = UsuarioDetail.get_object(request, pk)
-        serializer = UsuarioSerializer(usuario.listaSeguimiento, many=True)
+        serializer = UsuarioSerializer(usuario.listaSeguidos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description="El usuario actual seguirá al usuario con el nombre de usuario pasado en la petición.",
+    @swagger_auto_schema(operation_description="El usuario actual (id de la url) seguirá al usuario con el id pasado en la petición. En el caso de que ya lo siguiera, lo dejará de seguir.",
                          responses={200: UsuarioSerializer,
                                     403: 'Un usuario no puede seguirse a si mismo',
                                     404: 'Not found'},
@@ -120,15 +120,26 @@ class UsuarioFollow(APIView):
             if usuario == seguir:
                 return Response(data={"error": "Un usuario no puede seguirse asi mismo"},status=status.HTTP_403_FORBIDDEN)
 
-            if seguir not in usuario.listaSeguimiento: # follow
-                usuario.listaSeguimiento.append(seguir)
+            if seguir not in usuario.listaSeguidos: # follow
+                usuario.listaSeguidos.append(seguir)
+                seguir.listaSeguidores.append(usuario)
             else: # unfollow
-                usuario.listaSeguimiento.remove(seguir)
+                usuario.listaSeguidos.remove(seguir)
+                seguir.listaSeguidores.remove(usuario)
             usuario.save()
+            seguir.save()
             serializer = UsuarioSerializer(usuario)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+
+class UsuarioFollowers(APIView):
+    @swagger_auto_schema(operation_description="Se devolverán todos los usuarios que siguen al usuario actual (id de la url).",
+                         responses={200: UsuarioSerializer(many=True)})
+    def get(self, request, pk):
+        usuario = UsuarioDetail.get_object(request, pk)
+        serializer = UsuarioSerializer(usuario.listaSeguidores, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class UsuarioFilterName(APIView):
     @swagger_auto_schema(operation_description="Devuelve todos los usuarios que contengan en su nombre una cadena de texto.",
                             responses={200: 'OK', 400: 'Error en la cadena enviada'})
