@@ -1,6 +1,6 @@
 from django.conf.urls import url,include
 from rest_framework import routers
-from .views import index, PublicacionViewSet, UsuarioViewSet, list_publicaciones_views, publicaciones_detail_view
+from .views import index
 #API Views
 from .Apiviews.UserAPIView import UsuarioFollow, UsuarioFollowers, UsuarioList, UsuarioDetail, UsuarioFilterName
 from .Apiviews.PublicacionAPIView import PublicacionDetail, PublicacionList, PublicacionLike, PublicacionFiltrar
@@ -17,9 +17,6 @@ from django.urls import path
 # --------------------------------------
 
 urlpatterns = [
-
-
-    
     # url('', include(router.urls)), 
     url(r'^index', index),
     url(r'^publicaciones/$', PublicacionList.as_view()),
@@ -35,14 +32,4 @@ urlpatterns = [
     url(r'^publicaciones/(?P<pk>[a-zA-Z0-9-]+)/comentarios/(?P<cpk>[a-zA-Z0-9-]+)$', ComentarioDetail.as_view()),
     url(r'^usuarios/username/(?P<username>[a-zA-Z0-9-]+)/$', UsuarioFilterName.as_view()),
     url(r'^publicaciones/(?P<campo>[a-zA-Z0-9-_]+)/(?P<contenido>[a-zA-Z0-9-_]+)$', PublicacionFiltrar.as_view())
-
-
-
-    path('inicio/', inicio, name='inicio'),
-    path('html/eventos/', eventos_list ,name='eventos-list'),
-    path('html/eventos/{int:ID_ACTIVIDAD}', eventos_list ,name='eventos-details'),
-    path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
-    path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
-    path('html/usuarios', usuarios_list, name='usuarios-list'),
-    path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
 ]

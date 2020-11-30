@@ -42,6 +42,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('graffitiApp.urls')),
     path('', include('ayuntamientoApp.urls')),
+    path('', include('clienteApp.urls')),
     #path('Publicacion/', include('graffitiApp.urls'))
     path('mongoadmin/', mongo_admin.site.urls),
     # OpenApi

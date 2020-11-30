@@ -45,10 +45,10 @@ INSTALLED_APPS = [
     'django_mongoengine.mongo_admin',
     'drf_yasg',
     'graffitiApp',
-    'ayuntamientoApp'
+    'ayuntamientoApp',
+    'clienteApp',
     'bootstrap4'
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,7 +65,7 @@ ROOT_URLCONF = 'graffitisWeb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/clientesApp/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
