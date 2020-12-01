@@ -16,6 +16,7 @@ urlpatterns = [
     path('html/eventos/<int:ID_ACTIVIDAD>/$', eventos_details ,name='eventos-details'),
     path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
+    path('html/nuevapublicacion/', publicaciones_formulario_view, name='publicacion-formulario'),
     path('html/usuarios', usuarios_list, name='usuarios-list'),
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
 ]
