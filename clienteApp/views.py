@@ -4,8 +4,29 @@ from django.http import HttpResponse
 from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
+from django.http import HttpRequest
 import urllib3, json
 
+def eliminar_eventos_repetidos(lista):
+    # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    ids = []
+    res = []
+    nombres = []
+    for elem in lista:
+        if elem['ID_ACTIVIDAD'] not in ids and elem['NOMBRE'] not in nombres:
+            elem['NOMBRE'] = limpiar_nombre(elem['NOMBRE'])
+            res.append(elem)
+            ids.append(elem['ID_ACTIVIDAD']) 
+            nombres.append(elem['NOMBRE'])
+    return res
+
+def limpiar_nombre(cadena):
+    # AYUNTAMIENTO MUY CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    if('<b>' in cadena or '<B>' in cadena or '<BR>'in cadena ):
+        cadena = cadena.replace('<b>', '').replace('</b>', '')
+        cadena = cadena.replace('<B>', '').replace('</B>', '')
+        cadena = cadena.replace('<BR>', '')
+    return cadena
 
 # Prueba mover a app cliente
 def inicio(request):
@@ -13,17 +34,25 @@ def inicio(request):
     res = t.render()
     return HttpResponse(res)
 
+def eventos_details(request, ID_ACTIVIDAD):
+    http = urllib3.PoolManager()
+    r = http.request(
+        'GET',
+         'http://127.0.0.1:8000/eventosID/' + str(ID_ACTIVIDAD),
+    )
+    context={'evento':json.loads(r.data)}
+    if 'NOMBRE' in context['evento']:
+        context['evento']['NOMBRE'] = limpiar_nombre( context['evento']['NOMBRE']) 
+    return render(request, 'eventos_details.html', context=context)
+
 def eventos_list(request):
     http = urllib3.PoolManager()
     r = http.request(
         'GET',
-        'http://127.0.0.1:8000/eventos/'
+    'http://127.0.0.1:8000/eventos/'
     )
-
-    plt = get_template("eventos_list.html")
-    dic={'eventos':json.loads(r.data)}
-    res = plt.render(dic)
-    return HttpResponse(res)
+    context={'eventos':eliminar_eventos_repetidos(json.loads(r.data))}
+    return render(request, 'eventos_list.html', context=context)
 
 def base_view(request):
     return render(request, 'graffiti_list.html')

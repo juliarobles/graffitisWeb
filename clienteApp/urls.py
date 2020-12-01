@@ -1,6 +1,6 @@
 from django.conf.urls import url,include
 from django.urls import path
-from .views import *
+from clienteApp.views import *
 # De momento no usamos routers
 # --------------------------------------
 #from django.urls import url_include
@@ -12,8 +12,8 @@ from .views import *
 
 urlpatterns = [
     path('inicio/', inicio, name='inicio'),
-    path('html/eventos/', eventos_list ,name='eventos-list'),
-    path('html/eventos/{int:ID_ACTIVIDAD}', eventos_list ,name='eventos-details'),
+    path('html/eventos/$', eventos_list ,name='eventos-list'),
+    path('html/eventos/<int:ID_ACTIVIDAD>/$', eventos_details ,name='eventos-details'),
     path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
     path('html/usuarios', usuarios_list, name='usuarios-list'),

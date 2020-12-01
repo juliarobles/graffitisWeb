@@ -5,13 +5,14 @@
 {% block title %}
     Eventos
 {% endblock title %}
-    
 
 {% block body %}
+<h1>Lista de eventos</h1>
+<!-- {% url 'eventos-details' ID_ACTIVIDAD=evento.ID_ACTIVIDAD as url_eventos_details %} -->
     <ul>
         {% for evento  in eventos %}
         <li>
-           <a href={% url 'eventos-details' evento.ID_ACTIVIDAD%}></a> Nombre: {{evento.NOMBRE}}
+           <a href="{{evento.ID_ACTIVIDAD }}/$">{{evento.NOMBRE}}</a> 
         </li> 
         {% endfor %}
     </ul>
