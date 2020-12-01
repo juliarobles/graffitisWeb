@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Graffitis Web{% endblock %}</title>
+    <!-- Cargamos la libreria de bootstrap  -->
+    {% load bootstrap4 %}
+
+    <!-- CSS bootstrap -->
+    {% bootstrap_css %}
 </head>
 <body>
     {% load static %}
@@ -16,5 +21,8 @@
     {% block js %}
         <!-- <h1>Bloque para poner JavaScript</h1> -->
     {% endblock %}
+
+     <!-- JS y jQuery Bootstrap  -->
+	{% bootstrap_javascript jquery='full' %}
 </body>
 </html>
