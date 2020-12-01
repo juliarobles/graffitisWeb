@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Nueva publicación{% endblock %}
+{% block body%}
+
+<div class="pt-5 pl-5 pb-3"><h1>Lista de publicaciones</h1></div>
+
+<form action="#"style="padding-left: 50px; padding-bottom: 100px; width:1000px;">
+    <div class="form-group">
+      <label for="titulo">Titulo</label>
+      <input type="text" class="form-control" id="titulo" placeholder="Introducir titulo">
+    </div>
+    <div class="form-group">
+        <label for="descripcion">Descripci&oacute;n</label>
+        <textarea id="descripcion" class="form-control" placeholder="Introducir descripci&oacute;n" rows="10" cols="50"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="localizacion">Localizaci&oacute;n</label>
+        <input type="text" class="form-control" id="localizacion" placeholder="Introducir localizaci&oacute;n">
+    </div>
+    <div class="form-group">
+        <label for="tematica">Tem&aacute;tica</label>
+        <input type="text" class="form-control" id="tematica" placeholder="Introducir tem&aacute;tica">
+    </div>
+    <div class="form-group">
+      <label for="autor">Autor</label>
+      <input type="text" class="form-control" id="autor" placeholder="Introducir autor">
+    </div>
+    <div class="form-group">
+        <label for="imagen">Imagen</label>
+        <input type="url" class="form-control" id="imagen" placeholder="Introducir imagen">
+    </div>
+    <div class="form-group">
+    <label for="estado">Estado</label>
+    <select class="form-control" id="estado"> Estado
+            <option selected value="Perfecto">Perfecto</option>
+            <option value="Ok">Ok</option>
+            <option value="Regular">Regular</option>
+            <option value="Mal">Mal</option>
+            <option value="Pisado">Pisado</option>       
+    </select>
+    </div>  
+    <div class="form-group">
+        <label for="fecha">Fecha de captura</label>
+        <input type="date" class="form-control" id="fecha" placeholder="Introducir fecha">
+    </div>
+    <button type="submit" class="mt-3 btn btn-primary" style="margin-left:850px">Subir</button>
+  </form>
+
+{%endblock%}
