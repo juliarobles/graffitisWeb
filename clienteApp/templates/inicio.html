@@ -2,6 +2,85 @@
 {% extends "base.html" %}
 {% block title %} Inicio {% endblock title %}
 {% block body %}
-<h1>Esta es la página de inicio</h1>
-
+{% load range %}
+{% load lookup %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/inicio.css' %}">
+<div class="container ">
+    <div class="row justify-content-center">
+        {% for p in publicaciones %}
+            <div class="col-8 bg-white my-2 rounded border p-0">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-12 p-0">
+                            <div id="carousel{{p.id}}" class="carousel slide" data-ride="carousel">
+                                {% with len=p.listaGraffitis|length %}
+                                {% if len > 1 %}
+                                    <ol class="carousel-indicators">
+                                        <li data-target="#carousel{{p.id}}" data-slide-to=0 class="active"></li>
+                                            {% for value in 1|range:len %}
+                                                <li data-target="#carousel{{p.id}}" data-slide-to={{value}}></li>
+                                            {% endfor %}
+                                    </ol>
+                                {% endif %}
+                                <div class="carousel-inner">
+                                    {% for graffiti in p.listaGraffitis %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            <img class="d-block altura18 cover w-100 rounded-left" src="{{graffiti.imagen}}">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if len > 1 %}
+                                    <a class="carousel-control-prev" href="#carousel{{p.id}}" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel{{p.id}}" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                {% endif %}
+                                {% endwith %}
+                              </div>
+                        </div>
+                        <div class="col-md-6 col-12 pl-md-4">
+                            {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
+                            <div class="h6 mt-3 d-flex align-items-center">
+                                <img class="rounded-circle icon" src={{primerGraffiti.autor.imagen}} onerror="this.src='../static/images/iconHuevo.png';"/>
+                                &nbsp;&nbsp;{{primerGraffiti.autor.usuario}}
+                            </div>
+                            {% endwith %}
+                            <hr/>
+                            <p class="h4">{{p.titulo}}</p>
+                            <p>{{p.descripcion}}</p>
+                            <p>
+                            {% for tem in p.tematica %}
+                                #{{tem}}&nbsp;
+                            {% endfor %}
+                            </p>
+                            <p>{{p.autor}}</p>
+                            <div class="container">
+                                <div class="row justify-content-end">
+                                    <div class="col-3 d-flex justify-content-end">
+                                        {% with mg=p.meGusta|length %}
+                                        <p><i class="far fa-heart"></i>&nbsp;{{mg}}</p>
+                                        {% endwith %}
+                                    </div>
+                                    <div class="col-3 d-flex justify-content-end">
+                                        {% with lc=p.listaComentarios|length %}
+                                        <p><i class="far fa-comment"></i></i>&nbsp;{{lc}}</p>
+                                        {% endwith %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>"Aún no hay publicaciones :("</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock body %}

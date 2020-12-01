@@ -7,6 +7,8 @@ from django.template import Context
 from django.http import HttpRequest
 import urllib3, json
 
+http = urllib3.PoolManager()
+
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     ids = []
@@ -28,11 +30,13 @@ def limpiar_nombre(cadena):
         cadena = cadena.replace('<BR>', '')
     return cadena
 
-# Prueba mover a app cliente
-def inicio(request):
-    t = get_template('inicio.html')
-    res = t.render()
-    return HttpResponse(res)
+def inicio(request):   
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/'
+    )
+    context={'publicaciones':json.loads(r.data)}
+    return render(request, 'inicio.html', context=context)
 
 def eventos_details(request, ID_ACTIVIDAD):
     http = urllib3.PoolManager()
@@ -58,7 +62,7 @@ def base_view(request):
     return render(request, 'graffiti_list.html')
 
 def list_publicaciones_views(request):
-    publicaciones = Publicacion.objects.all()
+    publicaciones = Publicacion.objects.all() #NO podemos hacerlo así, tenemos que usar el servidor REST
     context = {
         "publicaciones": publicaciones
     }
