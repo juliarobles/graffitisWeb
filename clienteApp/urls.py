@@ -18,4 +18,5 @@ urlpatterns = [
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
     path('html/usuarios', usuarios_list, name='usuarios-list'),
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
+    path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
 ]

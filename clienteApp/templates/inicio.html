@@ -1,7 +1,10 @@
 
 {% extends "base.html" %}
 {% block title %} Inicio {% endblock title %}
+
 {% block body %}
 <h1>Esta es la página de inicio</h1>
-
+<!-- Panel lateral de eventos. Mover esta línea donde queramos ponerlo -->
+{% include 'eventos_panel.html' %}
 {% endblock body %}
+        

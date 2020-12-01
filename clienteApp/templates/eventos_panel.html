@@ -1,0 +1,53 @@
+{% url 'cargar-eventos-ajax' as  cargar_eventos%}
+<!-- Cargamos la carpeta static ? -->
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/panel_eventos.css' %}">
+    <!-- Panel lateral + elementos -->
+        <input type="checkbox" class="checkbox" id="check" onclick="cargarEventos()">
+        <label for="check" class="menu" id="etiqueta-eventos">Eventos</label>
+        <!-- Probar modal de bootstrap para que se cierre al clicar fuera -->
+                    <div class=" left-panel scroll" id="panel-eventos">
+                        <div class="text-center col pt-3 text-light">
+                            <h3>Eventos próximos</h3>
+                        </div>
+                    <ul id="lista-eventos" class="p-0 " >
+                        
+                        {% for evento in eventos %}
+                            <li>
+                        
+                                <div class="tarjeta-evento col bg-light" onclick="informacion_evento({{evento.ID_ACTIVIDAD}})">
+                                    <div class="titulo">
+                                        {{evento.NOMBRE}}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        
+                    </ul>
+            </div>
+            
+            
+                
+    <script>
+        function informacion_evento(id){
+            var clave = id;
+            var url = "{% url 'eventos-details' 123 %}".replace('123', clave);
+            window.location.href = url;   
+        }
+       function cargarEventos(){
+           if($('#check').prop('checked')){
+               //Ajax request
+               
+               $.ajax(
+                   {
+                       type:'GET', 
+                       url:"{% url 'cargar-eventos-ajax' %}",
+                       success: function(data) {
+                           console.log(data);
+                           $('#lista-eventos').replaceWith($('#lista-eventos',data));
+                    },
+                   }
+               )
+           }
+       }
+    </script>        

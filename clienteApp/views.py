@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 import urllib3, json
+
 
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -28,6 +29,16 @@ def limpiar_nombre(cadena):
         cadena = cadena.replace('<BR>', '')
     return cadena
 
+def cargar_eventos_ajax(request):
+    print('Cargando eventos')
+    if request.is_ajax and request.method == "GET":
+        http = urllib3.PoolManager()
+        r = http.request(
+        'GET',
+        'http://127.0.0.1:8000/eventos/'
+        )
+        data = {'eventos':eliminar_eventos_repetidos(json.loads(r.data))}
+        return render(request, 'inicio.html', data)
 # Prueba mover a app cliente
 def inicio(request):
     t = get_template('inicio.html')
