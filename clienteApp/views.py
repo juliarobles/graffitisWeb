@@ -89,7 +89,7 @@ def usuarios_detail(request, pk):
     seguidores = Usuario.objects.filter(listaSeguimiento__contains=usuario)
     context = {
         "usuario": usuario,
-        "seguidos": len(usuario.listaSeguimiento),
-        "seguidores": len(seguidores)
+        "seguidos": len(usuario.listaSeguidos),
+        "seguidores": len(usuario.listaSeguidores)
     }
     return render(request, 'usuarios_detail.html', context=context)
