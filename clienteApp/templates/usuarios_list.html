@@ -2,10 +2,28 @@
 {% block title %}Lista Usuarios{% endblock %}
 
 {% block body %}
-    <h1>Lista de Usuarios</h1>
-    <ul>
-        {%for usuario in usuarios %}
-            <li><a href="{{usuario.getDetailURL}}">{{usuario.usuario}}</a></li>
-        {% endfor %}
-    </ul>
+   
+
+    <div class="p-5"><h1>Lista de usuarios</h1></div>
+    <div class="table-responsive  table-hover" style="padding-left:40px;">
+    <table class="table" style="width:1750px;">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+                <tr class="clickable" onclick="window.location='{{u.getDetailURL}}'">
+                    <td>{{u.usuario}}</td>
+                    <td>{{u.nombre}}</td>
+                    <td>{{u.descripcion}}</td>
+                </tr>    
+            {% endfor %}
+        </tbody>
+      </table>    
+    </div>
+    <a href="#" class="ml-5 btn btn-success">Nuevo usuario</a>    
 {% endblock %}
