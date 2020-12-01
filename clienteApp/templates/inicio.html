@@ -9,7 +9,7 @@
 <div class="container ">
     <div class="row justify-content-center">
         {% for p in publicaciones %}
-            <div class="col-8 bg-white my-2 rounded border p-0">
+            <div class="col-11 col-sm-11 col-md-8 bg-white my-2 rounded border p-0">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 col-12 p-0">
@@ -26,7 +26,7 @@
                                 <div class="carousel-inner">
                                     {% for graffiti in p.listaGraffitis %}
                                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                            <img class="d-block altura18 cover w-100 rounded-left" src="{{graffiti.imagen}}">
+                                            <img class="d-block altura cover w-100 rounded-left" src="{{graffiti.imagen}}">
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -51,29 +51,28 @@
                             </div>
                             {% endwith %}
                             <hr/>
-                            <p class="h4">{{p.titulo}}</p>
-                            <p>{{p.descripcion}}</p>
-                            <p>
+                            <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
+                                <p class="h4">{{p.titulo}}</p>
+                                <p class="h6 mb-3">{{p.autor}}</p>
+                                <p class="wrapPalabras">{{p.descripcion}}</p>
+                            </a>
+                            <p class="wrapLinea">
                             {% for tem in p.tematica %}
                                 #{{tem}}&nbsp;
                             {% endfor %}
                             </p>
-                            <p>{{p.autor}}</p>
-                            <div class="container">
-                                <div class="row justify-content-end">
-                                    <div class="col-3 d-flex justify-content-end">
-                                        {% with mg=p.meGusta|length %}
-                                        <p><i class="far fa-heart"></i>&nbsp;{{mg}}</p>
-                                        {% endwith %}
-                                    </div>
-                                    <div class="col-3 d-flex justify-content-end">
-                                        {% with lc=p.listaComentarios|length %}
-                                        <p><i class="far fa-comment"></i></i>&nbsp;{{lc}}</p>
-                                        {% endwith %}
-                                    </div>
-                                </div>
+                            <div class="d-flex justify-content-end align-self-end abajo"> 
+                                <p>
+                                {% with lc=p.listaComentarios|length %}
+                                <i class="far fa-comment"></i>&nbsp;{{lc}}
+                                {% endwith %}
+                                &nbsp;
+                                &nbsp;
+                                {% with mg=p.meGusta|length %}
+                                <i class="far fa-heart"></i>&nbsp;{{mg}}
+                                {% endwith %}
+                                </p>
                             </div>
-                            
                         </div>
                     </div>
                 </div>

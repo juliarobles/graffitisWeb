@@ -5,11 +5,48 @@
 .none {object-fit: none;}
 .backgroundCover {background-size: cover;}
 
-.altura18 {
-    height:18rem;
+.altura {
+    height:20rem;
 }
 
 .icon {
     height:2rem;
     width:2rem;
+}
+
+.sinDecoracion {
+    text-decoration: none;
+    color:black;
+}
+
+.sinDecoracion:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.wrapPalabras {
+    display: block;
+    display: -webkit-box;
+    max-width: 100%;
+
+    min-height: 58px;
+    line-height: 1.2;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+.wrapLinea {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+
+@media(min-width:992px){
+    .abajo {
+        position: absolute;
+        bottom: 0;
+        right: 20px;
+    }
 }
