@@ -7,6 +7,7 @@ from django.template import Context
 from django.http import HttpRequest, JsonResponse
 import urllib3, json
 
+http = urllib3.PoolManager()
 
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -40,10 +41,14 @@ def cargar_eventos_ajax(request):
         data = {'eventos':eliminar_eventos_repetidos(json.loads(r.data))}
         return render(request, 'inicio.html', data)
 # Prueba mover a app cliente
-def inicio(request):
-    t = get_template('inicio.html')
-    res = t.render()
-    return HttpResponse(res)
+
+def inicio(request):   
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/'
+    )
+    context={'publicaciones':json.loads(r.data)}
+    return render(request, 'inicio.html', context=context)
 
 def eventos_details(request, ID_ACTIVIDAD):
     http = urllib3.PoolManager()
@@ -69,7 +74,7 @@ def base_view(request):
     return render(request, 'graffiti_list.html')
 
 def list_publicaciones_views(request):
-    publicaciones = Publicacion.objects.all()
+    publicaciones = Publicacion.objects.all() #NO podemos hacerlo así, tenemos que usar el servidor REST
     context = {
         "publicaciones": publicaciones
     }
@@ -84,6 +89,9 @@ def publicaciones_detail_view(request, pk):
     }
     return render(request, 'publicacion_detail.html', context=context)
 
+def publicaciones_formulario_view(request):
+    return render(request, 'publicacion_formulario_crear.html')
+
 def usuarios_list(request):
     usuarios = Usuario.objects.all()
     context = {
@@ -97,7 +105,7 @@ def usuarios_detail(request, pk):
     seguidores = Usuario.objects.filter(listaSeguimiento__contains=usuario)
     context = {
         "usuario": usuario,
-        "seguidos": len(usuario.listaSeguimiento),
-        "seguidores": len(seguidores)
+        "seguidos": len(usuario.listaSeguidos),
+        "seguidores": len(usuario.listaSeguidores)
     }
     return render(request, 'usuarios_detail.html', context=context)

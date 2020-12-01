@@ -4,3 +4,6 @@ graffitisWeb/__pycache__
 ayuntamientoApp/__pycache__
 ayuntamientoApp/migrations/__pycache__
 graffitiApp/Apiviews/__pycache__
+clienteApp/templatetags/__pycache__
+clienteApp/__pycache__
+clienteApp/migrations/__pycache__

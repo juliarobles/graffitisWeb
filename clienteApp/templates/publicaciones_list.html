@@ -3,7 +3,7 @@
 {%block body %}
     <div class="p-5"><h1>Lista de publicaciones</h1></div>
     <div class="table-responsive  table-hover" style="padding-left:40px;">
-    <table class="table" style="width:2000px;">
+    <table class="table" style="width:1750px;">
         <thead>
           <tr>
             <th>Titulo</th>
@@ -16,15 +16,15 @@
         <tbody>
             {% for p in publicaciones %}
                 <tr class="clickable" onclick="window.location='{{p.getDetailURL}}'">
-                    <td class="w-5">{{p.titulo}}</td>
+                    <td>{{p.titulo}}</td>
                     <td>{{p.descripcion}}</td>
                     <td>{{p.localizacion}}</td>
                     <td>{{p.tematica}}</td>
                     <td>{{p.autor}}</td>
-                </tr>        
+                </tr>    
             {% endfor %}
-        </body>
+        </tbody>
       </table>    
     </div>
-    <button class="ml-5 btn btn-success">Subir graffiti</button>    
+    <a href="{% url 'publicacion-formulario'%}" class="ml-5 btn btn-success">Nueva publicaci&oacute;n</a>    
 {% endblock %}

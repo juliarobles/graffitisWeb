@@ -11,9 +11,11 @@
 
     <!-- CSS bootstrap -->
     {% bootstrap_css %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <script src="https://kit.fontawesome.com/c77eea7e8a.js" crossorigin="anonymous"></script>
 </head>
-<body>
-
+<body class="bg-grisesito">
     {% include "navbar.html" %}
 
     {% block body %}
