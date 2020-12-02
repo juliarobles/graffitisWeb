@@ -10,3 +10,21 @@
     white-space:nowrap;
     text-overflow: ellipsis;
 }
+
+.sinDecoracion {
+    text-decoration: none;
+    color: black;
+}
+
+
+.sinDecoracion:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.wrapHT {
+    overflow: hidden;
+    overflow-wrap: break-word;
+    text-align: end;
+    word-break: break-all;
+}

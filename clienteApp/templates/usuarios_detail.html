@@ -44,6 +44,7 @@
                         <div class="container">
                             <div class="row">
                                 {% for p in listaPublicaciones %}
+                                <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
                                     <div class="col-12 col-md-4 p-0 face">
                                         {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
                                         <img class="d-block altura cover w-100" src="{{primerGraffiti.imagen}}">
@@ -65,6 +66,7 @@
                                             <div class="fondo"></div>
                                         </div>
                                     </div>
+                                </a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -75,6 +77,7 @@
                                 {% for p in listaActualizaciones %}
                                     {% if p.id in usuario.listaPublicaciones %}
                                     {% else %}
+                                    <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
                                     <div class="col-12 col-md-4 p-0 face">
                                         {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
                                         <img class="d-block altura cover w-100" src="{{primerGraffiti.imagen}}">
@@ -96,6 +99,7 @@
                                             <div class="fondo"></div>
                                         </div>
                                     </div>
+                                    </a>
                                     {% endif %}
                                 {% endfor %}
                             </div>

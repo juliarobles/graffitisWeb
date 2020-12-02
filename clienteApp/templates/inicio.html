@@ -28,7 +28,9 @@
                                 <div class="carousel-inner">
                                     {% for graffiti in p.listaGraffitis %}
                                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                            <img class="d-block altura cover w-100 rounded-left" src="{{graffiti.imagen}}">
+                                            <a class="sinDecoracion" href="{% url 'publicacion-detail' p.id %}">
+                                                <img class="d-block altura cover w-100 rounded-left" src="{{graffiti.imagen}}">
+                                            </a>
                                         </div>
                                     {% endfor %}
                                 </div>

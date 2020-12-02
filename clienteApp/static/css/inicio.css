@@ -7,16 +7,6 @@
     width:2rem;
 }
 
-.sinDecoracion {
-    text-decoration: none;
-    color:black;
-}
-
-.sinDecoracion:hover {
-    text-decoration: none;
-    color: black;
-}
-
 .wrapPalabras {
     display: block;
     display: -webkit-box;
