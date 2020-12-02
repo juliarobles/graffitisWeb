@@ -82,14 +82,24 @@ li{
     height: 300px;
     
 }
-.tarjeta-evento:hover{
+/* .tarjeta-evento:hover{
     -webkit-box-shadow: 0px 4px 14px 4px rgba(0,0,0,0.62);
     -moz-box-shadow: 0px 4px 14px 4px rgba(0,0,0,0.62);
     box-shadow: 0px 4px 14px 4px rgba(0,0,0,0.62);
     transform: translateY(-3%);
-}
+} */
 .tarjeta-evento > .titulo{
     font-weight: 600;
+}
+
+.enlace{
+    text-decoration: none !important;
+    color:black !important;
+}
+
+.enlace:hover{
+    text-decoration: none !important;
+    color:black !important;
 }
 
 .evento-info{

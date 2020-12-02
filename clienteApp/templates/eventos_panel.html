@@ -15,26 +15,29 @@
         
         {% for evento in eventos %}
         <li>
-            
-            <div id="{{evento.ID_ACTIVIDAD}}" class="tarjeta-evento col bg-light" onclick="ampliar_informacion({{evento.ID_ACTIVIDAD}})" >
-                <div class="titulo">
-                    {{evento.NOMBRE}}
+            <a class="enlace" data-toggle="collapse" href="#collapse{{evento.ID_ACTIVIDAD}}" role="button" aria-expanded="false" aria-controls="collapse{{evento.ID_ACTIVIDAD}}">
+                <div id="{{evento.ID_ACTIVIDAD}}" class="tarjeta-evento col bg-light" onclick="ampliar_informacion({{evento.ID_ACTIVIDAD}})">
+                    <div class="titulo">
+                        {{evento.NOMBRE}}
+                    </div>
+                    <div class="collapse mt-3" id="collapse{{evento.ID_ACTIVIDAD}}">
+                        <div class="card card-body" id="info{{evento.ID_ACTIVIDAD}}">
+                        </div>
+                    </div>
                 </div>
-
-                
-              
-            </div>
+            </a>
         </li>
         {% endfor %}
         
     </ul>
 </div>
-{% include 'info-card.html' %}
 
     <script>
         var claveAnterior;
         var clave;
         function ampliar_informacion(id) {
+            nuestroDiv=document.getElementById("info"+id);
+            console.log("info"+id);
             claveAnterior = clave;
             clave = id;
             var url_destino = "{% url 'cargar-eventos-id' 123 %}".replace('123', clave);
@@ -43,8 +46,8 @@
                     type:'GET', 
                     url:url_destino,
                     success: function(data) {
-                        $("#info").load("{% url 'card-info'%}");
-                        console.log(data)
+                        console.log(data);
+                        nuestroDiv.innerHTML=data;
                          /*if($('#evento-info').is(':visible')){
                              alert('Ocultando')
                              $('#evento-info').fadeOut(1000);
@@ -79,4 +82,4 @@
                )
            }
        }
-    </script>        
+    </script>    
