@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}{{publicacion.titulo}}{% endblock %}
-
 {% load range %}
 {% load lookup %}
-{%block body %}
+{% block body %}
+{% include "eventos_panel.html" %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/publicacionDetalles.css' %}">

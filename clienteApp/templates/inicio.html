@@ -47,9 +47,11 @@
                         </div>
                         <div class="col-md-6 col-12 pl-md-4">
                             {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
-                            <div class="h6 mt-3 d-flex align-items-center">
-                                <img class="rounded-circle icon" src={{primerGraffiti.autor.imagen}} onerror="this.src='../static/images/iconHuevo.png';"/>
-                                &nbsp;&nbsp;@{{primerGraffiti.autor.usuario}}
+                            <div class="h6 mt-3">
+                                <a class="sinDecoracion d-flex align-items-center" href="{% url 'usuarios-detail' primerGraffiti.autor.id %}">
+                                    <img class="rounded-circle icon" src={{primerGraffiti.autor.imagen}} onerror="this.src='../static/images/iconHuevo.png';"/>
+                                    &nbsp;&nbsp;@{{primerGraffiti.autor.usuario}}
+                                </a>
                             </div>
                             {% endwith %}
                             <hr/>

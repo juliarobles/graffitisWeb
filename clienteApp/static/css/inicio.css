@@ -30,12 +30,6 @@
     text-overflow: ellipsis;
 }
 
-.wrapLinea {
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow: ellipsis;
-}
-
 @media(min-width:992px){
     .abajo {
         position: absolute;

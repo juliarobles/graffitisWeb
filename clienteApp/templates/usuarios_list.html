@@ -16,7 +16,7 @@
         </thead>
         <tbody>
             {% for u in usuarios %}
-                <tr class="clickable" onclick="window.location='{{u.getDetailURL}}'">
+                <tr class="clickable" onclick="window.location='{% url 'usuarios-detail' u.id %}'">
                     <td>{{u.usuario}}</td>
                     <td>{{u.nombre}}</td>
                     <td>{{u.descripcion}}</td>

@@ -5,3 +5,8 @@
 .scale-down {object-fit: scale-down;}
 .none {object-fit: none;}
 .backgroundCover {background-size: cover;}
+.wrapLinea {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
