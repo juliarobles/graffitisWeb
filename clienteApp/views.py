@@ -9,6 +9,7 @@ import urllib3, json
 
 http = urllib3.PoolManager()
 
+
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     ids = []
@@ -39,7 +40,18 @@ def cargar_eventos_ajax(request):
         'http://127.0.0.1:8000/eventos/'
         )
         data = {'eventos':eliminar_eventos_repetidos(json.loads(r.data))}
-        return render(request, 'inicio.html', data)
+        return render(request, 'eventos_panel.html', data)
+
+def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
+    if request.is_ajax and request.method == "GET":
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/eventosID/'+str(ID_ACTIVIDAD),
+        )
+        data={'evento_seleccionado':json.loads(r.data)}
+        # data['evento_seleccionado']['DESCRIPCION']= limpiar_nombre(data['evento_seleccionado']['DESCRIPCION'])
+        data['evento_seleccionado']['NOMBRE']= limpiar_nombre(data['evento_seleccionado']['NOMBRE'])
+        return render(request, 'info-card.html', data )
 # Prueba mover a app cliente
 
 def inicio(request):   
