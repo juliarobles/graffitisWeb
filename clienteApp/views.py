@@ -57,12 +57,22 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
 def principal(request):
     return render(request, 'log.html')
 
-def inicio(request):   
+def inicio(request):
+    print("qeqqe")
     r = http.request(
         'GET',
     'http://127.0.0.1:8000/publicaciones/'
     )
     context={'publicaciones':json.loads(r.data)}
+    return render(request, 'inicio.html', context=context)
+
+def buscar(request, busqueda):
+    print(pk)
+    print("aaaa")
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'
+    )
     return render(request, 'inicio.html', context=context)
 
 def registro(request):

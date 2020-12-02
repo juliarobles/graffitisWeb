@@ -11,9 +11,10 @@ from clienteApp.views import *
 # --------------------------------------
 
 urlpatterns = [
+    path('inicio/?busqueda=<str:busqueda>', buscar, name='url-buscar'),
     path('inicio/', inicio, name='inicio'),
     path('principal/', principal, name='principal'),
-    path('registro/$', registro, name='registro'),
+    path('registro/', registro, name='registro'),
     path('html/eventos/$', eventos_list ,name='eventos-list'),
     path('html/eventos/<int:ID_ACTIVIDAD>/$', eventos_details ,name='eventos-details'),
     path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
@@ -22,5 +23,5 @@ urlpatterns = [
     path('html/usuarios', usuarios_list, name='usuarios-list'),
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
     path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
-    path('ajax/eventos/<int:ID_ACTIVIDAD>/$', cargar_evento_id_ajax, name='cargar-eventos-id'),
+    path('ajax/eventos/<int:ID_ACTIVIDAD>/', cargar_evento_id_ajax, name='cargar-eventos-id'),
 ]
