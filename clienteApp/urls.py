@@ -12,6 +12,7 @@ from clienteApp.views import *
 
 urlpatterns = [
     path('inicio/', inicio, name='inicio'),
+    path('principal/', principal, name='principal'),
     path('registro/$', registro, name='registro'),
     path('html/eventos/$', eventos_list ,name='eventos-list'),
     path('html/eventos/<int:ID_ACTIVIDAD>/$', eventos_details ,name='eventos-details'),

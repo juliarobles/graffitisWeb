@@ -54,6 +54,9 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
         return render(request, 'info-card.html', data )
 # Prueba mover a app cliente
 
+def principal(request):
+    return render(request, 'log.html')
+
 def inicio(request):   
     r = http.request(
         'GET',
