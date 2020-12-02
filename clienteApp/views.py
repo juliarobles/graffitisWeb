@@ -62,6 +62,10 @@ def inicio(request):
     context={'publicaciones':json.loads(r.data)}
     return render(request, 'inicio.html', context=context)
 
+def registro(request):
+    print("Prueba")
+    return render(request, 'registro.html')
+
 def eventos_details(request, ID_ACTIVIDAD):
     r = http.request(
         'GET',
