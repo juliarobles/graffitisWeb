@@ -3,6 +3,7 @@
 {% url 'usuarios-list' as url_lista_usuarios %}
 {% url 'publicaciones-list' as url_lista_publicaciones %}
 {% url 'eventos-list' as url_lista_eventos %}
+
 {% load static %}
 <!-- Required meta tags -->
 <meta charset="utf-8">
@@ -35,8 +36,13 @@
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-success my-2 my-sm-0" type="submit">Buscar</button>
-        <button class="ml-2 mr-1 btn btn-primary my-2 my-sm-0" type="submit">Inicio de sesión</button>
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Registro</button>
+        <button class="ml-2 mr-1 btn btn-primary my-2 my-sm-0" type="button">Inicio de sesión</button>
+        <button onclick="navegar_registro()" class="btn btn-secondary my-2 my-sm-0" id="registro-button" type="button">Registro</button>
+        <script>
+          function navegar_registro(){
+            window.location.href = "{% url 'registro' %}"; 
+          }
+        </script>
       </form>
     </div>
   </nav>
