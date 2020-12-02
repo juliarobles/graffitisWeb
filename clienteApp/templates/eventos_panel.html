@@ -2,33 +2,63 @@
 <!-- Cargamos la carpeta static ? -->
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/panel_eventos.css' %}">
-    <!-- Panel lateral + elementos -->
-        <input type="checkbox" class="checkbox" id="check" onclick="cargarEventos()">
-        <label for="check" class="menu" id="etiqueta-eventos">Eventos</label>
-        <!-- Probar modal de bootstrap para que se cierre al clicar fuera -->
-                    <div class=" left-panel scroll" id="panel-eventos">
-                        <div class="text-center col pt-3 text-light">
-                            <h3>Eventos próximos</h3>
-                        </div>
-                    <ul id="lista-eventos" class="p-0 " >
-                        
-                        {% for evento in eventos %}
-                            <li>
-                        
-                                <div class="tarjeta-evento col bg-light" onclick="informacion_evento({{evento.ID_ACTIVIDAD}})">
-                                    <div class="titulo">
-                                        {{evento.NOMBRE}}
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                        
-                    </ul>
-            </div>
+<!-- Panel lateral + elementos -->
+<input type="checkbox" class="checkbox" id="check" onclick="cargarEventos()">
+
+<label for="check" class="menu index2z" id="etiqueta-eventos" >Eventos</label>
+<!-- Probar modal de bootstrap para que se cierre al clicar fuera -->
+<div class=" left-panel scroll index2z" id="panel-eventos"  >
+    <div class="text-center col pt-3 text-light">
+        <h3>Eventos próximos</h3>
+    </div>
+    <ul id="lista-eventos" class="p-0 " >
+        
+        {% for evento in eventos %}
+        <li>
             
-            
+            <div id="{{evento.ID_ACTIVIDAD}}" class="tarjeta-evento col bg-light" onclick="ampliar_informacion({{evento.ID_ACTIVIDAD}})" >
+                <div class="titulo">
+                    {{evento.NOMBRE}}
+                </div>
+
                 
+              
+            </div>
+        </li>
+        {% endfor %}
+        
+    </ul>
+</div>
+{% include 'info-card.html' %}
+
     <script>
+        var claveAnterior;
+        var clave;
+        function ampliar_informacion(id) {
+            claveAnterior = clave;
+            clave = id;
+            var url_destino = "{% url 'cargar-eventos-id' 123 %}".replace('123', clave);
+            $.ajax(
+                {
+                    type:'GET', 
+                    url:url_destino,
+                    success: function(data) {
+                        $("#info").load("{% url 'card-info'%}");
+                        console.log(data)
+                         /*if($('#evento-info').is(':visible')){
+                             alert('Ocultando')
+                             $('#evento-info').fadeOut(1000);
+                            }else{
+                                alert('Mostrando')
+                                $('#evento-info').fadeIn(1000);
+                            }*/
+                 },
+                }
+            )
+           
+            
+           // $("#"+clave).toggleClass('tarjeta-evento-desplegada');
+          }
         function informacion_evento(id){
             var clave = id;
             var url = "{% url 'eventos-details' 123 %}".replace('123', clave);
@@ -43,7 +73,6 @@
                        type:'GET', 
                        url:"{% url 'cargar-eventos-ajax' %}",
                        success: function(data) {
-                           console.log(data);
                            $('#lista-eventos').replaceWith($('#lista-eventos',data));
                     },
                    }

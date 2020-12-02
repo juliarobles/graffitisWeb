@@ -20,4 +20,5 @@ urlpatterns = [
     path('html/usuarios', usuarios_list, name='usuarios-list'),
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
     path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
+    path('ajax/eventos/<int:ID_ACTIVIDAD>/$', cargar_evento_id_ajax, name='cargar-eventos-id'),
 ]
