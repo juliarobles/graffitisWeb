@@ -2,7 +2,11 @@
 {% block title %}Detalles Usuario{% endblock %}
 
 {% block body %}
-    <h1>Detalles de Usuario</h1>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/publicacionDetalles.css' %}">
+<script src="{% static 'js/pararCarousel.js' %}"></script>
+<!-- <h1>Detalles de Usuario</h1>
     <ul>
         <li>{{usuario.usuario}}</li>
         <li><img src="{{usuario.imagen}}"></li>
@@ -16,6 +20,29 @@
         {% for publicacion in usuario.listaPublicaciones %}
             <li><a href="{{publicacion.getDetailURL}}">{{publicacion.titulo}}</a></li>
         {% endfor %}
-    </ul>
+    </ul> -->
+<div class="container">
+    <div class="row">
+        <div class="col col-sm-2">
+            <img class="rounded-circle icon" src={{usuario.imagen}}
+        onerror="this.src='{% static 'images/iconHuevo.png' %}';" style="height: 8rem; width: 8rem;" />
+        </div>
+        <div class="col align-left">
+            <h1>{{usuario.usuario}}</h1>
+            <h4>Seguidores:{{seguidores}} Seguidos:{{usuario.listaSeguidos|length}}</h4>
+            <a href="#" class="btn btn-primary">Seguir</a>
+            <a href="#" class="btn btn-primary">Enviar mensaje</a>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <p class="text-justify">{{usuario.descripcion}}</p>
+    </div>
+    <hr/>
+    <div class="row justify-content-center">
+        <h1>Lista Publicaciones Aqui</h1>
+    </div>
+    
+</div>
 
 {% endblock %}
