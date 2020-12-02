@@ -15,13 +15,13 @@
         </thead>
         <tbody>
             {% for p in publicaciones %}
-                <tr class="clickable" onclick="window.location='{{p.getDetailURL}}'">
-                    <td>{{p.titulo}}</td>
-                    <td>{{p.descripcion}}</td>
-                    <td>{{p.localizacion}}</td>
-                    <td>{{p.tematica}}</td>
-                    <td>{{p.autor}}</td>
-                </tr>    
+                <tr class="clickable" onclick="window.location='{% url 'publicacion-detail' p.id %}'">
+                  <td>{{p.titulo}}</td>
+                  <td>{{p.descripcion}}</td>
+                  <td>{{p.localizacion}}</td>
+                  <td>{{p.tematica}}</td>
+                  <td>{{p.autor}}</td>
+                </tr>  
             {% endfor %}
         </tbody>
       </table>    

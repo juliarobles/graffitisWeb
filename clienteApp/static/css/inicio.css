@@ -7,16 +7,6 @@
     width:2rem;
 }
 
-.sinDecoracion {
-    text-decoration: none;
-    color:black;
-}
-
-.sinDecoracion:hover {
-    text-decoration: none;
-    color: black;
-}
-
 .wrapPalabras {
     display: block;
     display: -webkit-box;
@@ -27,12 +17,6 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow:hidden;
-    text-overflow: ellipsis;
-}
-
-.wrapLinea {
-    overflow:hidden;
-    white-space:nowrap;
     text-overflow: ellipsis;
 }
 

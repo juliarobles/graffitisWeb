@@ -1,48 +1,113 @@
 {% extends 'base.html' %}
 {% block title %}Detalles Usuario{% endblock %}
-
+{% load range %}
+{% load lookup %}
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/publicacionDetalles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/usuarioDetalles.css' %}">
 <script src="{% static 'js/pararCarousel.js' %}"></script>
-<!-- <h1>Detalles de Usuario</h1>
-    <ul>
-        <li>{{usuario.usuario}}</li>
-        <li><img src="{{usuario.imagen}}"></li>
-        <li>{{usuario.descripcion}}</li>
-        <li>Seguidos: {{seguidos}}</li>
-        <li>Seguidores: {{seguidores}}</li>
-    </ul>
-
-    <h1>Publicaciones</h1>
-    <ul>
-        {% for publicacion in usuario.listaPublicaciones %}
-            <li><a href="{{publicacion.getDetailURL}}">{{publicacion.titulo}}</a></li>
-        {% endfor %}
-    </ul> -->
 <div class="container">
-    <div class="row">
-        <div class="col col-sm-2">
-            <img class="rounded-circle icon" src={{usuario.imagen}}
-        onerror="this.src='{% static 'images/iconHuevo.png' %}';" style="height: 8rem; width: 8rem;" />
-        </div>
-        <div class="col align-left">
-            <h1>{{usuario.usuario}}</h1>
-            <h4>Seguidores:{{seguidores}} Seguidos:{{usuario.listaSeguidos|length}}</h4>
-            <a href="#" class="btn btn-primary">Seguir</a>
-            <a href="#" class="btn btn-primary">Enviar mensaje</a>
-        </div>
-    </div>
-    <br/>
-    <div class="row">
-        <p class="text-justify">{{usuario.descripcion}}</p>
-    </div>
-    <hr/>
     <div class="row justify-content-center">
-        <h1>Lista Publicaciones Aqui</h1>
-    </div>
-    
+        <div class="col-11 col-sm-11 col-md-8 bg-white rounded pt-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-4 d-flex justify-content-center">
+                        <img class="rounded-circle icon" src={{usuario.imagen}}
+                        onerror="this.src='{% static 'images/iconHuevo.png' %}';" style="height: 12rem; width: 12rem;" />
+                    </div>
+                    <div class="col-12 col-md-6 mt-3 mt-md-0">
+                        <h1 class="h2">{{usuario.nombre}}</h1>
+                        <h1 class="h5">@{{usuario.usuario}}</h1>
+                        <h6><strong>{{usuario.listaSeguidores|length}}</strong> seguidores  <strong>{{usuario.listaSeguidos|length}}</strong> seguidos</h6>
+                        <p class="descripcion">{{usuario.descripcion}}</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="btn btn-sm btn-outline-dark mr-3">Seguir</a>
+                            <a href="#" class="btn btn-sm btn-outline-dark">Enviar mensaje</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <br/>
+            <div class="m-3">
+                <hr/>
+                <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                    <li class="nav-item pill-color">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Publicaciones</a>
+                    </li>
+                    <li class="nav-item pill-color">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Contribuciones</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="container">
+                            <div class="row">
+                                {% for p in listaPublicaciones %}
+                                <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
+                                    <div class="col-12 col-md-4 p-0 face">
+                                        {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
+                                        <img class="d-block altura cover w-100" src="{{primerGraffiti.imagen}}">
+                                        {% endwith %}
+                                        <div class="content">
+                                            <h5 class="p-2 wrapLinea">{{p.titulo}}</h5>
+                                        </div>
+                                        <div class="overlay">
+                                            <div class="text">
+                                                {% with lc=p.listaComentarios|length %}
+                                                <i class="far fa-comment"></i>&nbsp;{{lc}}
+                                                {% endwith %}
+                                                &nbsp;
+                                                &nbsp;
+                                                {% with mg=p.meGusta|length %}
+                                                <i class="far fa-heart"></i>&nbsp;{{mg}}
+                                                {% endwith %}
+                                            </div>
+                                            <div class="fondo"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="container">
+                            <div class="row">
+                                {% for p in listaActualizaciones %}
+                                    {% if p.id in usuario.listaPublicaciones %}
+                                    {% else %}
+                                    <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
+                                    <div class="col-12 col-md-4 p-0 face">
+                                        {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
+                                        <img class="d-block altura cover w-100" src="{{primerGraffiti.imagen}}">
+                                        {% endwith %}
+                                        <div class="content">
+                                            <h5 class="p-2 wrapLinea">{{p.titulo}}</h5>
+                                        </div>
+                                        <div class="overlay">
+                                            <div class="text">
+                                                {% with lc=p.listaComentarios|length %}
+                                                <i class="far fa-comment"></i>&nbsp;{{lc}}
+                                                {% endwith %}
+                                                &nbsp;
+                                                &nbsp;
+                                                {% with mg=p.meGusta|length %}
+                                                <i class="far fa-heart"></i>&nbsp;{{mg}}
+                                                {% endwith %}
+                                            </div>
+                                            <div class="fondo"></div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div> 
+    </div> 
 </div>
-
 {% endblock %}

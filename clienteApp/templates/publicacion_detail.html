@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}{{publicacion.titulo}}{% endblock %}
-
 {% load range %}
 {% load lookup %}
-{%block body %}
+{% block body %}
+{% include "eventos_panel.html" %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/publicacionDetalles.css' %}">
@@ -30,10 +30,12 @@
                                             <img class="d-block altura cover w-100 rounded-left" src="{{graffiti.imagen}}">
                                         </div>
                                         <div class="col-md-4 col-12 mx-0 px-0">
-                                            <div class="h6 mt-3 px-3 d-flex align-items-center">
-                                                <img class="rounded-circle icon" src={{graffiti.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
-                                                &nbsp;&nbsp;@{{graffiti.autor.usuario}}
-                                            </div>
+                                            <a class="sinDecoracion" href="{% url 'usuarios-detail' graffiti.autor.id %}">
+                                                <div class="h6 mt-3 px-3 d-flex align-items-center">
+                                                    <img class="rounded-circle icon" src={{graffiti.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
+                                                    &nbsp;&nbsp;@{{graffiti.autor.usuario}}
+                                                </div>
+                                            </a>
                                             <hr/>
                                             <div class="px-3">
                                                 <p class="h6">Fecha de captura:</p>
@@ -63,7 +65,11 @@
                     <div class="row w-100">
                         <div class="col-md-8 col-12">
                             <p class="h3">{{publicacion.titulo}}</p>
-                            <h6>Publicado por: @{{creador.usuario}}</h6>
+                            <h6>Publicado por: 
+                                <a class="sinDecoracion" href="{% url 'usuarios-detail' creador.id %}">
+                                @{{creador.usuario}}
+                                </a>
+                            </h6>
                             <h6>Autor: {{publicacion.autor}}</h6>
                             <p class="w-100">{{publicacion.descripcion}}</p>
                         </div>
@@ -72,7 +78,7 @@
                                 <i class="far fa-heart mr-2"></i>
                                 {{meGusta}}
                             </div>
-                            <p class="d-flex justify-content-end align-items-center">
+                            <p class="d-flex justify-content-end align-items-center wrapHT">
                                 {% for tem in publicacion.tematica %}
                                     #{{tem}}&nbsp;
                                 {% endfor %}
@@ -86,7 +92,11 @@
                     {% for comentario in publicacion.listaComentarios %}
                         <div class="h6 mt-3 d-flex align-items-center">
                             <img class="rounded-circle icon" src={{comentario.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
-                            <div class="ml-2 mr-4">{{comentario.autor.nombre}} - @{{comentario.autor.usuario}}<br/><aaa class="text-muted">{{comentario.texto}}</aaa></div>
+                            <div class="ml-2 mr-4">{{comentario.autor.nombre}} - 
+                                <a class="sinDecoracion" href="{% url 'usuarios-detail' comentario.autor.id %}">
+                                    @{{comentario.autor.usuario}}
+                                </a>
+                                <br/><aaa class="text-muted">{{comentario.texto}}</aaa></div>
                         </div>
                     {% endfor %}
                 </div>

@@ -54,12 +54,25 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
         return render(request, 'info-card.html', data )
 # Prueba mover a app cliente
 
-def inicio(request):   
+def principal(request):
+    return render(request, 'log.html')
+
+def inicio(request):
+    print("qeqqe")
     r = http.request(
         'GET',
     'http://127.0.0.1:8000/publicaciones/'
     )
     context={'publicaciones':json.loads(r.data)}
+    return render(request, 'inicio.html', context=context)
+
+def buscar(request, busqueda):
+    print(pk)
+    print("aaaa")
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'
+    )
     return render(request, 'inicio.html', context=context)
 
 def registro(request):
@@ -117,19 +130,34 @@ def publicaciones_formulario_view(request):
     return render(request, 'publicacion_crear.html')
 
 def usuarios_list(request):
-    usuarios = Usuario.objects.all()
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'
+    )
     context = {
-        "usuarios": usuarios
+        "usuarios": json.loads(r.data)
     }
     return render(request, 'usuarios_list.html', context=context)
 
 def usuarios_detail(request, pk):
-    pk = ObjectId(pk)
-    usuario = Usuario.objects.get(pk=pk)
-    seguidores = Usuario.objects.filter(listaSeguimiento__contains=usuario)
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'+str(pk)
+    )
+    usuario=json.loads(r.data)
+    listaPublicaciones = []
+    for id in usuario['listaPublicaciones']:
+        r = http.request('GET','http://127.0.0.1:8000/publicaciones/'+str(id))
+        listaPublicaciones.append(json.loads(r.data))
+    listaActualizaciones = []
+    for id in usuario['listaGraffitisPublicaciones']:
+        r = http.request('GET','http://127.0.0.1:8000/publicaciones/'+str(id))
+        listaActualizaciones.append(json.loads(r.data))
+
+
     context = {
         "usuario": usuario,
-        "seguidos": len(usuario.listaSeguidos),
-        "seguidores": len(usuario.listaSeguidores)
+        "listaPublicaciones": listaPublicaciones,
+        "listaActualizaciones": listaActualizaciones
     }
     return render(request, 'usuarios_detail.html', context=context)
