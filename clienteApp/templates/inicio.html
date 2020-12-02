@@ -6,10 +6,11 @@
 {% load range %}
 {% load lookup %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/inicio.css' %}">
 <div class="container ">
     <div class="row justify-content-center">
-        {% for p in publicaciones %}
+        {% for p in publicaciones reversed%}
             <div class="col-11 col-sm-11 col-md-8 bg-white my-2 rounded border p-0">
                 <div class="container">
                     <div class="row">
@@ -48,7 +49,7 @@
                             {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
                             <div class="h6 mt-3 d-flex align-items-center">
                                 <img class="rounded-circle icon" src={{primerGraffiti.autor.imagen}} onerror="this.src='../static/images/iconHuevo.png';"/>
-                                &nbsp;&nbsp;{{primerGraffiti.autor.usuario}}
+                                &nbsp;&nbsp;@{{primerGraffiti.autor.usuario}}
                             </div>
                             {% endwith %}
                             <hr/>
@@ -62,7 +63,7 @@
                                 #{{tem}}&nbsp;
                             {% endfor %}
                             </p>
-                            <div class="d-flex justify-content-end align-self-end abajo"> 
+                            <div class="h5 d-flex justify-content-end align-self-end abajo"> 
                                 <p>
                                 {% with lc=p.listaComentarios|length %}
                                 <i class="far fa-comment"></i>&nbsp;{{lc}}

@@ -51,7 +51,6 @@ def inicio(request):
     return render(request, 'inicio.html', context=context)
 
 def eventos_details(request, ID_ACTIVIDAD):
-    http = urllib3.PoolManager()
     r = http.request(
         'GET',
          'http://127.0.0.1:8000/eventosID/' + str(ID_ACTIVIDAD),
@@ -62,7 +61,6 @@ def eventos_details(request, ID_ACTIVIDAD):
     return render(request, 'eventos_details.html', context=context)
 
 def eventos_list(request):
-    http = urllib3.PoolManager()
     r = http.request(
         'GET',
     'http://127.0.0.1:8000/eventos/'
@@ -74,18 +72,28 @@ def base_view(request):
     return render(request, 'graffiti_list.html')
 
 def list_publicaciones_views(request):
-    publicaciones = Publicacion.objects.all() #NO podemos hacerlo así, tenemos que usar el servidor REST
-    context = {
-        "publicaciones": publicaciones
-    }
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/'
+    )
+    context={'publicaciones':json.loads(r.data)}
     return render(request, 'publicaciones_list.html', context=context)
 
 def publicaciones_detail_view(request, pk):
-    pk = ObjectId(pk)
-    publicacion = Publicacion.objects.get(pk=pk)
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/'+str(pk)
+    )
+    publicacion=json.loads(r.data)
+    b = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'+str(publicacion['creador'])
+    )
     context = {
         "publicacion": publicacion,
-        "meGusta": len(publicacion.meGusta)
+        "creador":json.loads(b.data),
+        "meGusta": len(publicacion['meGusta']),
+        "lenComentarios": len(publicacion['listaComentarios'])
     }
     return render(request, 'publicacion_detail.html', context=context)
 

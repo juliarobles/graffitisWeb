@@ -1,31 +1,96 @@
 {% extends 'base.html' %}
-{% block title %}Detalles Publicacion{% endblock %}
+{% block title %}{{publicacion.titulo}}{% endblock %}
 
+{% load range %}
+{% load lookup %}
 {%block body %}
-    <h1>Im&aacute;genes</h1>
-    {% for graffiti in publicacion.listaGraffitis %}
-        <ul>
-            <li>Autor: {{graffiti.autor.id}}</li>
-            <li>Estado: {{graffiti.estado}}</li>
-            <li>Fecha de Captura: {{graffiti.fechaCaptura}}</li>
-            <li><img src="{{graffiti.imagen}}"></li>
-        </ul>
-    {% endfor %}
-    <h1>Detalles de la Publicaci&oacute;n</h1>
-    <ul>
-        <li>{{publicacion.titulo}}</li>
-        <li>{{publicacion.descripcion}}</li>
-        <li>{{publicacion.localizacion}}</li>
-        <li>{{publicacion.autor}}</li>
-        <li>Creador: {{publicacion.creador.id}}</li>
-        <li>{{meGusta}} Me Gusta</li>
-    </ul>
-    <h1>Comentarios</h1>
-    {% for comentario in publicacion.listaComentarios %}
-        <ul>
-            <li>{{comentario.autor.id}}</li>
-            <li>{{comentario.texto}}</li>
-        </ul>
-    {% endfor %}
-    <a href="{% url 'publicaciones-list' %}">Volver</a>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/publicacionDetalles.css' %}">
+<script src="{% static 'js/pararCarousel.js' %}"></script>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-11 col-sm-11 col-md-8 bg-white rounded pb-4">
+                <div id="carousel" class="carousel slide border rounded p-0 m-md-4 my-3" data-ride="carousel">
+                    {% with len=publicacion.listaGraffitis|length %}
+                    {% if len > 1 %}
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel" data-slide-to=0 class="active"></li>
+                        {% for value in 1|range:len %}
+                            <li data-target="#carousel" data-slide-to={{value}}></li>
+                        {% endfor %}
+                    </ol>
+                    {% endif %}
+                    <div class="carousel-inner fondoFoto">
+                        {% for graffiti in publicacion.listaGraffitis %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-8 col-12 mx-0 px-0">
+                                            <img class="d-block altura cover w-100 rounded-left" src="{{graffiti.imagen}}">
+                                        </div>
+                                        <div class="col-md-4 col-12 mx-0 px-0">
+                                            <div class="h6 mt-3 px-3 d-flex align-items-center">
+                                                <img class="rounded-circle icon" src={{graffiti.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
+                                                &nbsp;&nbsp;@{{graffiti.autor.usuario}}
+                                            </div>
+                                            <hr/>
+                                            <div class="px-3">
+                                                <p class="h6">Fecha de captura:</p>
+                                                <p>{{graffiti.fechaCaptura}}</p>
+                                                <p class="h6">Estado de conservación:</p>
+                                                <p>{{graffiti.estado}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if len > 1 %}
+                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="container mx-md-4 mx-0">
+                    <div class="row w-100">
+                        <div class="col-md-8 col-12">
+                            <p class="h3">{{publicacion.titulo}}</p>
+                            <h6>Publicado por: @{{creador.usuario}}</h6>
+                            <h6>Autor: {{publicacion.autor}}</h6>
+                            <p class="w-100">{{publicacion.descripcion}}</p>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="h2 d-flex justify-content-end align-items-center">
+                                <i class="far fa-heart mr-2"></i>
+                                {{meGusta}}
+                            </div>
+                            <p class="d-flex justify-content-end align-items-center">
+                                {% for tem in publicacion.tematica %}
+                                    #{{tem}}&nbsp;
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                    <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>
+                    <p>AQUI VA LA PARTE DE AÑADIR COMENTARIO</p>
+                    <p>Quiero poner que cuando se pulse la foto se pueda ver más grande</p>
+                    <h4 class="mt-4">Comentarios &bull; {{lenComentarios}}</h4>
+                    {% for comentario in publicacion.listaComentarios %}
+                        <div class="h6 mt-3 d-flex align-items-center">
+                            <img class="rounded-circle icon" src={{comentario.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
+                            <div class="ml-2 mr-4">{{comentario.autor.nombre}} - @{{comentario.autor.usuario}}<br/><aaa class="text-muted">{{comentario.texto}}</aaa></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
