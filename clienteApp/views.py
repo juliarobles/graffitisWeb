@@ -6,6 +6,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpRequest, JsonResponse
 import urllib3, json
+import requests
 
 http = urllib3.PoolManager()
 
@@ -58,21 +59,64 @@ def principal(request):
     return render(request, 'log.html')
 
 def inicio(request):
-    print("qeqqe")
-    r = http.request(
-        'GET',
-    'http://127.0.0.1:8000/publicaciones/'
-    )
-    context={'publicaciones':json.loads(r.data)}
-    return render(request, 'inicio.html', context=context)
+    publicaciones = []
+    if "busqueda" in request.GET:
+        busqueda = request.GET.get("busqueda")
+        if "#" in busqueda: #Busco por temática
+            listaHT = busqueda.split("#")
+            for ht in listaHT:
+                if ht != '':
+                    url = 'http://127.0.0.1:8000/publicaciones/tematica/' + str(ht).strip()
+                    try:
+                        r = requests.get(url)
+                        data = r.json()
+                        for dato in data:
+                            publicaciones.append(dato)
+                    except ValueError:
+                        print("Response content is not valid JSON")
+        elif "@" in busqueda: #Busco por usuario
+            listaUsers = busqueda.split('@')
+            for user in listaUsers:
+                if user != '':
+                    try:
+                        r = http.request('GET', 'http://127.0.0.1:8000/usuarios/username/' + str(user).strip())
+                        usuario = json.loads(r.data)
+                        id = usuario[0]['id']
+                        r = http.request('GET', 'http://127.0.0.1:8000/publicaciones/creador/' + str(id))
+                        data = json.loads(r.data)
+                        for dato in data:
+                            publicaciones.append(dato)
+                    except:
+                        pass
 
-def buscar(request, busqueda):
-    print(pk)
-    print("aaaa")
-    r = http.request(
-        'GET',
-    'http://127.0.0.1:8000/usuarios/'
-    )
+        else: #Busco por nombre y descripcion
+            listaWords = busqueda.split(' ')
+            for word in listaWords:
+                if word != '':
+                    try:
+                        word = str(word).strip()
+                        r = http.request('GET', 'http://127.0.0.1:8000/publicaciones/titulo/' + word)
+                        data1 = json.loads(r.data)
+                        r = http.request('GET', 'http://127.0.0.1:8000/publicaciones/descripcion/' + word)
+                        data2 = json.loads(r.data)
+                         
+                        #data3 = data1 + list(set(data2) - set(data1)) #Elimino repetidos
+
+                        for dato in data1:
+                            publicaciones.append(dato)
+                        for dato in data2:
+                            if dato not in data1:
+                                publicaciones.append(dato)
+
+                    except:
+                        pass
+    else:
+        r = http.request(
+            'GET',
+        'http://127.0.0.1:8000/publicaciones/'
+        )
+        publicaciones = json.loads(r.data)
+    context={'publicaciones': publicaciones}
     return render(request, 'inicio.html', context=context)
 
 def registro(request):

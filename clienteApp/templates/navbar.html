@@ -9,11 +9,7 @@
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- Bootstrap CSS -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> -->
-
-
-<!-- <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=usgQJOR--vb7zmeTwQr1LKP43H1cWarMZZNAei36cTyTEetcYhYG216k16DGg7B8LfFbUBk2KB3DJP4T4t3WYqlEcHLSLAjxrNvKwU9Q0J21Dv0oJ144sjJhiNuCXoDS619fzuO-mMnBgtlyJOZ0XJwfaJOmX9zQyEqOcvRZ4Do" charset="UTF-8"></script> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
   <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-white mb-3">
     <a class="navbar-brand" href="{{url_inicio}}">
       <img src="{% static 'images/logo.png' %}" height="30" alt="">
@@ -31,8 +27,8 @@
           <a class="nav-link" href="{{url_lista_eventos}}"><i class="fas fa-calendar-alt"></i></a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0" action="{{url_buscar}}" method="GET">
-        <input name="busqueda" id="busqueda" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
+      <form class="form-inline my-2 my-lg-0" action="{{url_inicio}}" method="GET">
+        <input name="busqueda" id="busqueda" class="form-control mr-sm-2 bg-grisesito" type="search" placeholder="&#xF002;  Buscar" aria-label="Search" style="font-family:Arial, FontAwesome"/>
       </form>
         <!-- <button onclick="navegar_registro()" class="btn btn-secondary my-2 my-sm-0" id="registro-button" type="button">Registro</button>
         <script>
@@ -41,6 +37,6 @@
           }
         </script> -->
       
-      <button class="ml-2 mr-1 btn btn-primary my-2 my-sm-0 form-inline" type="button">Cerrar sesión</button>
+      <button class="ml-2 mr-1 btn btn-outline-dark my-2 my-sm-0 form-inline" type="button"><i class="fas fa-sign-out-alt"></i></button>
     </div>
   </nav>
