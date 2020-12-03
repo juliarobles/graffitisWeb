@@ -3,7 +3,7 @@
     background-image: url("https://s1.1zoom.me/b5050/234/355835-sepik_1920x1080.jpg");
   
     /* Set a specific height */
-    height: 500px;
+    height: 300px;
     width: 100%  ;
     /* Create the parallax scrolling effect */
     background-attachment: fixed;

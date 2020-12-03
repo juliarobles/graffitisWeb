@@ -171,7 +171,7 @@ def publicaciones_detail_view(request, pk):
     return render(request, 'publicacion_detail.html', context=context)
 
 def publicaciones_formulario_view(request):
-    return render(request, 'publicacion_formulario_crear.html')
+    return render(request, 'publicacion_crear.html')
 
 def usuarios_list(request):
     r = http.request(
