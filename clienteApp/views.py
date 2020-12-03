@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from graffitiApp.models import Publicacion, Usuario, Graffiti #No deberiamos usar esto
 from django.http import HttpResponse
+from django.urls import reverse
 from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 import urllib3, json
 import requests
 
@@ -205,3 +206,8 @@ def usuarios_detail(request, pk):
         "listaActualizaciones": listaActualizaciones
     }
     return render(request, 'usuarios_detail.html', context=context)
+
+def crear_publicacion(request):
+    print(request.POST)
+    
+    return redirect(reverse('inicio'))
