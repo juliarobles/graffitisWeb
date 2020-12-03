@@ -203,13 +203,12 @@ class PublicacionFiltrar(APIView):
     def get(self, request, campo, contenido):
         """Devuelve las publicaciones que contengan la subcadena CONTENIDO en la propiedad CAMPO. 
         Campos permitidos: titulo, descripcion, creador, autor, localizacion, tematica. 
-        En el caso de el creador y la localización la busqueda será EXACTA. 
+        En el caso de el creador, la localización y la temática la busqueda será EXACTA, en otro caso será CONTENIDA. En el caso de la temática, con contener uno de los temas ya se cuenta como válido.
         No utilizar tildes. 
         Si no encuentra ninguna publicación que corresponda con CONTENIDO, devuelve una lista vacia.
         Ejemplo: \n campo = autor \n contenido = Marq"""
         
         resultado = []
-        print("hor")
 
         if(campo=='' and contenido==''):
             return Response({"error":"No se ha proporcionado campo o contenido"}, status=status.HTTP_400_BAD_REQUEST)
@@ -234,6 +233,6 @@ def filtrarPor(campo, contenido):
     elif (campo.lower() == "autor"):
         return Publicacion.objects.filter(autor__icontains=contenido)
     elif (campo.lower() == "tematica"):
-        return Publicacion.objects.filter(tematica__icontains=contenido)
+        return Publicacion.objects.filter(tematica__iexact=contenido)
     else:
         return -1

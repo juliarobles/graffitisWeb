@@ -11,7 +11,6 @@ from clienteApp.views import *
 # --------------------------------------
 
 urlpatterns = [
-    path('inicio/?busqueda=<str:busqueda>', buscar, name='url-buscar'),
     path('inicio/', inicio, name='inicio'),
     path('principal/', principal, name='principal'),
     path('registro/', registro, name='registro'),
