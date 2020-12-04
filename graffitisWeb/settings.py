@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import pymongo
+from pymongo import MongoClient
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -145,8 +147,12 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-SESSION_ENGINE = 'django_mongoengine.sessions'
+SESSION_ENGINE = 'mongo_sessions.session'
 SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
+
+connection = MongoClient()
+MONGO_CLIENT = connection.get_database(name='iweb')
+MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
 
 #MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
 
