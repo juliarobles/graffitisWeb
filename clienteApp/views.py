@@ -5,11 +5,11 @@ from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect
 import urllib3, json
 import requests
 
 http = urllib3.PoolManager()
-
 
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -56,7 +56,47 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
 # Prueba mover a app cliente
 
 def principal(request):
-    return render(request, 'log.html')
+    if request.session.has_key('usuario'):
+        return redirect('/inicio/')
+        
+    else:
+        return render(request, 'log.html')
+
+# ACCION
+# Origen: log.html
+# Efecto: loguea a un usuario
+def action_login(request):
+    context = None
+    
+    if request.method == 'POST':
+        # Tomamos el usuario y contraseña del post
+        email_form = request.POST.get('email', '')
+        password_form = request.POST.get('password', '')
+        
+        # Buscamos el usuario
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/usuarios/',
+        )
+        
+        usuario_data = json.loads(r.data.decode('utf-8'))
+        usuario_matched = [user for user in usuario_data if user['email'] == email_form]
+        
+        password_correct = None
+        if(usuario_matched):
+            password_correct = usuario_matched[0]['password']
+        
+        if password_correct == password_form:
+            request.session['usuario'] = email_form
+            
+            return redirect('/inicio/')
+        else:
+            context = {
+                'email' : email_form,
+                'message' : 'Error, usuario incorrecto.'
+            }
+    
+    return render(request, 'log.html', context=context)
 
 def inicio(request):
     publicaciones = []
