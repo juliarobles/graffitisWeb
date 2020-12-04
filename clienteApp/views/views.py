@@ -356,4 +356,18 @@ def crear_comentario(request, pk):
             headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
             requests.post(url, data=data, headers=headers)
-    return publicaciones_detail_view(request,pk)
+    return redirect(reverse('publicacion-detail', args=(pk,)))
+
+def delete_comentario(request, pk, cpk):
+    # if request.method == 'DELETE':
+    #     # if request.session.has_key('usuario'):
+    #     #     id_user = request.session['usuario']
+    #     #     r = http.request(
+    #     #         'GET',
+    #     #         'http://127.0.0.1:8000/publicaciones/'+str(pk)+'/comentarios/'+str(cpk)
+    #     #     )
+    #     #     comentario = json.loads(r.data)
+            
+    #     #     if id_user == comentario.autor:
+    #             r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/comentarios/{cpk}')
+    return redirect(reverse('inicio'))
