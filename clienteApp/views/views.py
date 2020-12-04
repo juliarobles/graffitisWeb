@@ -12,6 +12,10 @@ import requests
 
 http = urllib3.PoolManager()
 
+def comprobarUsuarioLogueado(request):
+     if not request.session.has_key('usuario'):
+        return redirect('/principal/')
+
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     ids = []
@@ -64,6 +68,10 @@ def principal(request):
         return render(request, 'log.html')
 
 def inicio(request):
+    ret = comprobarUsuarioLogueado(request)
+    if ret:
+        return ret
+    
     publicaciones = []
     if "busqueda" in request.GET:
         busqueda = request.GET.get("busqueda")
