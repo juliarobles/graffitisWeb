@@ -254,5 +254,18 @@ def crear_publicacion(request):
     return redirect(reverse('inicio'))
 
 def eliminar_publicacion(request, pk):
-    r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/'+str(pk)
+    )
+    publicacion=json.loads(r.data)
+    
+    b = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'+str(publicacion['creador'])
+    )
+
+    creador = json.loads(b.data)
+    if creador['email'] == request.session.get('usuario'):
+        r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
     return redirect(reverse('inicio'))
