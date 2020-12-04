@@ -64,7 +64,13 @@
                 <div class="container mx-md-4 mx-0">
                     <div class="row w-100">
                         <div class="col-md-8 col-12">
+                            <div class="row w-100">
                             <p class="h3">{{publicacion.titulo}}</p>
+                            <div class="col-sm-1"></div>
+                            {% if request.session.usuario == creador.email %}
+                            <a href="{% url 'publicacion-delete' publicacion.id %}" class="btn btn-danger">Eliminar</a>
+                            {%endif%}
+                            </div>
                             <h6>Publicado por: 
                                 <a class="sinDecoracion" href="{% url 'usuarios-detail' creador.id %}">
                                 @{{creador.usuario}}
