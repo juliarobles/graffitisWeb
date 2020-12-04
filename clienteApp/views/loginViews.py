@@ -39,3 +39,11 @@ def action_login(request):
             }
     
     return render(request, 'log.html', context=context)
+
+# ACCION
+# Efecto: elimina al usuario de la sesión
+# Ruta final: principal
+def action_logout(request):
+    del request.session['usuario']
+    
+    return redirect('/principal/')

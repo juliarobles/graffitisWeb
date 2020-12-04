@@ -22,5 +22,6 @@ urlpatterns = [
 
 #Acciones
 urlpatterns += [
-    path('loginIn', action_login, name='action_login')
+    path('loginIn', action_login, name='action_login'),
+    path('loginOut', action_logout, name='action_logout')
 ]
