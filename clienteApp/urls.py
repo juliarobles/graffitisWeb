@@ -1,14 +1,7 @@
 from django.conf.urls import url,include
 from django.urls import path
-from clienteApp.views import *
-# De momento no usamos routers
-# --------------------------------------
-#from django.urls import url_include
-
-# router = routers.DefaultRouter()
-# router.register(r'Publicacion', views.PublicacionViewSet, basename="Publicacion" )
-# router.register(r'Usuario', views.UsuarioViewSet, basename="Usuario" )
-# --------------------------------------
+from clienteApp.views.views import *
+from clienteApp.views.loginViews import *
 
 #  ** Información API IMGUR**
 #  ** Cuenta: graffitisweb@gmail.com
@@ -27,12 +20,13 @@ from clienteApp.views import *
 
 
 
+# Paginas principales
 urlpatterns = [
     path('inicio/', inicio, name='inicio'),
     path('principal/', principal, name='principal'),
     path('registro/', registro, name='registro'),
-    path('html/eventos/$', eventos_list ,name='eventos-list'),
-    path('html/eventos/<int:ID_ACTIVIDAD>/$', eventos_details ,name='eventos-details'),
+    path('html/eventos/', eventos_list ,name='eventos-list'),
+    path('html/eventos/<int:ID_ACTIVIDAD>/', eventos_details ,name='eventos-details'),
     path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
     path('html/nuevapublicacion/', publicaciones_formulario_view, name='publicacion-formulario'),
@@ -41,4 +35,13 @@ urlpatterns = [
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
     path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
     path('ajax/eventos/<int:ID_ACTIVIDAD>/', cargar_evento_id_ajax, name='cargar-eventos-id'),
+    path('html/publicaciones/eliminar/<str:pk>', eliminar_publicacion, name='publicacion-delete'),
+    path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario')
+
+]
+
+#Acciones
+urlpatterns += [
+    path('loginIn', action_login, name='action_login'),
+    path('loginOut', action_logout, name='action_logout')
 ]

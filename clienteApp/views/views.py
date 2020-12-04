@@ -5,6 +5,7 @@ from django.urls import reverse
 from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
+from django.http import HttpRequest, JsonResponse
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 import urllib3, json, flickrapi
 import requests, webbrowser
@@ -13,6 +14,9 @@ import requests, webbrowser
 http = urllib3.PoolManager()
 client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
+def comprobarUsuarioLogueado(request):
+     if not request.session.has_key('usuario'):
+        return redirect('/principal/')
 
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -59,9 +63,17 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
 # Prueba mover a app cliente
 
 def principal(request):
-    return render(request, 'log.html')
+    if request.session.has_key('usuario'):
+        return redirect('/inicio/')
+        
+    else:
+        return render(request, 'log.html')
 
 def inicio(request):
+    ret = comprobarUsuarioLogueado(request)
+    if ret:
+        return ret
+    
     publicaciones = []
     if "busqueda" in request.GET:
         busqueda = request.GET.get("busqueda")
@@ -311,3 +323,37 @@ def crear_publicacion(request):
         print(r.status)
     
     return redirect(reverse('inicio'))
+
+def eliminar_publicacion(request, pk):
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/'+str(pk)
+    )
+    publicacion=json.loads(r.data)
+    
+    b = http.request(
+        'GET',
+    'http://127.0.0.1:8000/usuarios/'+str(publicacion['creador'])
+    )
+
+    creador = json.loads(b.data)
+    if creador['email'] == request.session.get('usuario'):
+        r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
+    return redirect(reverse('inicio'))
+
+def crear_comentario(request, pk):
+    if request.method == 'POST':
+        if request.session.has_key('usuario'):
+            texto_comentario = request.POST.get('texto')
+            id_user = request.session['usuario']
+            
+            cadena = {
+                "texto": str(texto_comentario),
+                "autor": str(id_user)
+            }
+            data = json.dumps(cadena)
+            url = 'http://127.0.0.1:8000/publicaciones/'+str(pk)+'/comentarios/'
+            headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+
+            requests.post(url, data=data, headers=headers)
+    return publicaciones_detail_view(request,pk)

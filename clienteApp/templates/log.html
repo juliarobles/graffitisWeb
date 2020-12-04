@@ -19,17 +19,22 @@
             <div class="row contenedor">
                 <div class="col-10 col-sm-8 col-md-4 rounded p-4 align-self-center justify-content-center bg-white">
                     <img class="w-100 d-flex justify-content-center contain" src="{% static 'images/logo.png' %}" height="50" alt="">
-                    <form class="mt-3">
+                    <form class="mt-3" method="post" action="{% url 'action_login' %}"> {% csrf_token %}
                         <div class="form-group">
                             <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
-                            <input type="email" class="form-control" id="email" placeholder="Email">
+                            <input type="email" class="form-control" id="email" placeholder="Email" name="email" value= {{email}}>
                         </div>
                         <div class="form-group">
                             <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
-                            <input type="password" class="form-control" id="password" placeholder="Contraseña">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
                         </div>
+                        {% if message != None %}
+                        <div class="alert alert-danger" role="alert">
+                            {{message}}
+                        </div>
+                        {% endif %}
                         <div class="d-flex justify-content-center">
-                            <button type="Iniciar sesión" class="btn btn-primary colorBoton">Iniciar sesión</button>
+                            <input type="submit" value="Iniciar sesion" class="btn btn-primary colorBoton"/>
                         </div>
                         
                         <hr/>
