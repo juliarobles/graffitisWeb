@@ -6,11 +6,13 @@ from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
-import urllib3, json
-import requests
+import urllib3, json, flickrapi
+import requests, webbrowser
+
 
 http = urllib3.PoolManager()
-
+client_id = '6f71c692857b528'
+client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
 
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -208,6 +210,104 @@ def usuarios_detail(request, pk):
     return render(request, 'usuarios_detail.html', context=context)
 
 def crear_publicacion(request):
-    print(request.POST)
+    # ** Pruebas Imgur
+    # client = ImgurClient(client_id, client_secret)
+    # client.upload_from_path(POST['imagen'])
+    # **Pruebas imagen
+    # r = request.POST['imagen']
+    # r.raw.decode_content = True
+    # im = Image.open(r.raw)
+    # print(im.format, im.mode, im.size)
+    # print(request.FILES)
+    # return render(request, 'imagen.html', context={'imagen':request.FILES['imagen']})
+    #  ** Flickr
+    token= '72157717157590777-acde95669be3f3f1&oauth_verifier=b7825e3b792089ef'  #**No sé que es esto. oauth_token
+    api_key = '75b8452aae39dc0967a42c37c139e8a0'
+    api_secret = '15075131b9983f9b'
+    user_id= '191270823@N05'
+
+    
+    otro_token ='898-452-861' #** Este código creo que si funciona, será el token
+
+
+    # **No sé cómo funciona el tema del token y la verificación de Flickr 
+    # ** pero solo tendréis que descomentar las líneas de abajo para autorizar la app
+    # ** y obtener un token nuevo
+    # # ! Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
+
+    # print('Step 1: authenticate')
+    # # Only do this if we don't have a valid token already
+    # if not flickr.token_valid(perms='write'):
+
+    #     # Get a request token
+    #     flickr.get_request_token(oauth_callback='oob')
+
+    #     # Open a browser at the authentication URL. Do this however
+    #     # you want, as long as the user visits that URL.
+    #     authorize_url = flickr.auth_url(perms='write')
+    #     webbrowser.open_new_tab(authorize_url)
+
+    #     # Get the verifier code from the user. Do this however you
+    #     # want, as long as the user gives the application the code.
+    #     verifier = str(input('Verifier code: '))
+
+    #     # Trade the request token for an access token
+    #     flickr.get_access_token(verifier)
+
+    # print('Step 2: use Flickr')
+    # resp = flickr.photos.getInfo(photo_id='7658567128')
+
+    if request.method == 'POST':
+
+
+
+        # **Por ahora está comentado para no subir muchas fotos con las pruebas 
+        # **Cuando esté crear publicación completo habrá que descomentarlo
+        flickr = flickrapi.FlickrAPI(api_key, api_secret)
+        # imagen = request.FILES['imagen']
+        # resp = flickr.upload(filename=str(imagen), fileobj=imagen.file)
+        # print(resp)
+        img = flickr.walk_user()
+        for photo in flickr.walk_user('191270823@N05'):
+            # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
+            if(photo.get('size-suffix')):
+                url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'_'+photo.get('size-suffix')+'.jpg'
+            else:
+                url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
+                
+            print(url)
+            if photo.get('title') == 'volley clandestino azul-rosa.png' :
+                img = photo
+        return render(request, 'imagen.html', context={'imagen':url})
+
+
+        
+
+
+
+
+        dic = {
+            'titulo': request.POST['titulo'],
+            'descripcion': request.POST['descripcion'],
+            'localizacion': request.POST['localizacion'],
+            'tematica': request.POST['tematica'],
+            'autor': request.POST['autor'],
+            'creador': request.POST['creador'],#**Añadir el creador (id usuario logeado)
+            'listaGraffitis':
+            [
+                {
+                    'imagen': request.POST['imagen'], #**Meter url de imgur (investigar)
+                    'estado': request.POST['estado'], 
+                    'fechaCaptura': request.POST['fechaCaptura'], 
+                    'autor': request.POST['autor']
+                }
+            ],
+        }
+        r = http.request(
+            'POST',
+            'http://localhost:8000/publicaciones', 
+            fields=dic
+        )
+        print(r.status)
     
     return redirect(reverse('inicio'))

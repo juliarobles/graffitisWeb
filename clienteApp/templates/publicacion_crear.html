@@ -4,7 +4,7 @@
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/publicacion_crear.css' %}">
-<form action="{% url 'crear-publicacion' %}" method="POST">
+<form action="{% url 'crear-publicacion' %}" method="POST"  enctype="multipart/form-data">
     {% csrf_token %}
     <div class="text-center py-2">
         <h1>¿Has encontrado un graffiti nuevo?</h1>
@@ -33,11 +33,16 @@
             </div>
             <div class="campo-form">
                 <label for="Estado conservacion">Estado de conservación</label> <br>
-                <input type="text" name="Estado conservacion" id="Estado conservacion">
-            </div>
+                <select name="estado" class="form-control" id="estado"> Estado
+                    <option selected value="Perfecto">Perfecto</option>
+                    <option value="Ok">Ok</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Mal">Mal</option>
+                    <option value="Pisado">Pisado</option>       
+            </select>            </div>
             <div class="campo-form">
                 <label for="fecha_captura">Fecha de captura</label> <br>
-                <input type="text" name="fecha_captura" id="fecha_captura">
+                <input type="date" name="fecha_captura" id="fecha_captura">
             </div>
           </div>
           <div class="col-12 col-md-7 info-imagen">

@@ -10,6 +10,23 @@ from clienteApp.views import *
 # router.register(r'Usuario', views.UsuarioViewSet, basename="Usuario" )
 # --------------------------------------
 
+#  ** Información API IMGUR**
+#  ** Cuenta: graffitisweb@gmail.com
+#  ** Pass: graffiti1$
+#  **  client_id = '6f71c692857b528'
+#  **  client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
+
+# **
+# ** flicker clave
+# ** 75b8452aae39dc0967a42c37c139e8a0
+# ** flicker secreto
+# ** 15075131b9983f9b
+# ** Cuenta: graffitisweb@gmail.com
+# ** Pass: graffitigraffiti
+# ** user_id: 191270823@N05
+
+
+
 urlpatterns = [
     path('inicio/', inicio, name='inicio'),
     path('principal/', principal, name='principal'),
