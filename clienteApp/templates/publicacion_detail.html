@@ -83,6 +83,8 @@
                         </div>
                         <div class="col-md-4 col-12">
                             <div class="h2 d-flex justify-content-end align-items-center">
+                                <button onclick="focusComentario()" style="background:transparent; border:none; outline:none" ><i class="far fa-comment"></i>&nbsp;{{lenComentarios}}</button>
+                                &nbsp;
                                 <i class="far fa-heart mr-2"></i>
                                 {{meGusta}}
                             </div>
@@ -95,6 +97,14 @@
                     </div>
                     <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>
                     <p>AQUI VA LA PARTE DE AÑADIR COMENTARIO</p>
+                    <div>
+                        <hr style="margin-left:30px; width:600px">
+                        <form method="POST" action="{% url 'crear-comentario' publicacion.id %}">
+                        {% csrf_token %}
+                        <textarea name="texto" id="texto" cols=90 rows=4 placeholder="Añade un comentario..." style="resize: none;"></textarea>
+                        <button class="submit btn-primary" style="margin-left:570px">Comentar</button>
+                        </form>
+                    </div>                   
                     <h4 class="mt-4">Comentarios &bull; {{lenComentarios}}</h4>
                     {% for comentario in publicacion.listaComentarios %}
                         <div class="h6 mt-3 d-flex align-items-center">
@@ -110,6 +120,12 @@
             </div>
         </div>
     </div>
+    <script>
+        function focusComentario(){
+            var tac = document.getElementById("texto");
+            tac.focus();
+        }
+    </script>
     {% include 'boton_compartir.html' %}
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

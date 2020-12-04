@@ -18,7 +18,9 @@ urlpatterns = [
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
     path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
     path('ajax/eventos/<int:ID_ACTIVIDAD>/', cargar_evento_id_ajax, name='cargar-eventos-id'),
-    path('html/publicaciones/eliminar/<str:pk>', eliminar_publicacion, name='publicacion-delete')
+    path('html/publicaciones/eliminar/<str:pk>', eliminar_publicacion, name='publicacion-delete'),
+    path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario')
+
 ]
 
 #Acciones

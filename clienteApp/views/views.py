@@ -240,3 +240,20 @@ def eliminar_publicacion(request, pk):
     if creador['email'] == request.session.get('usuario'):
         r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
     return redirect(reverse('inicio'))
+
+def crear_comentario(request, pk):
+    if request.method == 'POST':
+        if request.session.has_key('usuario'):
+            texto_comentario = request.POST.get('texto')
+            id_user = request.session['usuario']
+            
+            cadena = {
+                "texto": str(texto_comentario),
+                "autor": str(id_user)
+            }
+            data = json.dumps(cadena)
+            url = 'http://127.0.0.1:8000/publicaciones/'+str(pk)+'/comentarios/'
+            headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+
+            requests.post(url, data=data, headers=headers)
+    return publicaciones_detail_view(request,pk)
