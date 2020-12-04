@@ -211,3 +211,7 @@ def crear_publicacion(request):
     print(request.POST)
     
     return redirect(reverse('inicio'))
+
+def eliminar_publicacion(request, pk):
+    r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
+    return redirect(reverse('inicio'))
