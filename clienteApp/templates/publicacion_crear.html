@@ -4,7 +4,8 @@
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/publicacion_crear.css' %}">
-<form action="">
+<form action="{% url 'crear-publicacion' %}" method="POST">
+    {% csrf_token %}
     <div class="text-center py-2">
         <h1>¿Has encontrado un graffiti nuevo?</h1>
         <hr width="70%">
@@ -44,7 +45,7 @@
                 <div class="zindex1 position-absolute">¡Sube tu imagen!</div>
                 <img id="imagen-mostrar"  class="zindex2 imagen-subir" src="#" hidden/>            </div>
             <div class="row boton-imagen ">
-                <input id="subir-archivo" type='file' onchange="readURL(this);" hidden />
+                <input id="subir-archivo" type='file' onchange="readURL(this);" name="imagen" hidden />
                   <button onclick="clicar_input()" type="button" class="pulse"  >Elige una foto</button>
                 </div>
             </div>
