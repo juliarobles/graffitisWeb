@@ -181,7 +181,8 @@ def publicaciones_detail_view(request, pk):
         "publicacion": publicacion,
         "creador":json.loads(b.data),
         "meGusta": len(publicacion['meGusta']),
-        "lenComentarios": len(publicacion['listaComentarios'])
+        "lenComentarios": len(publicacion['listaComentarios']),
+        "usuarioLogeado": request.session['usuario']
     }
     return render(request, 'publicacion_detail.html', context=context)
 
@@ -359,15 +360,20 @@ def crear_comentario(request, pk):
     return redirect(reverse('publicacion-detail', args=(pk,)))
 
 def delete_comentario(request, pk, cpk):
-    # if request.method == 'DELETE':
-    #     # if request.session.has_key('usuario'):
-    #     #     id_user = request.session['usuario']
-    #     #     r = http.request(
-    #     #         'GET',
-    #     #         'http://127.0.0.1:8000/publicaciones/'+str(pk)+'/comentarios/'+str(cpk)
-    #     #     )
-    #     #     comentario = json.loads(r.data)
+    
+    if request.session.has_key('usuario'):
+        id_user = request.session['usuario']
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/publicaciones/'+pk+'/comentarios/'+cpk
+        )
+        comentario = json.loads(r.data)
+        
+        headers = {'Accept': 'application/json'}
+        
+        if id_user == comentario.get('autor').get('id'):
+            a=requests.delete('http://127.0.0.1:8000/publicaciones/'+pk+'/comentarios/'+cpk, headers=headers)
             
-    #     #     if id_user == comentario.autor:
-    #             r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/comentarios/{cpk}')
-    return redirect(reverse('inicio'))
+
+            
+    return redirect(reverse('publicacion-detail', args=(pk,)))
