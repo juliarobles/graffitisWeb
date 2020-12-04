@@ -1,7 +1,7 @@
 from django.conf.urls import url,include
 from django.urls import path
-from clienteApp.views import *
-
+from clienteApp.views.views import *
+from clienteApp.views.loginViews import *
 
 # Paginas principales
 urlpatterns = [
