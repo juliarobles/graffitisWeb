@@ -29,7 +29,7 @@ def action_login(request):
             password_correct = usuario_matched[0]['password']
         
         if password_correct == password_form:
-            request.session['usuario'] = email_form
+            request.session['usuario'] = usuario_matched[0]['usuario']
             
             return redirect('/inicio/')
         else:
