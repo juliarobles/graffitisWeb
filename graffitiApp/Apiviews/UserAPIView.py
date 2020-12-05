@@ -135,12 +135,12 @@ class UsuarioFollow(APIView):
             if usuario == seguir:
                 return Response(data={"error": "Un usuario no puede seguirse asi mismo"},status=status.HTTP_403_FORBIDDEN)
 
-            if seguir not in usuario.listaSeguidos: # follow
-                usuario.listaSeguidos.append(seguir)
-                seguir.listaSeguidores.append(usuario)
+            if seguir not in usuario.listaSeguidores: # follow
+                usuario.listaSeguidores.append(seguir)
+                seguir.listaSeguidos.append(usuario)
             else: # unfollow
-                usuario.listaSeguidos.remove(seguir)
-                seguir.listaSeguidores.remove(usuario)
+                usuario.listaSeguidores.remove(seguir)
+                seguir.listaSeguidos.remove(usuario)
             usuario.save()
             seguir.save()
             serializer = UsuarioSerializer(usuario)
