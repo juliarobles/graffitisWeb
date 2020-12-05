@@ -185,7 +185,8 @@ def publicaciones_detail_view(request, pk):
         "publicacion": publicacion,
         "creador":json.loads(b.data),
         "meGusta": len(publicacion['meGusta']),
-        "lenComentarios": len(publicacion['listaComentarios'])
+        "lenComentarios": len(publicacion['listaComentarios']),
+        "usuarioLogeado": request.session['usuario']
     }
     return render(request, 'publicacion_detail.html', context=context)
 
@@ -363,14 +364,32 @@ def crear_comentario(request, pk):
     return publicaciones_detail_view(request,pk)
 
 def eliminar_graffiti(request, ppk, gpk):
-    ppk = str(ppk)
-    gpk = str(gpk)
-    r = http.request(
-        'GET',
-    'http://127.0.0.1:8000/publicaciones/{ppk}/graffitis/{cpk}'
-    )
-    # graffiti = json.loads(r.data)
+    if request.session.has_key('usuario'):
+        r = requests.get('http://localhost:8000/publicaciones/' + ppk +'/graffitis/' + gpk)
+        graffiti = json.loads(r.text)
+        r = requests.get('http://localhost:8000/usuarios/' + graffiti['autor']['id'])
+        autor = json.loads(r.text)
     
-    print(type(r.data))
-
+        if request.session.get('usuario') == autor['id']:
+            requests.delete('http://localhost:8000/publicaciones/' + ppk +'/graffitis/' + gpk)
+    
     return redirect(reverse('publicacion-detail', args={ppk}))
+
+def delete_comentario(request, pk, cpk):
+    
+    if request.session.has_key('usuario'):
+        id_user = request.session['usuario']
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/publicaciones/'+pk+'/comentarios/'+cpk
+        )
+        comentario = json.loads(r.data)
+        
+        headers = {'Accept': 'application/json'}
+        
+        if id_user == comentario.get('autor').get('id'):
+            a=requests.delete('http://127.0.0.1:8000/publicaciones/'+pk+'/comentarios/'+cpk, headers=headers)
+            
+
+            
+    return redirect(reverse('publicacion-detail', args=(pk,)))

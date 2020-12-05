@@ -3,6 +3,7 @@
 {% load range %}
 {% load lookup %}
 {% block body %}
+{% load appname_tags %}
 {% include "eventos_panel.html" %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
@@ -104,19 +105,24 @@
                         <hr style="margin-left:30px; width:600px">
                         <form method="POST" action="{% url 'crear-comentario' publicacion.id %}">
                         {% csrf_token %}
-                        <textarea name="texto" id="texto" cols=90 rows=4 placeholder="Añade un comentario..." style="resize: none;"></textarea>
+                        <textarea name="texto" id="texto" rows=4 placeholder="Añade un comentario..." style="width:95%;resize: none;"></textarea>
                         <button class="submit btn-primary" style="margin-left:570px">Comentar</button>
                         </form>
                     </div>                   
                     <h4 class="mt-4">Comentarios &bull; {{lenComentarios}}</h4>
                     {% for comentario in publicacion.listaComentarios %}
+                        {% if comentario.autor.id == usuarioLogeado %}
+                        <a href="{% url 'delete-comentario' publicacion.id comentario|mongo_id %}" style="margin-top:13px; margin-right:35px; float:right;" data-toggle="tooltip" data-placement="top" title="Borrar comentario" >
+                            <img class="squared icon" src="{% static 'images/iconbasura.png' %}">
+                        </a> 
+                        {% endif %}  
                         <div class="h6 mt-3 d-flex align-items-center">
                             <img class="rounded-circle icon" src={{comentario.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
                             <div class="ml-2 mr-4">{{comentario.autor.nombre}} - 
                                 <a class="sinDecoracion" href="{% url 'usuarios-detail' comentario.autor.id %}">
                                     @{{comentario.autor.usuario}}
                                 </a>
-                                <br/><aaa class="text-muted">{{comentario.texto}}</aaa></div>
+                                <br/><aaa class="text-muted">{{comentario.texto}}</aaa></div>                             
                         </div>
                     {% endfor %}
                 </div>

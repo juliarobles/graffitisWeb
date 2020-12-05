@@ -88,8 +88,16 @@ class ComentarioDetail(APIView):
         gpk = ObjectId(cpk)
         comentario = self.get_object(pk, gpk)
         publicacion = Publicacion.objects.get(pk=pk)
-        comentario.autor.listaComentariosPublicaciones.remove(publicacion)
-        comentario.autor.save()
+        
+        hayMasComentarios = False
+        for com in publicacion.listaComentarios:
+            if com.autor == comentario.autor:
+                hayMasComentarios = True 
+                break
+        if not hayMasComentarios:
+            comentario.autor.listaComentariosPublicaciones.remove(publicacion)
+            comentario.autor.save()
+
         publicacion.listaComentarios.remove(comentario)
         publicacion.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
