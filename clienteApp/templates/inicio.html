@@ -51,7 +51,7 @@
                             {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
                             <div class="h6 mt-3">
                                 <a class="sinDecoracion d-flex align-items-center" href="{% url 'usuarios-detail' primerGraffiti.autor.id %}">
-                                    <img class="rounded-circle icon" src={{primerGraffiti.autor.imagen}} onerror="this.src='../static/images/iconHuevo.png';"/>
+                                    <img class="rounded-circle icon" src={{primerGraffiti.autor.imagen}} onerror="this.src='{% static 'images/iconHuevo.png' %}';"/>
                                     &nbsp;&nbsp;@{{primerGraffiti.autor.usuario}}
                                 </a>
                             </div>
@@ -69,14 +69,21 @@
                             </p>
                             <div class="h5 d-flex justify-content-end align-self-end abajo"> 
                                 <p>
-                                {% with lc=p.listaComentarios|length %}
-                                <i class="far fa-comment"></i>&nbsp;{{lc}}
-                                {% endwith %}
-                                &nbsp;
-                                &nbsp;
-                                {% with mg=p.meGusta|length %}
-                                <i class="far fa-heart"></i>&nbsp;{{mg}}
-                                {% endwith %}
+                                    {% with lc=p.listaComentarios|length %}
+                                    <i class="far fa-comment"></i>&nbsp;{{lc}}
+                                    {% endwith %}
+                                    &nbsp;
+                                    &nbsp;
+                                    <a href="{% url 'inicio-like' p.id %}" class="sinDecoracion">
+                                        {% with mg=p.meGusta|length %}
+                                        {% if request.session.usuario in p.meGusta %}
+                                            <i class="fas fa-heart text-danger"></i>
+                                        {% else %}
+                                            <i class="far fa-heart"></i>
+                                        {% endif %}
+                                        &nbsp;{{mg}}
+                                        {% endwith %}
+                                    </a>
                                 </p>
                             </div>
                         </div>

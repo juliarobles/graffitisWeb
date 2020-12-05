@@ -1,21 +1,22 @@
 from django.shortcuts import render, redirect
-from graffitiApp.models import Publicacion, Usuario, Graffiti #No deberiamos usar esto
 from django.http import HttpResponse
 from django.urls import reverse
 from bson import ObjectId
 from django.template.loader import get_template
 from django.template import Context
-from django.http import HttpRequest, JsonResponse
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
+from django.utils.http import urlencode
 import urllib3, json, flickrapi
 import requests, webbrowser
+from urllib.parse import urlencode
 
 
 http = urllib3.PoolManager()
 client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
 def comprobarUsuarioLogueado(request):
-     if not request.session.has_key('usuario'):
+    #Lo he cambiado por esto: https://stackoverflow.com/questions/4963186/django-sessions-can-you-check-for-session-data-and-set-it-in-same-view 
+     if 'usuario' not in request.session:
         return redirect('/principal/')
 
 def eliminar_eventos_repetidos(lista):
@@ -73,10 +74,10 @@ def inicio(request):
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
-    
     publicaciones = []
-    if "busqueda" in request.GET:
+    if "busqueda" in request.GET and request.GET.get("busqueda") != "":
         busqueda = request.GET.get("busqueda")
+        request.session['ultBusqueda'] = busqueda
         if "#" in busqueda: #Busco por temática
             listaHT = busqueda.split("#")
             for ht in listaHT:
@@ -114,18 +115,17 @@ def inicio(request):
                         data1 = json.loads(r.data)
                         r = http.request('GET', 'http://127.0.0.1:8000/publicaciones/descripcion/' + word)
                         data2 = json.loads(r.data)
-                         
-                        #data3 = data1 + list(set(data2) - set(data1)) #Elimino repetidos
 
                         for dato in data1:
                             publicaciones.append(dato)
                         for dato in data2:
                             if dato not in data1:
                                 publicaciones.append(dato)
-
                     except:
                         pass
     else:
+        if 'ultBusqueda' in request.session:
+            request.session['ultBusqueda'] = ""
         r = http.request(
             'GET',
         'http://127.0.0.1:8000/publicaciones/'
@@ -362,6 +362,30 @@ def crear_comentario(request, pk):
 
             requests.post(url, data=data, headers=headers)
     return publicaciones_detail_view(request,pk)
+
+def like_inicio(request, pk):
+    private_post_like(request, pk)
+    if 'ultBusqueda' in request.session and request.session['ultBusqueda'] != "":
+        url = reverse('inicio')
+        params = urlencode({'busqueda' : request.session['ultBusqueda']})
+        return HttpResponseRedirect(url + "?%s" % params)
+    else:
+        return redirect(reverse('inicio'))
+
+def like_publicacion(request, pk):
+    private_post_like(request, pk)
+    return redirect(reverse('publicacion-detail', args=(pk,)))
+
+def private_post_like(request,pk):
+    if request.session.has_key('usuario'):
+        cadena = {
+            "usuario": str(request.session['usuario'])
+        }
+        data = json.dumps(cadena)
+        url = 'http://127.0.0.1:8000/publicaciones/'+str(pk)+'/like'
+        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+
+        requests.post(url, data=data, headers=headers)
 
 def eliminar_graffiti(request, ppk, gpk):
     if request.session.has_key('usuario'):
