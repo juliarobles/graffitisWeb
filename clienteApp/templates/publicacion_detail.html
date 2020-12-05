@@ -46,7 +46,13 @@
                                                 <p class="h6">Estado de conservación:</p>
                                                 <p>{{graffiti.estado}}</p>
                                                 {% if graffiti.autor.id == request.session.usuario%}
-                                                <p><a href="{% url 'graffiti-delete' publicacion.id graffiti.id %}" class="btn btn-danger">Eliminar</a></p>
+                                                <p>
+                                                    <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br>
+                                                    
+                                                    {% if graffiti is not publicacion.listaGraffitis|lookup:0 %}
+                                                        <a href="{% url 'graffiti-delete' publicacion.id graffiti.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
+                                                    {% endif %}
+                                                </p>
                                                 {%endif%}
                                             </div>
                                         </div>
@@ -71,9 +77,6 @@
                     <div class="row w-100">
                         <div class="col-md-8 col-12">
                             <p class="h3">{{publicacion.titulo}}</p>
-                            {% if request.session.usuario == creador.id %}
-                            <a href="{% url 'publicacion-delete' publicacion.id %}" class="btn btn-danger">Eliminar</a>
-                            {%endif%}
                             <h6>Publicado por: 
                                 <a class="sinDecoracion" href="{% url 'usuarios-detail' creador.id %}">
                                 @{{creador.usuario}}
@@ -102,20 +105,26 @@
                             </p>
                         </div>
                     </div>
-                    <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>
-                    <p>AQUI VA LA PARTE DE AÑADIR COMENTARIO</p>     
+                    {% if request.session.usuario == creador.id %}
+                        <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br>
+                        <a href="{% url 'publicacion-delete' publicacion.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
+                    {%endif%}
+                    <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>   
                     <hr class="mr-md-4 mr-1">        
                     <h4 class="mt-4">Comentarios &bull; {{lenComentarios}}</h4>
                     <form method="POST" action="{% url 'crear-comentario' publicacion.id %}">
                         <div class="form-group mt-3 mr-md-4 mr-1">
                             {% csrf_token %}
-                            <textarea class="form-control" name="texto" id="texto" rows=4 placeholder="Añade un comentario..."></textarea>
-                            <button class="submit btn btn-primary mt-2">Comentar</button>
+                            <textarea class="form-control" name="texto" id="texto" rows=3 placeholder="Añade un comentario..."></textarea>
+                            <div class="d-flex justify-content-end">
+                                <button class="submit btn btn-dark mt-2 btn-sm">Comentar</button>
+                            </div>
+                            
                         </div>
                     </form> 
                     {% for comentario in publicacion.listaComentarios %}
                         {% if comentario.autor.id == usuarioLogeado %}
-                        <a href="{% url 'delete-comentario' publicacion.id comentario|mongo_id %}" style="margin-top:13px; margin-right:35px; float:right;" data-toggle="tooltip" data-placement="top" title="Borrar comentario" >
+                        <a href="{% url 'delete-comentario' publicacion.id comentario|mongo_id %}" class="text-danger" style="float:right;" data-toggle="tooltip" data-placement="top" title="Borrar comentario" >
                             <!-- <img class="squared icon" src="{% static 'images/iconbasura.png' %}"> -->
                             <i class="far fa-trash-alt squared icon"></i>
                         </a> 

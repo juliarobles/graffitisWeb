@@ -1,6 +1,7 @@
 
 {% url 'inicio' as url_inicio %}
 {% url 'url-buscar' as url_buscar %}
+{% url 'publicacion-formulario' as url_crearPublicacion %}
 {% url 'usuarios-list' as url_lista_usuarios %}
 {% url 'publicaciones-list' as url_lista_publicaciones %}
 {% url 'eventos-list' as url_lista_eventos %}
@@ -23,9 +24,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{{url_lista_usuarios}}"><i class="fas fa-users"></i></a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="{{url_lista_eventos}}"><i class="fas fa-calendar-alt"></i></a>
-        </li>
+        </li> -->
       </ul>
       <form class="form-inline my-2 my-lg-0" action="{{url_inicio}}" method="GET">
         <input name="busqueda" id="busqueda" class="form-control mr-sm-2 bg-grisesito" type="search" placeholder="&#xF002;  Buscar" aria-label="Search" style="font-family:Arial, FontAwesome"/>
@@ -36,7 +37,7 @@
             window.location.href = "{% url 'registro' %}"; 
           }
         </script> -->
-      
+      <a class="btn btn-dark" href="{{url_crearPublicacion}}" >Nueva publicación</a>
       <button class="ml-2 mr-1 btn btn-outline-dark my-2 my-sm-0 form-inline" type="button" onclick="window.location.href='{% url 'action_logout'%}'"><i class="fas fa-sign-out-alt"></i></button>
     </div>
   </nav>
