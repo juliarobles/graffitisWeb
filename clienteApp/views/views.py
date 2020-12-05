@@ -177,6 +177,10 @@ def publicaciones_detail_view(request, pk):
         'GET',
     'http://127.0.0.1:8000/usuarios/'+str(publicacion['creador'])
     )
+
+    for graffiti in publicacion['listaGraffitis']:
+        graffiti['id'] = str(graffiti['_id'])
+
     context = {
         "publicacion": publicacion,
         "creador":json.loads(b.data),
@@ -337,7 +341,7 @@ def eliminar_publicacion(request, pk):
     )
 
     creador = json.loads(b.data)
-    if creador['email'] == request.session.get('usuario'):
+    if creador['id'] == request.session.get('usuario'):
         r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
     return redirect(reverse('inicio'))
 
@@ -357,3 +361,16 @@ def crear_comentario(request, pk):
 
             requests.post(url, data=data, headers=headers)
     return publicaciones_detail_view(request,pk)
+
+def eliminar_graffiti(request, ppk, gpk):
+    ppk = str(ppk)
+    gpk = str(gpk)
+    r = http.request(
+        'GET',
+    'http://127.0.0.1:8000/publicaciones/{ppk}/graffitis/{cpk}'
+    )
+    # graffiti = json.loads(r.data)
+    
+    print(type(r.data))
+
+    return redirect(reverse('publicacion-detail', args={ppk}))

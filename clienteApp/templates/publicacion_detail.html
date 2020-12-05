@@ -44,6 +44,9 @@
                                                 <p>{{graffiti.fechaCaptura}}</p>
                                                 <p class="h6">Estado de conservación:</p>
                                                 <p>{{graffiti.estado}}</p>
+                                                {% if graffiti.autor.id == request.session.usuario%}
+                                                <p><a href="{% url 'graffiti-delete' publicacion.id graffiti.id %}" class="btn btn-danger">Eliminar</a></p>
+                                                {%endif%}
                                             </div>
                                         </div>
                                     </div>
@@ -69,7 +72,7 @@
                             <div class="row w-100">
                             <p class="h3">{{publicacion.titulo}}</p>
                             <div class="col-sm-1"></div>
-                            {% if request.session.usuario == creador.email %}
+                            {% if request.session.usuario == creador.id %}
                             <a href="{% url 'publicacion-delete' publicacion.id %}" class="btn btn-danger">Eliminar</a>
                             {%endif%}
                             </div>

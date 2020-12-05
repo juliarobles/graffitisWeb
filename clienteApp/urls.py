@@ -36,7 +36,8 @@ urlpatterns = [
     path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
     path('ajax/eventos/<int:ID_ACTIVIDAD>/', cargar_evento_id_ajax, name='cargar-eventos-id'),
     path('html/publicaciones/eliminar/<str:pk>', eliminar_publicacion, name='publicacion-delete'),
-    path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario')
+    path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario'),
+    path('html/publicaciones/detalles/<str:ppk>/graffitis/<str:gpk>/delete', eliminar_graffiti, name='graffiti-delete')
 
 ]
 
