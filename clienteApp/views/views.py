@@ -393,3 +393,14 @@ def delete_comentario(request, pk, cpk):
 
             
     return redirect(reverse('publicacion-detail', args=(pk,)))
+
+def usuario_follow(request, pk):
+    if request.session.has_key('usuario'):
+        id_user = request.session.get('usuario')
+        headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+        data={'usuario':request.session.get('usuario')}
+        body = json.dumps(data)
+        r = requests.post(f'http://localhost:8000/usuarios/{pk}/follow', data=body, headers=headers)
+        print(r)
+        print(r.text)
+    return redirect(reverse('usuarios-detail', args={pk}))

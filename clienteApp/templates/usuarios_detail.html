@@ -22,8 +22,17 @@
                         <h6><strong>{{usuario.listaSeguidores|length}}</strong> seguidores  <strong>{{usuario.listaSeguidos|length}}</strong> seguidos</h6>
                         <p class="descripcion">{{usuario.descripcion}}</p>
                         <div class="d-flex justify-content-center">
-                            <a href="#" class="btn btn-sm btn-outline-dark mr-3">Seguir</a>
+                            {% if not request.session.usuario == usuario.id %}
+                            <a href="{% url 'usuario-follow' usuario.id %}" class="btn btn-sm btn-outline-dark mr-3">
+                                {% if request.session.usuario in usuario.listaSeguidores%}
+                                Dejar de seguir
+                                {% else %}
+                                Seguir
+                                {% endif %}
+                            </a>
+
                             <a href="#" class="btn btn-sm btn-outline-dark">Enviar mensaje</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
