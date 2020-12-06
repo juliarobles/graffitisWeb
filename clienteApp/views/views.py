@@ -15,6 +15,8 @@ from urllib.parse import urlencode
 http = urllib3.PoolManager()
 client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
+FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
+FLICKR_API_SECRET = '15075131b9983f9b'
 def comprobarUsuarioLogueado(request):
     #Lo he cambiado por esto: https://stackoverflow.com/questions/4963186/django-sessions-can-you-check-for-session-data-and-set-it-in-same-view 
      if 'usuario' not in request.session:
@@ -449,4 +451,16 @@ def graffiti_form(request, pk):
         
         return render(request, 'graffiti_form.html', context=context)
     elif request.method == 'POST':
-        pass
+        if request.session.has_key('usuario'):
+            form = GraffitiForm(request.POST, request.FILES)
+            if form.is_valid():
+                flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET)
+                imagen_file = request.FILES['imagen']
+                rsp = flickr.upload(filename='uwu', fileobj=imagen_file)
+                # subir la imagen a flickr
+                data={
+                    'imagen': 0,
+                    'estado': form.estado,
+                    'fechaCaptura': form.fechaCaptura,
+                    'autor': request.session.get('usuario')
+                }
