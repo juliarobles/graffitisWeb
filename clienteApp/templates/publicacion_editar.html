@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/publicacion_crear.css' %}">
+<form action="{% url 'editar-publicacion' publicacion.id %}" method="POST"  enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="text-center py-2">
+        <h1>¿Has encontrado un graffiti nuevo?</h1>
+        <hr width="70%">
+        <h4>¡Enséñanoslo!</h4>
+    </div>
+    <div class="container contenedor-principal text-dark">
+        <div class="row">
+          <div class="col-12 col-md-5 informacion">
+            <!-- Informacion sobre la foto -->
+            <div class="campo-form">
+                <label for="titulo">Título</label> <br>
+                <input type="text" style="text-align:center" name="titulo" id="titulo" value="{{publicacion.titulo}}">
+            </div>
+            <div class="campo-form">
+                <label for="descripcion">Descripción</label><br>
+                <textarea style="text-align:center" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' placeholder="" type="textarea" name="descripcion" id="descripcion"  cols="40">{{publicacion.descripcion}}</textarea>
+            </div>
+            <div class="campo-form">
+                <label for="tematica">Temática</label> <br>
+                <input style="text-align:center" value="{{tematica}}" type="text" name="tematica" id="tematica">
+            </div>
+            <div class="campo-form">
+                <label for="autor">Autor</label> <br>
+                <input style="text-align:center" value="{{publicacion.autor}}" type="text" name="autor" id="autor">
+            </div>
+            <div class="campo-form">
+                <label for="Estado conservacion">Estado de conservación</label> <br>
+                <select name="estado" class="form-control" id="estado"> Estado
+                    <option selected value="{{graffiti.estado}}" disabled>{{graffiti.estado}}</option> 
+            </select>            </div>
+            <div class="campo-form">
+                <label for="fecha_captura">Fecha de captura</label> <br>
+                <input type="date" name="fecha_captura" id="fecha_captura" value="{{graffiti.fechaCaptura}}" readonly>
+            </div>
+        </div>
+        <div class="col-12 col-md-7 info-imagen">
+            <div class="row muestra-imagen  Absolute-Center p-0 " style="height:100%; border-bottom:0px">
+                <img id="imagen-mostrar"  class="zindex2 imagen-subir" src="{{graffiti.imagen}}"/>
+            </div>
+        </div>
+        <div class="boton-enviar">
+                <button  type="submit" class="pulse"  >Enviar</button>
+        </div>
+        
+    </div>
+</form>
+{% endblock body %}
+    

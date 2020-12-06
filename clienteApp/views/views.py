@@ -464,3 +464,46 @@ def graffiti_form(request, pk):
             headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
             r = requests.post(f'http://localhost:8000/publicaciones/{pk}/graffitis/', data=body, headers=headers)
             return redirect(reverse('publicacion-detail', args=[pk]))
+
+
+def editar_publicacion(request, pk):
+    if request.method == 'POST' :
+        tematica = request.POST['tematica']
+        cadena = "["
+        lista = []
+        for tem in tematica.split(", "):
+            lista.append(tem)
+
+        dic = {
+            'titulo': request.POST['titulo'],
+            'descripcion': request.POST['descripcion'],
+            'tematica': lista,
+            'autor': request.POST['autor']
+        }
+        data = json.dumps(dic)
+        headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+
+        r = requests.put(f'http://127.0.0.1:8000/publicaciones/{pk}/', data=data, headers=headers)
+        
+        
+    else: 
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/publicaciones/'+str(pk)
+        )
+        publicacion = json.loads(r.data)
+        primerGraffiti = publicacion.get('listaGraffitis')[0]
+        tematica = publicacion.get("tematica")
+        cadena = ""
+        for tem in tematica:
+            cadena += tem + ", "
+        context={
+                'publicacion': publicacion,
+                'graffiti' : primerGraffiti,
+                'tematica': cadena[:-2]
+        }
+        
+        return render(request, 'publicacion_editar.html', context=context)
+    
+    return redirect(reverse('publicacion-detail', args=[pk]))
+
