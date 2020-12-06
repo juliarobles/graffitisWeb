@@ -104,7 +104,8 @@
                         </div>
                         <div class="col-md-4 col-12">
                             <div class="h2 d-flex justify-content-end align-items-center">
-                                <button onclick="focusComentario()" style="background:transparent; border:none; outline:none" ><i class="far fa-comment"></i>&nbsp;{{lenComentarios}}</button>
+                                <script src="{% static 'js/focusComment.js' %}"></script>
+                                <button id="buttonComment" onclick="focusComentario()" style="background:transparent; border:none; outline:none" ><i class="far fa-comment"></i>&nbsp;{{lenComentarios}}</button>
                                 &nbsp;
                                 <a href="{% url 'publicacion-like' publicacion.id %}" class="sinDecoracion">
                                     {% if request.session.usuario in publicacion.meGusta %}
@@ -142,7 +143,6 @@
                     {% for comentario in publicacion.listaComentarios %}
                         {% if comentario.autor.id == usuarioLogeado %}
                         <a href="{% url 'delete-comentario' publicacion.id comentario|mongo_id %}" class="text-danger" style="float:right;" data-toggle="tooltip" data-placement="top" title="Borrar comentario" >
-                            <!-- <img class="squared icon" src="{% static 'images/iconbasura.png' %}"> -->
                             <i class="far fa-trash-alt squared icon"></i>
                         </a> 
                         {% endif %}  

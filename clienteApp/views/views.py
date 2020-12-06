@@ -75,12 +75,14 @@ def principal(request):
 
 def inicio(request):
     ret = comprobarUsuarioLogueado(request)
+    busNav = ""
     if ret:
         return ret
     publicaciones = []
     if "busqueda" in request.GET and request.GET.get("busqueda") != "":
         busqueda = request.GET.get("busqueda")
         request.session['ultBusqueda'] = busqueda
+        busNav = busqueda
         if "#" in busqueda: #Busco por temática
             listaHT = busqueda.split("#")
             for ht in listaHT:
@@ -134,7 +136,7 @@ def inicio(request):
         'http://127.0.0.1:8000/publicaciones/'
         )
         publicaciones = json.loads(r.data)
-    context={'publicaciones': publicaciones}
+    context={'publicaciones': publicaciones, "busqueda": busNav}
     return render(request, 'inicio.html', context=context)
 
 def registro(request):

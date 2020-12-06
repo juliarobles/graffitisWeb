@@ -9,6 +9,23 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/inicio.css' %}">
 <div class="container ">
+    <script type='text/javascript'>
+
+        (function()
+        {
+          if( window.localStorage )
+          {
+            if( !localStorage.getItem('firstLoad') )
+            {
+              localStorage['firstLoad'] = true;
+              window.location.reload();
+            }  
+            else
+              localStorage.removeItem('firstLoad');
+          }
+        })();
+        
+        </script>
     <div class="row justify-content-center">
         {% for p in publicaciones reversed%}
             <div class="col-11 col-sm-11 col-md-8 bg-white my-2 rounded border p-0">
@@ -69,9 +86,12 @@
                             </p>
                             <div class="h5 d-flex justify-content-end align-self-end abajo"> 
                                 <p>
-                                    {% with lc=p.listaComentarios|length %}
-                                    <i class="far fa-comment"></i>&nbsp;{{lc}}
-                                    {% endwith %}
+                                    <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
+                                        <script src="{% static 'js/focusComment.js' %}"></script>
+                                        {% with lc=p.listaComentarios|length %}
+                                        <i class="far fa-comment"></i>&nbsp;{{lc}}
+                                        {% endwith %}
+                                    </a>
                                     &nbsp;
                                     &nbsp;
                                     <a href="{% url 'inicio-like' p.id %}" class="sinDecoracion">
