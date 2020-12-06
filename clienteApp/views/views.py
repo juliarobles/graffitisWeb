@@ -9,6 +9,7 @@ from django.utils.http import urlencode
 import urllib3, json, flickrapi
 import requests, webbrowser
 from urllib.parse import urlencode
+import time
 
 
 http = urllib3.PoolManager()
@@ -16,6 +17,27 @@ client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
 FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
 FLICKR_API_SECRET = '15075131b9983f9b'
+FLICKR_USER = '191270823@N05'
+
+def uploadImage(image):
+    flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET)
+
+    filename = image.name
+    rsp = flickr.upload(filename=filename, fileobj=image)
+    time.sleep(3)
+
+    if rsp.get('stat') != 'ok':
+        return None
+
+    image_id = rsp.find('photoid').text
+
+    for photo in flickr.walk_user():
+        if photo.get('id') == image_id:
+            url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
+            return url
+
+    return None
+
 def comprobarUsuarioLogueado(request):
     #Lo he cambiado por esto: https://stackoverflow.com/questions/4963186/django-sessions-can-you-check-for-session-data-and-set-it-in-same-view 
      if 'usuario' not in request.session:
@@ -451,7 +473,7 @@ def graffiti_form(request, pk):
         if request.session.has_key('usuario'):
             imagen = request.FILES['imagen']
             # Subir imagen a flickr
-            url = '' # url de la imagen
+            url = uploadImage(imagen)
             print(imagen.name)
             form = request.POST
             data = {
@@ -463,4 +485,6 @@ def graffiti_form(request, pk):
             body = json.dumps(data)
             headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
             r = requests.post(f'http://localhost:8000/publicaciones/{pk}/graffitis/', data=body, headers=headers)
+            print(r)
+            print(r.text)
             return redirect(reverse('publicacion-detail', args=[pk]))
