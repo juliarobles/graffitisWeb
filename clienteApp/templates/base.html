@@ -15,6 +15,9 @@
     <link rel="shortcut icon" href="{% static 'images/icon.ico' type='image/x-icon' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <script src="https://kit.fontawesome.com/c77eea7e8a.js" crossorigin="anonymous"></script>
+    {% block head %}
+    {% endblock %}
+
 </head>
 <body class="bg-grisesito">
     {% include "navbar.html" %}
