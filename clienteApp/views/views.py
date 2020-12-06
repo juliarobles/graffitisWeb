@@ -8,7 +8,6 @@ from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 from django.utils.http import urlencode
 import urllib3, json, flickrapi
 import requests, webbrowser
-from ..forms import GraffitiForm
 from urllib.parse import urlencode
 
 
@@ -433,8 +432,6 @@ def usuario_follow(request, pk):
         data={'usuario':request.session.get('usuario')}
         body = json.dumps(data)
         r = requests.post(f'http://localhost:8000/usuarios/{pk}/follow', data=body, headers=headers)
-        print(r)
-        print(r.text)
     return redirect(reverse('usuarios-detail', args={pk}))
 
 def graffiti_form(request, pk):
@@ -444,25 +441,26 @@ def graffiti_form(request, pk):
     - GET: crea el formulario y muestra el html
     - POST: crea el graffiti y se guarda, redirige a la publicacion
     """
+    comprobarUsuarioLogueado(request)
     if request.method == 'GET':
-        form = GraffitiForm()
         context={
-            'publicacion': pk,
-            'form': form
+            'publicacion': pk
         }
-        
         return render(request, 'graffiti_form.html', context=context)
     elif request.method == 'POST':
         if request.session.has_key('usuario'):
-            form = GraffitiForm(request.POST, request.FILES)
-            if form.is_valid():
-                flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET)
-                imagen_file = request.FILES['imagen']
-                rsp = flickr.upload(filename='uwu', fileobj=imagen_file)
-                # subir la imagen a flickr
-                data={
-                    'imagen': 0,
-                    'estado': form.estado,
-                    'fechaCaptura': form.fechaCaptura,
-                    'autor': request.session.get('usuario')
-                }
+            imagen = request.FILES['imagen']
+            # Subir imagen a flickr
+            url = '' # url de la imagen
+            print(imagen.name)
+            form = request.POST
+            data = {
+                'estado': form['estado'],
+                'fechaCaptura': form['fecha_captura'],
+                'autor': request.session.get('usuario'),
+                'imagen': url
+            }
+            body = json.dumps(data)
+            headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+            r = requests.post(f'http://localhost:8000/publicaciones/{pk}/graffitis/', data=body, headers=headers)
+            return redirect(reverse('publicacion-detail', args=[pk]))
