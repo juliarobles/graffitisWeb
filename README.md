@@ -79,7 +79,7 @@ Para ello, solo hemos de realizar dos tareas:
  1. Poner en marcha la base de datos.
  2. Ejecutar la aplicación mediante el siguiente comnado:
  ``` shell
- python manage.py runserver.
+ python manage.py runserver
  ```
  La OpenAPI de la API Rest se encuentra en la raíz del proyecto, si quieres acceder al cliente deberas entrar en http://127.0.0.1:8000/principal/.
  
