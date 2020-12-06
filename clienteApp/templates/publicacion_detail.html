@@ -2,6 +2,17 @@
 {% block title %}{{publicacion.titulo}}{% endblock %}
 {% load range %}
 {% load lookup %}
+
+{% block head %}
+    <meta property="og:url"                content="{{ request.path }}" />
+    <meta property="og:type"               content="Publicacion" />
+    <meta property="og:title"              content="{{ publicacion.titulo }}" />
+    <meta property="og:description"        content="{{ publicacion.descripcion }}" />
+    {% with primerGraffiti=publicacion.listaGraffitis|lookup:0 %}
+    <meta property="og:image"              content="{{ primerGraffiti.imagen }}" />
+    {% endwith %}
+{% endblock %}
+
 {% block body %}
 {% load appname_tags %}
 {% include "eventos_panel.html" %}
@@ -87,13 +98,13 @@
                         </div>
                         <div class="col-md-4 col-12">
                             <div class="h2 d-flex justify-content-end align-items-center">
-                                <button onclick="focusComentario()" style="background:transparent; border:none; outline:none" ><i class="far fa-comment"></i>&nbsp;{{lenComentarios}}</button>
+                                <a id="buttonComment" onclick="focusComentario()" href="javascript:void(0);" class="sinDecoracion mr-2" ><i class="far fa-comment"></i>&nbsp;{{lenComentarios}}</a>
                                 &nbsp;
                                 <a href="{% url 'publicacion-like' publicacion.id %}" class="sinDecoracion">
                                     {% if request.session.usuario in publicacion.meGusta %}
-                                        <i class="fas fa-heart text-danger mr-1"></i>
+                                        <i class="fas fa-heart text-danger mr-0"></i>
                                     {% else %}
-                                        <i class="far fa-heart mr-1"></i>
+                                        <i class="far fa-heart mr-0"></i>
                                     {% endif %}
                                     {{meGusta}}
                                 </a>
@@ -106,10 +117,19 @@
                         </div>
                     </div>
                     {% if request.session.usuario == creador.id %}
-                        <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br>
+                        <a href="{% url 'editar-publicacion' publicacion.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
                         <a href="{% url 'publicacion-delete' publicacion.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
                     {%endif%}
-                    <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>   
+                    <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>  
+                    <hr class="mr-md-4 mr-1">  
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <p >¿Tienes alguna imagen de este graffiti? ¡Compartela!</p>
+                        </div>
+                        <div class="row justify-content-center">
+                            <a href="{% url 'graffiti-form' publicacion.id %}" class="btn text-white d-flex align-items-center" style="background-color: #e95f28; border-color: #e95f28;"><i class="fas fa-plus-circle"></i>&nbsp;A&ntilde;adir contribuci&oacute;n</a>
+                        </div>
+                    </div>
                     <hr class="mr-md-4 mr-1">        
                     <h4 class="mt-4">Comentarios &bull; {{lenComentarios}}</h4>
                     <form method="POST" action="{% url 'crear-comentario' publicacion.id %}">
@@ -125,7 +145,6 @@
                     {% for comentario in publicacion.listaComentarios %}
                         {% if comentario.autor.id == usuarioLogeado %}
                         <a href="{% url 'delete-comentario' publicacion.id comentario|mongo_id %}" class="text-danger" style="float:right;" data-toggle="tooltip" data-placement="top" title="Borrar comentario" >
-                            <!-- <img class="squared icon" src="{% static 'images/iconbasura.png' %}"> -->
                             <i class="far fa-trash-alt squared icon"></i>
                         </a> 
                         {% endif %}  
@@ -143,12 +162,6 @@
             </div>
         </div>
     </div>
-    <script>
-        function focusComentario(){
-            var tac = document.getElementById("texto");
-            tac.focus();
-        }
-    </script>
     {% include 'boton_compartir.html' %}
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -170,4 +183,5 @@
             });		
         });
     </script>
+    <script src="{% static 'js/focusComment.js' %}"></script>
 {% endblock %}

@@ -1,4 +1,25 @@
 {% load static %}
+
+<!-- Inicializar facebook -->
+<script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId            : '721375862113204',
+        autoLogAppEvents : true,
+        xfbml            : true,
+        version          : 'v9.0'
+      });
+    };
+</script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+<!-- Inicializar pinterest -->
+<script
+    type="text/javascript"
+    async defer
+    src="//assets.pinterest.com/js/pinit.js"
+></script>
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/compartir.css' %}">
 <button id="boton-compartir" class=" boton-compartir" onclick="animar_todo()"></button>
 <button class="fab  fa-twitter compartir-twitter" onclick="compartir_twitter(
@@ -8,7 +29,8 @@
     'este usuario'
     {% endif %}
 )"></button>
-<button class="fab  fa-instagram compartir-insta"></button>
+<button class="compartir-facebook" onclick="compartir_facebook()"><i class="fab fa-facebook-f"></i></button>
+<button class="compartir-pinterest" onclick="PinUtils.pinAny()"><i class="fab fa-pinterest-p"></i></button>
 
 
 <script>
@@ -21,8 +43,13 @@
             right: "+=" + desplazar + "px",
             opacity:  opacidad,
         }, 500);
-        $( ".compartir-insta" ).animate({
+        $( ".compartir-facebook" ).animate({
             right: "+=" + 2*desplazar + "px",
+            opacity:  opacidad,
+            
+        }, 500);
+        $( ".compartir-pinterest" ).animate({
+            right: "+=" + 3*desplazar + "px",
             opacity:  opacidad,
             
         }, 500);
@@ -42,14 +69,26 @@
     }
         
     function compartir_twitter(tipo){
-        alert('Compartiendo por Twitter');
         var tipo_url = tipo;
         window.open(
             "https://twitter.com/intent/tweet?text=Mira "
-            + tipo_url +" que he encontrado en Underground! " + window.location.href
-            
-           
+            + tipo_url +" que he encontrado en Underground! " + window.location.href,
+            'twitter-share-dialog',"width=626, height=436"
             
         );
     }
+
+    function compartir_facebook(){
+        // FB.ui({
+        //     method: 'share',
+        //     href:'http://127.0.0.1:8000/html/publicaciones/detalles/5fbab37bbcbecf56728297b0/',
+        // }, function(response){});
+
+        // Que te den facebook al final lo he conseguido aunque haya sido a las 4 de la mañana
+        window.open(
+            'https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=' + encodeURIComponent(window.location.href) + '&display=popup&ref=plugin&src=share_button',
+            'facebook-share-dialog',"width=626, height=436"
+        );
+    }
+    
 </script>

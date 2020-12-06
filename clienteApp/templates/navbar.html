@@ -29,7 +29,7 @@
         </li> -->
       </ul>
       <form class="form-inline my-2 my-lg-0" action="{{url_inicio}}" method="GET">
-        <input name="busqueda" id="busqueda" class="form-control mr-sm-2 bg-grisesito" type="search" placeholder="&#xF002;  Buscar" aria-label="Search" style="font-family:Arial, FontAwesome"/>
+        <input name="busqueda" id="busqueda" value="{{busqueda}}" class="form-control mr-sm-2 bg-grisesito" type="search" placeholder="&#xF002;  Buscar" aria-label="Search" style="font-family:Arial, FontAwesome"/>
       </form>
         <!-- <button onclick="navegar_registro()" class="btn btn-secondary my-2 my-sm-0" id="registro-button" type="button">Registro</button>
         <script>
@@ -37,7 +37,8 @@
             window.location.href = "{% url 'registro' %}"; 
           }
         </script> -->
-      <a class="btn btn-dark" href="{{url_crearPublicacion}}" >Nueva publicación</a>
-      <button class="ml-2 mr-1 btn btn-outline-dark my-2 my-sm-0 form-inline" type="button" onclick="window.location.href='{% url 'action_logout'%}'"><i class="fas fa-sign-out-alt"></i></button>
+      <a class="nav-item btn btn-dark" href="{{url_crearPublicacion}}" >Nueva publicación</a>
+      <a class="nav-item btn btn-dark ml-2" href="{% url 'usuarios-detail' request.session.usuario %}" ><i class="fas fa-user"></i> Mi perfil</a>
+      <button class="nav-item ml-2 mr-1 btn btn-outline-dark my-2 my-sm-0 form-inline" type="button" onclick="window.location.href='{% url 'action_logout'%}'"><i class="fas fa-sign-out-alt"></i></button>
     </div>
   </nav>

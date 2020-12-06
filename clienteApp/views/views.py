@@ -16,6 +16,8 @@ from xml.etree import ElementTree
 http = urllib3.PoolManager()
 client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
+FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
+FLICKR_API_SECRET = '15075131b9983f9b'
 def comprobarUsuarioLogueado(request):
     #Lo he cambiado por esto: https://stackoverflow.com/questions/4963186/django-sessions-can-you-check-for-session-data-and-set-it-in-same-view 
     if 'usuario' not in request.session:
@@ -75,12 +77,14 @@ def principal(request):
 
 def inicio(request):
     ret = comprobarUsuarioLogueado(request)
+    busNav = ""
     if ret:
         return ret
     publicaciones = []
     if "busqueda" in request.GET and request.GET.get("busqueda") != "":
         busqueda = request.GET.get("busqueda")
         request.session['ultBusqueda'] = busqueda
+        busNav = busqueda
         if "#" in busqueda: #Busco por temática
             listaHT = busqueda.split("#")
             for ht in listaHT:
@@ -134,7 +138,7 @@ def inicio(request):
         'http://127.0.0.1:8000/publicaciones/'
         )
         publicaciones = json.loads(r.data)
-    context={'publicaciones': publicaciones}
+    context={'publicaciones': publicaciones, "busqueda": busNav}
     return render(request, 'inicio.html', context=context)
 
 def registro(request):
@@ -161,6 +165,9 @@ def eventos_list(request):
 
 def base_view(request):
     return render(request, 'graffiti_list.html')
+
+def privacidad(request):
+    return render(request, 'politicaPrivacidad.html')
 
 def list_publicaciones_views(request):
     r = http.request(
@@ -369,7 +376,7 @@ def crear_comentario(request, pk):
             headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
             requests.post(url, data=data, headers=headers)
-    return publicaciones_detail_view(request,pk)
+    return redirect(reverse('publicacion-detail', args=(pk,)))
 
 def like_inicio(request, pk):
     private_post_like(request, pk)
@@ -433,6 +440,78 @@ def usuario_follow(request, pk):
         data={'usuario':request.session.get('usuario')}
         body = json.dumps(data)
         r = requests.post(f'http://localhost:8000/usuarios/{pk}/follow', data=body, headers=headers)
-        print(r)
-        print(r.text)
     return redirect(reverse('usuarios-detail', args={pk}))
+
+def graffiti_form(request, pk):
+    """
+    Esta funcion se encargara de generar la pagina html con el formulario
+    para los graffitis. Tiene doble funcionalidad:
+    - GET: crea el formulario y muestra el html
+    - POST: crea el graffiti y se guarda, redirige a la publicacion
+    """
+    comprobarUsuarioLogueado(request)
+    if request.method == 'GET':
+        context={
+            'publicacion': pk
+        }
+        return render(request, 'graffiti_form.html', context=context)
+    elif request.method == 'POST':
+        if request.session.has_key('usuario'):
+            imagen = request.FILES['imagen']
+            # Subir imagen a flickr
+            url = '' # url de la imagen
+            print(imagen.name)
+            form = request.POST
+            data = {
+                'estado': form['estado'],
+                'fechaCaptura': form['fecha_captura'],
+                'autor': request.session.get('usuario'),
+                'imagen': url
+            }
+            body = json.dumps(data)
+            headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+            r = requests.post(f'http://localhost:8000/publicaciones/{pk}/graffitis/', data=body, headers=headers)
+            return redirect(reverse('publicacion-detail', args=[pk]))
+
+
+def editar_publicacion(request, pk):
+    if request.method == 'POST' :
+        tematica = request.POST['tematica']
+        cadena = "["
+        lista = []
+        for tem in tematica.split(", "):
+            lista.append(tem)
+
+        dic = {
+            'titulo': request.POST['titulo'],
+            'descripcion': request.POST['descripcion'],
+            'tematica': lista,
+            'autor': request.POST['autor']
+        }
+        data = json.dumps(dic)
+        headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+
+        r = requests.put(f'http://127.0.0.1:8000/publicaciones/{pk}/', data=data, headers=headers)
+        
+        
+    else: 
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/publicaciones/'+str(pk)
+        )
+        publicacion = json.loads(r.data)
+        primerGraffiti = publicacion.get('listaGraffitis')[0]
+        tematica = publicacion.get("tematica")
+        cadena = ""
+        for tem in tematica:
+            cadena += tem + ", "
+        context={
+                'publicacion': publicacion,
+                'graffiti' : primerGraffiti,
+                'tematica': cadena[:-2]
+        }
+        
+        return render(request, 'publicacion_editar.html', context=context)
+    
+    return redirect(reverse('publicacion-detail', args=[pk]))
+
