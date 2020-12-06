@@ -7,6 +7,18 @@
     height:14rem;
 }
 
+@media (max-width:992px) {
+  .anchura {
+    width: 100%;
+  }
+}
+
+@media(min-width:992px){
+.anchura {
+    width: 14rem !important; 
+}
+}
+
 .content {
     position: absolute; /* Position the background text */
     bottom: 0; /* At the bottom. Use top:0 to append it to the top */
@@ -17,6 +29,12 @@
     padding: 4px; /* Some padding */
 }
 
+@media(min-width:992px){
+  .content {
+      width: 14rem !important; 
+  }
+  }
+
 .overlay {
     position: absolute;
     top: 0;
@@ -24,7 +42,7 @@
     left: 0;
     right: 0;
     height: 100%;
-    width: 100%;
+    width: 14rem;
     opacity: 0;
     transition: .5s ease;
     background-color: #5e5e5e00;
@@ -57,7 +75,7 @@
     left: 0;
     right: 0;
     height: 100%;
-    width: 100%;
+    width: 14rem;
     opacity: 0;
     transition: .5s ease;
     background-color: #0000008c;

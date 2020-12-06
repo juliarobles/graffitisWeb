@@ -56,7 +56,7 @@
                                 <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
                                     <div class="col-12 col-md-4 p-0 face">
                                         {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
-                                        <img class="d-block altura cover w-100" src="{{primerGraffiti.imagen}}">
+                                        <img class="d-block altura anchura cover" src="{{primerGraffiti.imagen}}">
                                         {% endwith %}
                                         <div class="content">
                                             <h5 class="p-2 wrapLinea">{{p.titulo}}</h5>
@@ -89,7 +89,7 @@
                                     <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
                                     <div class="col-12 col-md-4 p-0 face">
                                         {% with primerGraffiti=p.listaGraffitis|lookup:0 %}
-                                        <img class="d-block altura cover w-100" src="{{primerGraffiti.imagen}}">
+                                        <img class="d-block altura anchura cover" src="{{primerGraffiti.imagen}}">
                                         {% endwith %}
                                         <div class="content">
                                             <h5 class="p-2 wrapLinea">{{p.titulo}}</h5>
