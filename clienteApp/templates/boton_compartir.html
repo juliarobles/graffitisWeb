@@ -1,4 +1,6 @@
 {% load static %}
+
+<!-- Inicializar facebook -->
 <script>
     window.fbAsyncInit = function() {
       FB.init({
@@ -11,6 +13,13 @@
 </script>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
+<!-- Inicializar pinterest -->
+<script
+    type="text/javascript"
+    async defer
+    src="//assets.pinterest.com/js/pinit.js"
+></script>
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/compartir.css' %}">
 <button id="boton-compartir" class=" boton-compartir" onclick="animar_todo()"></button>
 <button class="fab  fa-twitter compartir-twitter" onclick="compartir_twitter(
@@ -21,6 +30,7 @@
     {% endif %}
 )"></button>
 <button class="compartir-facebook" onclick="compartir_facebook()"><i class="fab fa-facebook-f"></i></button>
+<button class="compartir-pinterest" onclick="PinUtils.pinAny()"><i class="fab fa-pinterest-p"></i></button>
 
 
 <script>
@@ -35,6 +45,11 @@
         }, 500);
         $( ".compartir-facebook" ).animate({
             right: "+=" + 2*desplazar + "px",
+            opacity:  opacidad,
+            
+        }, 500);
+        $( ".compartir-pinterest" ).animate({
+            right: "+=" + 3*desplazar + "px",
             opacity:  opacidad,
             
         }, 500);
