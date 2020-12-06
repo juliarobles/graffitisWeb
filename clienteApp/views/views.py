@@ -9,6 +9,7 @@ from django.http import HttpRequest, JsonResponse
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 import urllib3, json, flickrapi
 import requests, webbrowser
+from ..forms import GraffitiForm
 
 
 http = urllib3.PoolManager()
@@ -404,3 +405,21 @@ def usuario_follow(request, pk):
         print(r)
         print(r.text)
     return redirect(reverse('usuarios-detail', args={pk}))
+
+def graffiti_form(request, pk):
+    """
+    Esta funcion se encargara de generar la pagina html con el formulario
+    para los graffitis. Tiene doble funcionalidad:
+    - GET: crea el formulario y muestra el html
+    - POST: crea el graffiti y se guarda, redirige a la publicacion
+    """
+    if request.method == 'GET':
+        form = GraffitiForm()
+        context={
+            'publicacion': pk,
+            'form': form
+        }
+        
+        return render(request, 'graffiti_form.html', context=context)
+    elif request.method == 'POST':
+        pass

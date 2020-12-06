@@ -77,6 +77,7 @@
                             <a href="{% url 'publicacion-delete' publicacion.id %}" class="btn btn-danger">Eliminar</a>
                             {%endif%}
                             </div>
+                            <p><a href="{% url 'graffiti-form' publicacion.id %}" class="btn btn-warning">A&ntilde;adir contribuci&oacute;n</a></p>
                             <h6>Publicado por: 
                                 <a class="sinDecoracion" href="{% url 'usuarios-detail' creador.id %}">
                                 @{{creador.usuario}}
