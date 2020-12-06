@@ -8,7 +8,10 @@ from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 from django.utils.http import urlencode
 import urllib3, json, flickrapi
 import requests, webbrowser
+from datetime import date
 from urllib.parse import urlencode
+import time
+from xml.etree import ElementTree
 
 
 http = urllib3.PoolManager()
@@ -16,9 +19,31 @@ client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
 FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
 FLICKR_API_SECRET = '15075131b9983f9b'
+FLICKR_USER = '191270823@N05'
+
+def uploadImage(image):
+    flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET)
+
+    filename = image.name
+    rsp = flickr.upload(filename=filename, fileobj=image)
+    time.sleep(3)
+
+    if rsp.get('stat') != 'ok':
+        return None
+
+    image_id = rsp.find('photoid').text
+
+    for photo in flickr.walk_user():
+        if photo.get('id') == image_id:
+            url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
+            return url
+
+    return None
+
 def comprobarUsuarioLogueado(request):
     #Lo he cambiado por esto: https://stackoverflow.com/questions/4963186/django-sessions-can-you-check-for-session-data-and-set-it-in-same-view 
-     if 'usuario' not in request.session:
+    if 'usuario' not in request.session:
+        print(str('usuario' not in request.session) + " tiene que ser true")
         return redirect('/principal/')
 
 def eliminar_eventos_repetidos(lista):
@@ -198,6 +223,9 @@ def publicaciones_detail_view(request, pk):
     return render(request, 'publicacion_detail.html', context=context)
 
 def publicaciones_formulario_view(request):
+    ret = comprobarUsuarioLogueado(request)
+    if ret:
+        return ret
     return render(request, 'publicacion_crear.html')
 
 def usuarios_list(request):
@@ -234,6 +262,9 @@ def usuarios_detail(request, pk):
     return render(request, 'usuarios_detail.html', context=context)
 
 def crear_publicacion(request):
+    ret = comprobarUsuarioLogueado(request)
+    if ret:
+        return ret
     # ** Pruebas Imgur
     # client = ImgurClient(client_id, client_secret)
     # client.upload_from_path(POST['imagen'])
@@ -282,57 +313,56 @@ def crear_publicacion(request):
     # resp = flickr.photos.getInfo(photo_id='7658567128')
 
     if request.method == 'POST':
-
-
-
+        fecha = date.fromisoformat(request.POST['fecha_captura'])
+        print(fecha)
         # **Por ahora está comentado para no subir muchas fotos con las pruebas 
         # **Cuando esté crear publicación completo habrá que descomentarlo
         flickr = flickrapi.FlickrAPI(api_key, api_secret)
-        # imagen = request.FILES['imagen']
-        # resp = flickr.upload(filename=str(imagen), fileobj=imagen.file)
-        # print(resp)
-        img = flickr.walk_user()
-        for photo in flickr.walk_user('191270823@N05'):
+        imagen = request.FILES['imagen']
+        resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
+
+        # Sacamos la id de la respuesta del servidor REST
+        for elem in resp:
+            if(str(elem.tag)=='photoid'):
+                photo_id = elem.text
+
+        # Obtenemos la URL consultando el servidor REST 
+        for photo in flickr.walk_user(user_id):
+            # Estructura de la url por si alguien quiere utilizar algo 
             # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
-            if(photo.get('size-suffix')):
-                url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'_'+photo.get('size-suffix')+'.jpg'
-            else:
+            if(photo.get('id') == photo_id):
                 url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
-                
-            print(url)
-            if photo.get('title') == 'volley clandestino azul-rosa.png' :
-                img = photo
-        return render(request, 'imagen.html', context={'imagen':url})
-
-
-        
-
-
-
-
+                break        
+        tematicas = str(request.POST['tematica']).split('#')
+        del tematicas[0]
+        # return render(request, 'imagen.html', context={'imagen':url})
         dic = {
-            'titulo': request.POST['titulo'],
-            'descripcion': request.POST['descripcion'],
-            'localizacion': request.POST['localizacion'],
-            'tematica': request.POST['tematica'],
-            'autor': request.POST['autor'],
-            'creador': request.POST['creador'],#**Añadir el creador (id usuario logeado)
-            'listaGraffitis':
+            "titulo": request.POST["titulo"],
+            "descripcion": request.POST["descripcion"],
+            "localizacion": request.POST["localizacion"],
+            "tematica": tematicas,#[request.POST["tematica"]],
+            "autor": request.POST["autor"],
+            "creador":  request.session['usuario'],#**Añadir el creador (id usuario logeado)
+            "listaGraffitis":
             [
                 {
-                    'imagen': request.POST['imagen'], #**Meter url de imgur (investigar)
-                    'estado': request.POST['estado'], 
-                    'fechaCaptura': request.POST['fechaCaptura'], 
-                    'autor': request.POST['autor']
+                    "imagen":url, 
+                    "estado": request.POST["estado"], 
+                    "fechaCaptura": request.POST["fecha_captura"], 
+                    "autor": request.session['usuario']
                 }
             ],
         }
-        r = http.request(
-            'POST',
-            'http://localhost:8000/publicaciones', 
-            fields=dic
-        )
-        print(r.status)
+        print(dic)
+
+        requests.post('http://localhost:8000/publicaciones/', data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
+        # r = http.request(
+        #     'POST',
+        #     'http://localhost:8000/publicaciones', 
+        #     fields=json.dumps(dic), 
+        #     headers=  {'Content-type': 'application/json', 'Accept': 'application/json'}
+        # )
+        
     
     return redirect(reverse('inicio'))
 
@@ -451,7 +481,7 @@ def graffiti_form(request, pk):
         if request.session.has_key('usuario'):
             imagen = request.FILES['imagen']
             # Subir imagen a flickr
-            url = '' # url de la imagen
+            url = uploadImage(imagen)
             print(imagen.name)
             form = request.POST
             data = {
@@ -464,3 +494,46 @@ def graffiti_form(request, pk):
             headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
             r = requests.post(f'http://localhost:8000/publicaciones/{pk}/graffitis/', data=body, headers=headers)
             return redirect(reverse('publicacion-detail', args=[pk]))
+
+
+def editar_publicacion(request, pk):
+    if request.method == 'POST' :
+        tematica = request.POST['tematica']
+        cadena = "["
+        lista = []
+        for tem in tematica.split(", "):
+            lista.append(tem)
+
+        dic = {
+            'titulo': request.POST['titulo'],
+            'descripcion': request.POST['descripcion'],
+            'tematica': lista,
+            'autor': request.POST['autor']
+        }
+        data = json.dumps(dic)
+        headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+
+        r = requests.put(f'http://127.0.0.1:8000/publicaciones/{pk}/', data=data, headers=headers)
+        
+        
+    else: 
+        r = http.request(
+            'GET',
+            'http://127.0.0.1:8000/publicaciones/'+str(pk)
+        )
+        publicacion = json.loads(r.data)
+        primerGraffiti = publicacion.get('listaGraffitis')[0]
+        tematica = publicacion.get("tematica")
+        cadena = ""
+        for tem in tematica:
+            cadena += tem + ", "
+        context={
+                'publicacion': publicacion,
+                'graffiti' : primerGraffiti,
+                'tematica': cadena[:-2]
+        }
+        
+        return render(request, 'publicacion_editar.html', context=context)
+    
+    return redirect(reverse('publicacion-detail', args=[pk]))
+
