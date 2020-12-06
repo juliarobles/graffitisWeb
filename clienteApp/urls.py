@@ -41,7 +41,8 @@ urlpatterns = [
     path('html/publicaciones/detalles/<str:pk>/comentarios/<str:cpk>', delete_comentario, name='delete-comentario'),
     path('html/publicaciones/detalles/<str:pk>/like', like_publicacion, name='publicacion-like'),
     path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
-    path('html/usuarios/detalles/<str:pk>/follow/', usuario_follow, name='usuario-follow')
+    path('html/usuarios/detalles/<str:pk>/follow/', usuario_follow, name='usuario-follow'),
+    path('html/politica-de-privacidad/', privacidad, name='privacidad')
 ]
 
 #Acciones

@@ -159,6 +159,9 @@ def eventos_list(request):
 def base_view(request):
     return render(request, 'graffiti_list.html')
 
+def privacidad(request):
+    return render(request, 'politicaPrivacidad.html')
+
 def list_publicaciones_views(request):
     r = http.request(
         'GET',
@@ -361,7 +364,7 @@ def crear_comentario(request, pk):
             headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
             requests.post(url, data=data, headers=headers)
-    return publicaciones_detail_view(request,pk)
+    return redirect(reverse('publicacion-detail', args=(pk,)))
 
 def like_inicio(request, pk):
     private_post_like(request, pk)
