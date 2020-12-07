@@ -218,7 +218,8 @@ def publicaciones_detail_view(request, pk):
         "creador":json.loads(b.data),
         "meGusta": len(publicacion['meGusta']),
         "lenComentarios": len(publicacion['listaComentarios']),
-        "usuarioLogeado": request.session['usuario']
+        "usuarioLogeado": request.session['usuario'],
+        "primerGraffiti": publicacion.get("listaGraffitis")[0]
     }
     return render(request, 'publicacion_detail.html', context=context)
 
@@ -281,7 +282,7 @@ def crear_publicacion(request):
     api_secret = '15075131b9983f9b'
     user_id= '191270823@N05'
 
-    
+
     otro_token ='898-452-861' #** Este código creo que si funciona, será el token
 
     if request.method == 'POST':
@@ -491,12 +492,43 @@ def graffiti_form(request, pk):
             return redirect(reverse('publicacion-detail', args=[pk]))
 
 
-def editar_publicacion(request, pk):
+def editar_publicacion(request, pk, gpk):
     if request.method == 'POST' :
+
+        api_key = '75b8452aae39dc0967a42c37c139e8a0'
+        api_secret = '15075131b9983f9b'
+        user_id= '191270823@N05'
+
+        flickr = flickrapi.FlickrAPI(api_key, api_secret)
+        imagencheck = request.FILES.get('imagen') or None
+        if imagencheck is not None  :
+            imagen = request.FILES['imagen']
+            resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
+
+            # Sacamos la id de la respuesta del servidor REST
+            for elem in resp:
+                if(str(elem.tag)=='photoid'):
+                    photo_id = elem.text
+
+            # Obtenemos la URL consultando el servidor REST 
+            for photo in flickr.walk_user(user_id):
+                # Estructura de la url por si alguien quiere utilizar algo 
+                # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
+                if(photo.get('id') == photo_id):
+                    url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
+                    break
+        else :
+            r = http.request(
+                'GET',
+                'http://127.0.0.1:8000/publicaciones/'+pk+'/graffitis/'+gpk
+            )
+            graffiti = json.loads(r.data)
+            url = graffiti.get('imagen')        
+
         tematica = request.POST['tematica']
         cadena = "["
         lista = []
-        for tem in tematica.split(", "):
+        for tem in tematica.split("#")[1:]:
             lista.append(tem)
 
         dic = {
@@ -505,11 +537,16 @@ def editar_publicacion(request, pk):
             'tematica': lista,
             'autor': request.POST['autor']
         }
+        doc = {
+            'imagen' : url,
+            'estado': request.POST['estado'],
+            'fechaCaptura':request.POST['fecha_captura'],
+            'autor': request.POST['publicador']
+        }
         data = json.dumps(dic)
         headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-
+        g = requests.put(f'http://127.0.0.1:8000/publicaciones/{pk}/graffitis/{gpk}', data=json.dumps(doc), headers=headers)
         r = requests.put(f'http://127.0.0.1:8000/publicaciones/{pk}/', data=data, headers=headers)
-        
         
     else: 
         r = http.request(
@@ -521,14 +558,15 @@ def editar_publicacion(request, pk):
         tematica = publicacion.get("tematica")
         cadena = ""
         for tem in tematica:
-            cadena += tem + ", "
+            cadena += '#'+tem
         context={
                 'publicacion': publicacion,
                 'graffiti' : primerGraffiti,
-                'tematica': cadena[:-2]
+                'tematica': cadena
         }
         
         return render(request, 'publicacion_editar.html', context=context)
     
     return redirect(reverse('publicacion-detail', args=[pk]))
+
 

@@ -117,7 +117,7 @@
                         </div>
                     </div>
                     {% if request.session.usuario == creador.id %}
-                        <a href="{% url 'editar-publicacion' publicacion.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
+                        <a href="{% url 'editar-publicacion' publicacion.id primerGraffiti.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
                         <a href="{% url 'publicacion-delete' publicacion.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
                     {%endif%}
                     <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>  
