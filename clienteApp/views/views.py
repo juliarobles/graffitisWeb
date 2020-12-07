@@ -334,7 +334,8 @@ def crear_publicacion(request):
                 url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
                 break        
         tematicas = str(request.POST['tematica']).split('#')
-        del tematicas[0]
+        if tematicas[0] == "":
+            del tematicas[0]
         # return render(request, 'imagen.html', context={'imagen':url})
         dic = {
             "titulo": request.POST["titulo"],
