@@ -51,6 +51,9 @@ Para poder ejecutar nuestra API en su propia máquina, solo tiene que seguir est
  ``` shell
  pip install python
  ```
+ 
+ :warning:Nota importante: A partir de Python 3.9 se ha eliminado una función que utiliza la librería Flickrapi, por lo que se debe usar Python 3.8 para ejecutar esta aplicación.
+
  3. Descargar nuestro proyecto:
  
   Si únicamente quieres hacer uso del API Rest usar:
