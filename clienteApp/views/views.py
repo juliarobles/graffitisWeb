@@ -284,40 +284,35 @@ def crear_publicacion(request):
     
     otro_token ='898-452-861' #** Este código creo que si funciona, será el token
 
-
-    # **No sé cómo funciona el tema del token y la verificación de Flickr 
-    # ** pero solo tendréis que descomentar las líneas de abajo para autorizar la app
-    # ** y obtener un token nuevo
-    # # ! Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
-
-    # print('Step 1: authenticate')
-    # # Only do this if we don't have a valid token already
-    # if not flickr.token_valid(perms='write'):
-
-    #     # Get a request token
-    #     flickr.get_request_token(oauth_callback='oob')
-
-    #     # Open a browser at the authentication URL. Do this however
-    #     # you want, as long as the user visits that URL.
-    #     authorize_url = flickr.auth_url(perms='write')
-    #     webbrowser.open_new_tab(authorize_url)
-
-    #     # Get the verifier code from the user. Do this however you
-    #     # want, as long as the user gives the application the code.
-    #     verifier = str(input('Verifier code: '))
-
-    #     # Trade the request token for an access token
-    #     flickr.get_access_token(verifier)
-
-    # print('Step 2: use Flickr')
-    # resp = flickr.photos.getInfo(photo_id='7658567128')
-
     if request.method == 'POST':
         fecha = date.fromisoformat(request.POST['fecha_captura'])
         print(fecha)
-        # **Por ahora está comentado para no subir muchas fotos con las pruebas 
-        # **Cuando esté crear publicación completo habrá que descomentarlo
         flickr = flickrapi.FlickrAPI(api_key, api_secret)
+
+        # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
+        # y obtener un token nuevo
+        # Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
+        ##############################################################################
+        # if not flickr.token_valid(perms='write'):
+
+        #     # Get a request token
+        #     flickr.get_request_token(oauth_callback='oob')
+
+        #     # Open a browser at the authentication URL. Do this however
+        #     # you want, as long as the user visits that URL.
+        #     authorize_url = flickr.auth_url(perms='write')
+        #     webbrowser.open_new_tab(authorize_url)
+
+        #     # Get the verifier code from the user. Do this however you
+        #     # want, as long as the user gives the application the code.
+        #     verifier = str(input('Verifier code: '))
+
+        #     # Trade the request token for an access token
+        #     flickr.get_access_token(verifier)
+        ################################################################################
+
+
+
         imagen = request.FILES['imagen']
         resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
 
@@ -354,7 +349,6 @@ def crear_publicacion(request):
                 }
             ],
         }
-        print(dic)
 
         requests.post('http://localhost:8000/publicaciones/', data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
         # r = http.request(
