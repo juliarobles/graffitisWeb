@@ -19,12 +19,15 @@ Nuestro cliente, llamado *Underground* y cuyo código completo se encuentra dent
 * Iniciar sesión provisionalmente. Este sistema será sustituido proximamente por OAuth de Google.
 * Ver todas las publicaciones en el inicio.
 * Buscar entre todas las publicaciones por uno o varios hashtags, uno o varios usuarios o una o varias palabras contenidas en el título o la descripción.
-* Ver una publicación detallada junto a todos los *graffitis* que la forman.
+* Consultar los eventos del Ayuntamiento de Málaga.
 * Ver el perfil de cualquier usuario, incluido sí mismo, junto con todas las publicaciones que este ha creado o en las que ha contribuido.
 * Seguir y dejar de seguir a otro usuario.
+* Ver una publicación detallada junto a todos los *graffitis* que la forman.
 * Crear una nueva publicación.
+* Editar una publicación creada por tí.
 * Eliminar una publicación creada por tí.
 * Contribuir a una publicación ya existente con una actualización (*graffiti*) del mismo.
+* Editar una contribución (*graffiti*) creada por tí.
 * Eliminar una contribución (*graffiti*) creada por tí.
 * Realizar comentarios en las publicaciones.
 * Eliminar los comentarios realizados el usuario de la sesión.

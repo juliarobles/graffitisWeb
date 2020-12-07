@@ -331,6 +331,8 @@ def crear_publicacion(request):
         tematicas = str(request.POST['tematica']).split('#')
         if tematicas[0] == "":
             del tematicas[0]
+        for t in tematicas:
+            t = t.strip()
         # return render(request, 'imagen.html', context={'imagen':url})
         dic = {
             "titulo": request.POST["titulo"],
