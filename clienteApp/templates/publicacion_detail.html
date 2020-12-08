@@ -58,8 +58,8 @@
                                                 <p>{{graffiti.estado}}</p>
                                                 {% if graffiti.autor.id == request.session.usuario%}
                                                 <p>
-                                                    <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br>
-                                                    
+                                                    <!-- De momento no editamos las contribuciones -->
+                                                    <!-- <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br> -->
                                                     {% if graffiti is not publicacion.listaGraffitis|lookup:0 %}
                                                         <a href="{% url 'graffiti-delete' publicacion.id graffiti.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
                                                     {% endif %}
