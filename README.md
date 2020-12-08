@@ -27,7 +27,6 @@ Nuestro cliente, llamado *Underground* y cuyo código completo se encuentra dent
 * Editar una publicación creada por tí.
 * Eliminar una publicación creada por tí.
 * Contribuir a una publicación ya existente con una actualización (*graffiti*) del mismo.
-* Editar una contribución (*graffiti*) creada por tí.
 * Eliminar una contribución (*graffiti*) creada por tí.
 * Realizar comentarios en las publicaciones.
 * Eliminar los comentarios realizados el usuario de la sesión.
