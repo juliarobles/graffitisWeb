@@ -17,11 +17,11 @@
             <!-- Informacion sobre la foto -->
             <div class="campo-form">
                 <label for="titulo">Título</label> <br>
-                <input type="text" style="text-align:center" name="titulo" id="titulo" value="{{publicacion.titulo}}">
+                <input maxlength="100" type="text" style="text-align:center" name="titulo" id="titulo" value="{{publicacion.titulo}}">
             </div>
             <div class="campo-form">
                 <label for="descripcion">Descripción</label><br>
-                <textarea style="text-align:center" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' placeholder="" type="textarea" name="descripcion" id="descripcion"  cols="40">{{publicacion.descripcion}}</textarea>
+                <textarea maxlength="500" style="text-align:center" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' placeholder="" type="textarea" name="descripcion" id="descripcion"  cols="40">{{publicacion.descripcion}}</textarea>
             </div>
             <div class="campo-form">
                 <label for="tematica">Temática</label> <br>
@@ -29,7 +29,7 @@
             </div>
             <div class="campo-form">
                 <label for="autor">Autor</label> <br>
-                <input style="text-align:center" value="{{publicacion.autor}}" type="text" name="autor" id="autor">
+                <input maxlength="50" style="text-align:center" value="{{publicacion.autor}}" type="text" name="autor" id="autor">
             </div>
             <div class="campo-form">
                 <label for="Estado conservacion">Estado de conservación</label> <br>

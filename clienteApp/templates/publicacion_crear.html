@@ -17,23 +17,23 @@
             <!-- Informacion sobre la foto -->
             <div class="campo-form">
                 <label for="titulo">Título</label> <br>
-                <input type="text" name="titulo" id="titulo">
+                <input type="text" name="titulo" id="titulo" maxlength="100">
             </div>
             <div class="campo-form">
                 <label for="descripcion">Descripción</label><br>
-                <textarea oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' placeholder=" " type="textarea" name="descripcion" id="descripcion"  cols="40"></textarea>
+                <textarea maxlength="500" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' placeholder=" " type="textarea" name="descripcion" id="descripcion"  cols="40"></textarea>
             </div>
             <div class="campo-form">
-                <label for="tematica">Temática</label> <br>
+                <label for="tematica">Temática (separar cada temática con #)</label> <br>
                 <input type="text" name="tematica" id="tematica">
             </div>
             <div class="campo-form">
                 <label for="localizacion">Localización</label> <br>
-                <input type="text" name="localizacion" id="localizacion">
+                <input maxlength="50" type="text" name="localizacion" id="localizacion" required>
             </div>
             <div class="campo-form">
                 <label for="autor">Autor</label> <br>
-                <input type="text" name="autor" id="autor">
+                <input maxlength="50" type="text" name="autor" id="autor">
             </div>
             <div class="campo-form">
                 <label for="Estado conservacion">Estado de conservación</label> <br>
@@ -54,7 +54,7 @@
                 <div class="zindex1 position-absolute">¡Sube tu imagen!</div>
                 <img id="imagen-mostrar"  class="zindex2 imagen-subir" src="#" hidden/>            </div>
             <div class="row boton-imagen ">
-                <input id="subir-archivo" type='file' onchange="readURL(this);" name="imagen" hidden />
+                <input id="subir-archivo" type='file' onchange="readURL(this);" name="imagen" hidden  required/>
                   <button onclick="clicar_input()" type="button" class="pulse"  >Elige una foto</button>
                 </div>
             </div>
