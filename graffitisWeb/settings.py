@@ -90,21 +90,12 @@ WSGI_APPLICATION = 'graffitisWeb.wsgi.application'
 MONGODB_DATABASES = {
     'default': {'name': 'iweb'}
 }
-# mongodb+srv://<username>:<password>@cluster0.pzn8b.mongodb.net/<dbname>?retryWrites=true&w=majority
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'iweb',
-        'HOST': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
-        'USER': 'Guest',
-        'PASSWORD': 'guest',
-        # 'CLIENT': {
-        #     'host': 
-        #     'name': 'iweb',
-        #     'username': 'Guest',
-        #     'password': 'guest',
-        #     'authMechanism': 'SCRAM-SHA-1',
-        # }
+        'ENFORCE_SCHEMA': False,
     }
 }
 
