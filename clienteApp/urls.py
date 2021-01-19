@@ -44,7 +44,9 @@ urlpatterns = [
     path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
     path('html/usuarios/detalles/<str:pk>/follow/', usuario_follow, name='usuario-follow'),
     path('html/publicacion/<str:pk>/graffiti/', graffiti_form, name='graffiti-form'),
-    path('html/politica-de-privacidad/', privacidad, name='privacidad')
+    path('html/politica-de-privacidad/', privacidad, name='privacidad'),
+    path('html/publicacion/<str:id_pub>/graffiti/<str:id_graf>/editar/', editar_graffiti, name='editar-graffiti'),
+    path('html/publicacion/<str:id_pub>/graffiti/<str:id_graf>/guardar/', guardar_editar_graffiti, name='guardar-graffiti'),
 ]
 
 #Acciones
