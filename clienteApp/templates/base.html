@@ -8,10 +8,23 @@
 
     <!-- Cargamos la libreria de bootstrap  -->
     {% load bootstrap4 %}
+    {% load static %}
 
     <!-- CSS bootstrap -->
     {% bootstrap_css %}
     {% load static %}
+
+    <!-- Sign Out -->
+    <script>
+        function onLoad() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init();
+            });
+        }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <meta name="google-signin-client_id" content="495343275268-1b1ccmu06nc825uvhcnb6p83kbfo2nmf.apps.googleusercontent.com">
+    
     <link rel="shortcut icon" href="{% static 'images/icon.ico' type='image/x-icon' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <script src="https://kit.fontawesome.com/c77eea7e8a.js" crossorigin="anonymous"></script>
