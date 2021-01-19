@@ -266,6 +266,16 @@ def crear_publicacion(request):
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
+    # ** Pruebas Imgur
+    # client = ImgurClient(client_id, client_secret)
+    # client.upload_from_path(POST['imagen'])
+    # **Pruebas imagen
+    # r = request.POST['imagen']
+    # r.raw.decode_content = True
+    # im = Image.open(r.raw)
+    # print(im.format, im.mode, im.size)
+    # print(request.FILES)
+    # return render(request, 'imagen.html', context={'imagen':request.FILES['imagen']})
     #  ** Flickr
     token= '72157717157590777-acde95669be3f3f1&oauth_verifier=b7825e3b792089ef'  #**No sé que es esto. oauth_token
     api_key = '75b8452aae39dc0967a42c37c139e8a0'
@@ -277,15 +287,29 @@ def crear_publicacion(request):
 
     if request.method == 'POST':
         fecha = date.fromisoformat(request.POST['fecha_captura'])
-
-        # Comprobamos la longitud de los campos
-
-
+        print(fecha)
         flickr = flickrapi.FlickrAPI(api_key, api_secret)
 
-        # Comprobar validez del token de cache
-    
-        actualizar_token(flickr)
+        # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
+        # y obtener un token nuevo
+        # Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
+        ##############################################################################
+        # if not flickr.token_valid(perms='write'):
+
+        #     # Get a request token
+        #     flickr.get_request_token(oauth_callback='oob')
+
+        #     # Open a browser at the authentication URL. Do this however
+        #     # you want, as long as the user visits that URL.
+        #     authorize_url = flickr.auth_url(perms='write')
+        #     webbrowser.open_new_tab(authorize_url)
+
+        #     # Get the verifier code from the user. Do this however you
+        #     # want, as long as the user gives the application the code.
+        #     verifier = str(input('Verifier code: '))
+
+        #     # Trade the request token for an access token
+        #     flickr.get_access_token(verifier)
         ################################################################################
 
 
@@ -340,29 +364,6 @@ def crear_publicacion(request):
     
     return redirect(reverse('inicio'))
 
-def actualizar_token(flickr):
-        flickr.authenticate_via_browser(perms='write')
-
-        # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
-        # y obtener un token nuevo
-        # Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
-        ##############################################################################
-        # if not flickr.token_valid(perms='write'):
-
-        #     # Get a request token
-        #     flickr.get_request_token(oauth_callback='oob')
-
-        #     # Open a browser at the authentication URL. Do this however
-        #     # you want, as long as the user visits that URL.
-        #     authorize_url = flickr.auth_url(perms='write')
-        #     webbrowser.open_new_tab(authorize_url)
-
-        #     # Get the verifier code from the user. Do this however you
-        #     # want, as long as the user gives the application the code.
-        #     verifier = str(input('Verifier code: '))
-
-        #     # Trade the request token for an access token
-        #     flickr.get_access_token(verifier)
 def eliminar_publicacion(request, pk):
     r = http.request(
         'GET',
@@ -420,15 +421,6 @@ def private_post_like(request,pk):
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
         requests.post(url, data=data, headers=headers)
-
-
-def editar_graffiti(request, id_pub, id_graf):
-    if request.session.has_key('usuario'):
-        r = requests.get('http://localhost:8000/publicaciones/' + id_pub +'/graffitis/' + id_graf)
-        graffiti = json.loads(r.text)
-        r = requests.get('http://localhost:8000/usuarios/' + graffiti['autor']['id'])
-        autor = json.loads(r.text)
-    return render(request, 'editar_graffiti.html', context={'graffiti' : graffiti, 'autor':autor, 'publicacion_id': id_pub, })
 
 def eliminar_graffiti(request, ppk, gpk):
     if request.session.has_key('usuario'):
@@ -501,22 +493,6 @@ def graffiti_form(request, pk):
             r = requests.post(f'http://localhost:8000/publicaciones/{pk}/graffitis/', data=body, headers=headers)
             return redirect(reverse('publicacion-detail', args=[pk]))
 
-def guardar_editar_graffiti(request, id_pub, id_graf):
-    ret = comprobarUsuarioLogueado(request)
-    if ret:
-        return ret
-    graffiti = requests.get('http://localhost:8000/publicaciones/'+id_pub+'/graffitis/' +id_graf)
-    graf = json.loads(graffiti.text)
-
-    if request.method == 'POST':
-        dic={
-            'imagen': graf['imagen'],
-            'estado': request.POST['estado'],
-            'fechaCaptura': request.POST['fecha_captura'],
-            'autor': graf['autor']['id']
-        }
-        resp = requests.put('http://localhost:8000/publicaciones/' + id_pub + '/graffitis/' + id_graf, data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
-    return redirect(reverse('publicacion-detail', args=[id_pub]))
 
 def editar_publicacion(request, pk, gpk):
     if request.method == 'POST' :

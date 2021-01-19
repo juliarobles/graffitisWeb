@@ -59,9 +59,6 @@
                                                 {% if graffiti.autor.id == request.session.usuario%}
                                                 <p>
                                                     <!-- De momento no editamos las contribuciones -->
-                                                    {% if request.session.usuario == graffiti.autor.id %}
-                                                    <a href="{% url 'editar-graffiti' publicacion.id graffiti.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
-                                                    {%endif%}
                                                     <!-- <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br> -->
                                                     {% if graffiti is not publicacion.listaGraffitis|lookup:0 %}
                                                         <a href="{% url 'graffiti-delete' publicacion.id graffiti.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
