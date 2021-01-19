@@ -22,31 +22,48 @@ from clienteApp.views.loginViews import *
 
 # Paginas principales
 urlpatterns = [
+
+    # General #
     path('inicio/', inicio, name='inicio'),
     path('principal/', principal, name='principal'),
     path('registro/', registro, name='registro'),
+    path('html/politica-de-privacidad/', privacidad, name='privacidad'),
+    path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
+
+    # Eventos #
+
     path('html/eventos/', eventos_list ,name='eventos-list'),
     path('html/eventos/<int:ID_ACTIVIDAD>/', eventos_details ,name='eventos-details'),
+    path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
+    path('ajax/eventos/<int:ID_ACTIVIDAD>/', cargar_evento_id_ajax, name='cargar-eventos-id'),
+
+    # Publicaciones # 
+
     path('html/publicaciones/', list_publicaciones_views, name='publicaciones-list'),
     path('html/publicaciones/detalles/<str:pk>/', publicaciones_detail_view, name='publicacion-detail'),
     path('html/nuevapublicacion/', publicaciones_formulario_view, name='publicacion-formulario'),
     path('html/nuevapublicacion/publicar', crear_publicacion, name='crear-publicacion'),
-    path('html/usuarios', usuarios_list, name='usuarios-list'),
-    path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
-    path('ajax/eventos', cargar_eventos_ajax, name='cargar-eventos-ajax'),
-    path('ajax/eventos/<int:ID_ACTIVIDAD>/', cargar_evento_id_ajax, name='cargar-eventos-id'),
     path('html/publicaciones/eliminar/<str:pk>', eliminar_publicacion, name='publicacion-delete'),
     path('html/publicaciones/editar/<str:pk>/<str:gpk>', editar_publicacion, name='editar-publicacion'),
-    path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario'),
-    path('html/publicaciones/detalles/<str:ppk>/graffitis/<str:gpk>/delete', eliminar_graffiti, name='graffiti-delete'),
-    path('html/publicaciones/detalles/<str:pk>/comentarios/<str:cpk>', delete_comentario, name='delete-comentario'),
     path('html/publicaciones/detalles/<str:pk>/like', like_publicacion, name='publicacion-like'),
-    path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
-    path('html/usuarios/detalles/<str:pk>/follow/', usuario_follow, name='usuario-follow'),
+
+    # Graffitis #
+
+    path('html/publicaciones/detalles/<str:ppk>/graffitis/<str:gpk>/delete', eliminar_graffiti, name='graffiti-delete'),
     path('html/publicacion/<str:pk>/graffiti/', graffiti_form, name='graffiti-form'),
-    path('html/politica-de-privacidad/', privacidad, name='privacidad'),
     path('html/publicacion/<str:id_pub>/graffiti/<str:id_graf>/editar/', editar_graffiti, name='editar-graffiti'),
     path('html/publicacion/<str:id_pub>/graffiti/<str:id_graf>/guardar/', guardar_editar_graffiti, name='guardar-graffiti'),
+
+    # Usuarios #
+
+    path('html/usuarios', usuarios_list, name='usuarios-list'),
+    path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
+    path('html/usuarios/detalles/<str:pk>/follow/', usuario_follow, name='usuario-follow'),
+
+    # Comentario #
+    path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario'),
+    path('html/publicaciones/detalles/<str:pk>/comentarios/<str:cpk>', delete_comentario, name='delete-comentario'),
+    
 ]
 
 #Acciones
