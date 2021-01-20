@@ -54,52 +54,70 @@ crossorigin=""></script>
       </div>
     </div>
     <script>
-      var mymap = L.map('mapid').setView([36.7213028, -4.4216366], 16);
-      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-          maxZoom: 18,
-          id: 'mapbox/streets-v11',
-          tileSize: 512,
-          zoomOffset: -1,
-          accessToken: 'pk.eyJ1IjoianVsaWFyb2JsZXMiLCJhIjoiY2trNG8xcWs5MTU1MjMycW9vNHQydjZ3MiJ9.tn9yzxwspPqdNymmZMqPfA'
-      }).addTo(mymap);
-      console.log("{{ publicaciones|safe }}");
-      var listPubli = JSON.parse("{{ publicaciones|safe }}".replace(/'/g, '"'));
-      for (var i = 0; i < listPubli.length; i++){
-          try {
-              var publ = listPubli[i];
-              var autor = publ.listaGraffitis[0].autor;
-              console.log(publ);
-              var coordenadas = publ.localizacion.split(',');
-              var marker = L.marker([coordenadas[0], coordenadas[1]]).addTo(mymap);
-              var url = "{% url 'usuarios-detail' "+autor.id+" %}".replace("+autor.id+", autor.id);
-              var url2 = "{% url 'publicacion-detail' "+publ.id+" %}".replace("+publ.id+", publ.id);
-              var html = ''
-                + '<div style="width: 200px;">'
-                  + '<a class="sinDecoracion d-flex align-items-center mb-2" href="' + url + '">'
-                      + '<img class="rounded-circle icon" src="' + autor.imagen + '" onerror=' + '"' + "this.src='{% static 'images/iconHuevo.png' %}';" + '"/>'
-                                + '&nbsp;&nbsp;<text class="text-dark"> @' + autor.usuario + '</text>'
-                  + '</a>'
-                  + '<a href="' + url2 + '" style="text-decoration: none; color: black;">'
-                    + '<img class="w-100 rounded" style="height: 150px; object-fit: cover;" src=' + publ.listaGraffitis[0].imagen + ">" 
-                    + '<h5 class="mt-3 mb-1" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.titulo + '</h5>'
-                    + '<h6 class="mt-0 mb-1" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.autor + '</h6>' 
-                    + '<p class="mt-0" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.descripcion + '</p>'
-                  + '</a>'
-                + '</div>'
-                marker.bindPopup(html);
-          } catch (error) {
-              console.error(error);
-          }
+      var positionLon = -4.4216366;
+      var positionLat = 36.7213028;
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function showPosition(position){
+          positionLat = position.coords.latitude;
+          positionLon = position.coords.longitude;
+          ponerMapa();
+        }, function(objPositionError)
+        {
+          ponerMapa();
+        }, {
+          maximumAge: 75000,
+          timeout: 15000
+        });
+      } else {
+        ponerMapa();
       }
-      
-      //GRACIAS: https://gis.stackexchange.com/questions/224932/problem-with-map-tiles-loading-with-leaflet-and-bootstrap
+      function ponerMapa(){
+        console.log(positionLat);
+        console.log(positionLon);
+        var mymap = L.map('mapid').setView([positionLat, positionLon], 16);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoianVsaWFyb2JsZXMiLCJhIjoiY2trNG8xcWs5MTU1MjMycW9vNHQydjZ3MiJ9.tn9yzxwspPqdNymmZMqPfA'
+        }).addTo(mymap);
+        var listPubli = JSON.parse("{{ publicaciones|safe }}".replace(/'/g, '"'));
+        for (var i = 0; i < listPubli.length; i++){
+            try {
+                var publ = listPubli[i];
+                var autor = publ.listaGraffitis[0].autor;
+                var coordenadas = publ.localizacion.split(',');
+                var marker = L.marker([coordenadas[0], coordenadas[1]]).addTo(mymap);
+                var url = "{% url 'usuarios-detail' "+autor.id+" %}".replace("+autor.id+", autor.id);
+                var url2 = "{% url 'publicacion-detail' "+publ.id+" %}".replace("+publ.id+", publ.id);
+                var html = ''
+                  + '<div style="width: 200px;">'
+                    + '<a class="sinDecoracion d-flex align-items-center mb-2" href="' + url + '">'
+                        + '<img class="rounded-circle icon" src="' + autor.imagen + '" onerror=' + '"' + "this.src='{% static 'images/iconHuevo.png' %}';" + '"/>'
+                                  + '&nbsp;&nbsp;<text class="text-dark"> @' + autor.usuario + '</text>'
+                    + '</a>'
+                    + '<a href="' + url2 + '" style="text-decoration: none; color: black;">'
+                      + '<img class="w-100 rounded" style="height: 150px; object-fit: cover;" src=' + publ.listaGraffitis[0].imagen + ">" 
+                      + '<h5 class="mt-3 mb-1" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.titulo + '</h5>'
+                      + '<h6 class="mt-0 mb-1" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.autor + '</h6>' 
+                      + '<p class="mt-0" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.descripcion + '</p>'
+                    + '</a>'
+                  + '</div>'
+                  marker.bindPopup(html);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        //GRACIAS: https://gis.stackexchange.com/questions/224932/problem-with-map-tiles-loading-with-leaflet-and-bootstrap
       //https://stackoverflow.com/questions/36246815/data-toggle-tab-does-not-download-leaflet-map/36257493#36257493
       $(document).ready(function(){
         $("a[href='#mapa']").on('shown.bs.tab', function(e) {
             mymap.invalidateSize();
         });
       });
+      }
 
     </script>
 </div>

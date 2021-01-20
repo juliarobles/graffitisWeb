@@ -11,6 +11,14 @@
     {% with primerGraffiti=publicacion.listaGraffitis|lookup:0 %}
     <meta property="og:image"              content="{{ primerGraffiti.imagen }}" />
     {% endwith %}
+    <!-- Mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -90,13 +98,13 @@
                 <div class="container ml-md-2 m mx-0">
                     <div class="row w-100">
                         <div class="col-md-8 col-12">
-                            <p class="h3">{{publicacion.titulo}}</p>
+                            <p class="h3 wrapLinea">{{publicacion.titulo}}</p>
                             <h6>Publicado por: 
                                 <a class="sinDecoracion" href="{% url 'usuarios-detail' creador.id %}">
                                 @{{creador.usuario}}
                                 </a>
                             </h6>
-                            <h6>Autor: {{publicacion.autor}}</h6>
+                            <h6 class="wrapLinea">Autor: {{publicacion.autor}}</h6>
                             <p class="w-100">{{publicacion.descripcion}}</p>
                         </div>
                         <div class="col-md-4 col-12">
@@ -123,7 +131,7 @@
                         <a href="{% url 'editar-publicacion' publicacion.id primerGraffiti.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
                         <a href="{% url 'publicacion-delete' publicacion.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
                     {%endif%}
-                    <p>AQUI VA EL MAPITA DE GOOGLE CUANDO LO PONGAMOS</p>  
+                    <div id="map" class="my-3 mr-md-4 mr-1 rounded" style="height: 130px;"></div> 
                     <hr class="mr-md-4 mr-1">  
                     <div class="container">
                         <div class="row justify-content-center">
@@ -187,4 +195,23 @@
         });
     </script>
     <script src="{% static 'js/focusComment.js' %}"></script>
+    <script>
+        var publ = JSON.parse("{{ publicacion|safe }}".replace(/'/g, '"'));
+        try {
+            var coordenadas = publ.localizacion.split(',');
+            var mymap = L.map('map').setView([coordenadas[0], coordenadas[1]], 15);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoianVsaWFyb2JsZXMiLCJhIjoiY2trNG8xcWs5MTU1MjMycW9vNHQydjZ3MiJ9.tn9yzxwspPqdNymmZMqPfA'
+            }).addTo(mymap);
+            var marker = L.marker([coordenadas[0], coordenadas[1]]).addTo(mymap);
+        } catch (error) {
+            console.error(error);
+        }
+      </script>
+
 {% endblock %}
