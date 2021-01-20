@@ -594,5 +594,3 @@ def editar_publicacion(request, pk, gpk):
         return render(request, 'publicacion_editar.html', context=context)
     
     return redirect(reverse('publicacion-detail', args=[pk]))
-
-
