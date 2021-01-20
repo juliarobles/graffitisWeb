@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 
 
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock head %}
+    
+
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/publicacion_crear.css' %}">
@@ -29,7 +40,10 @@
             </div>
             <div class="campo-form">
                 <label for="localizacion">Localización</label> <br>
-                <input maxlength="50" type="text" name="localizacion" id="localizacion" required>
+                <small>Utiliza el mapa para obtener las coordenadas o introducelas manualmente</small><br>
+                <small>(ej.: 36.7213028,-4.4216366)</small>
+                <input maxlength="50" type="text" name="localizacion" id="localizacion" required pattern="^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$">
+                <div id="mapid" class="mt-2" style="height: 150px;"></div>
             </div>
             <div class="campo-form">
                 <label for="autor">Autor</label> <br>
@@ -103,7 +117,53 @@
 
         today = yyyy+'-'+mm+'-'+dd;
         document.getElementById("fecha_captura").setAttribute("max", today);
-      }
+    }
+
+    var positionLon = -4.4216366;
+    var positionLat = 36.7213028;
+    var mymap;
+    var marker;
+    var inputLoc = document.getElementById('localizacion');
+
+    if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function showPosition(position){
+        positionLat = position.coords.latitude;
+        positionLon = position.coords.longitude;
+        ponerMapa();
+    }, function(objPositionError)
+    {
+        ponerMapa();
+    }, {
+        maximumAge: 75000,
+        timeout: 15000
+    });
+    } else {
+        ponerMapa();
+    }
+
+    function ponerMapa(){
+        console.log(positionLat);
+        console.log(positionLon);
+        mymap = L.map('mapid').setView([positionLat, positionLon], 13);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 20,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoianVsaWFyb2JsZXMiLCJhIjoiY2trNG8xcWs5MTU1MjMycW9vNHQydjZ3MiJ9.tn9yzxwspPqdNymmZMqPfA'
+        }).addTo(mymap);
+        mymap.on('click', function(e) {
+            if(marker){
+                mymap.removeLayer(marker);
+            } 
+            console.log(e.latlng);
+            marker = L.marker(e.latlng).addTo(mymap);
+            inputLoc.value = e.latlng.lat + "," + e.latlng.lng;
+        });
+    }
+
+
 </script>
 {% endblock body %}
     

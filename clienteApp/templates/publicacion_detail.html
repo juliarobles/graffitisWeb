@@ -211,7 +211,8 @@
             var marker = L.marker([coordenadas[0], coordenadas[1]]).addTo(mymap);
         } catch (error) {
             console.error(error);
+            var mapa = document.getElementById("map").style.display = "none";
         }
-      </script>
+    </script>
 
 {% endblock %}
