@@ -17,7 +17,7 @@
                         onerror="this.src='{% static 'images/iconHuevo.png' %}';" style="height: 12rem; width: 12rem;" />
                     </div>
                     <div class="col-12 col-md-6 mt-3 mt-md-0">
-                        <h1 class="h2">{{usuario.nombre}}</h1>
+                        <h1 class="h3">{{usuario.nombre}}</h1>
                         <h1 class="h5">@{{usuario.usuario}}</h1>
                         <h6><strong>{{usuario.listaSeguidores|length}}</strong> seguidores  <strong>{{usuario.listaSeguidos|length}}</strong> seguidos</h6>
                         <p class="descripcion">{{usuario.descripcion}}</p>
@@ -31,7 +31,7 @@
                                 {% endif %}
                             </a>
 
-                            <a href="#" class="btn btn-sm btn-outline-dark">Enviar mensaje</a>
+                            <!-- <a href="#" class="btn btn-sm btn-outline-dark">Enviar mensaje</a> -->
                             {% endif %}
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="container">
-                            <div class="row">
+                            <div class="row justify-content-center">
                                 {% for p in listaPublicaciones %}
                                 <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
                                     <div class="col-12 col-md-4 p-0 face">
