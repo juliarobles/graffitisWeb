@@ -29,6 +29,7 @@ urlpatterns = [
     path('registro/', registro, name='registro'),
     path('html/politica-de-privacidad/', privacidad, name='privacidad'),
     path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
+    path('ajax/paleta/', cargar_paleta_API, name='crear-paleta'),
 
     # Eventos #
 

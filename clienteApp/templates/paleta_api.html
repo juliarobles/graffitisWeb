@@ -1,0 +1,47 @@
+<html>
+    <style>
+        .color{
+            width: 20%;
+            float: left;
+     
+            height: 50%;
+            margin: 5px;
+        }
+        .paleta{
+            width: 90%;
+            margin: auto;
+            height: 100%;
+        }
+    </style>
+    <div class="general h-100">
+        <div class="paleta row" id="paleta">
+            {% if paleta  %}
+            <h3 class="col-12">Esta paleta de colores es para ti:</h3>
+            {% for color in paleta %}
+            <div class="color col rounded-lg" style="background-color: {{color}};"></div>
+            {% endfor %}
+                
+        {% else %}
+        <h3 class="col-12">Aún no has creado una paleta</h3>
+        <button class='btn btn-primary' onclick="crearPaleta()">Generar</button>
+        {% endif %}
+    </div> 
+        </div>
+    
+    <script>
+        function crearPaleta(){
+            $.ajax(
+                {
+                    type: 'GET',
+                    url:"{% url 'crear-paleta' %}",
+                    success: function(data){
+                        /* #paleta es la id del div*/
+                        console.log(data);
+                        $('.paleta').html(data);
+                        $('#paleta').replaceWith($('#paleta', data))
+                    }
+                },
+            )
+        }
+    </script>
+</html>

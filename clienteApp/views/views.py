@@ -21,6 +21,18 @@ FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
 FLICKR_API_SECRET = '15075131b9983f9b'
 FLICKR_USER = '191270823@N05'
 
+
+#####################FUNCIONES ÚTILES######################
+
+def cargar_paleta_API(request):
+    r = http.request(
+            'GET',
+            'http://palett.es/API/v1/palette',
+        )
+    paleta = {'paleta': json.loads(r.data)}
+    print(paleta)
+    return render(request, 'paleta_api.html', paleta)
+
 def uploadImage(image):
     flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET)
 
