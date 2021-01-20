@@ -20,6 +20,12 @@
     text-overflow: ellipsis;
 }
 
+.puntosSuspensivos {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media(min-width:992px){
     .abajo {
         position: absolute;
@@ -34,6 +40,6 @@ body, html{
 }
 
 .mapa {
-    height: 400px;
+    height: 70vh;
     width: 100%;
 }

@@ -50,8 +50,8 @@
                         {% endwith %}
                         <hr/>
                         <a href="{% url 'publicacion-detail' p.id %}" class="sinDecoracion">
-                            <p class="h4">{{p.titulo}}</p>
-                            <p class="h6 mb-3">{{p.autor}}</p>
+                            <p class="h4 puntosSuspensivos">{{p.titulo}}</p>
+                            <p class="h6 mb-3 puntosSuspensivos">{{p.autor}}</p>
                             <p class="wrapPalabras">{{p.descripcion}}</p>
                         </a>
                         <p class="wrapLinea">
