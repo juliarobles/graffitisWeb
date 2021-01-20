@@ -66,8 +66,9 @@ urlpatterns = [
     
 ]
 
-#Acciones
+# Login
 urlpatterns += [
+    path('loginInToken', action_loginInToken, name='action_loginInToken'),
     path('loginIn', action_login, name='action_login'),
     path('loginOut', action_logout, name='action_logout')
 ]
