@@ -3,7 +3,7 @@ import requests
 
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 from google.oauth2 import id_token
 from google.auth.transport import requests as g_requests
@@ -69,13 +69,9 @@ def action_loginInToken(request):
         else:
             request.session['usuario'] = matched_user['id']
         
-        response = HttpResponseRedirect('/inicio')
-        response.set_cookie('usuario', 'usuario')
-        
-        return response
-    else:
-        return redirect('/inicio')
-    
+        request.session.save()
+        return JsonResponse({'dummy': 'yei'})
+
 # ACCION
 # Origen: log.html
 # Efecto: autentifica a un usuario

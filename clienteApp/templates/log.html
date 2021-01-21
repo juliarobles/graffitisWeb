@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnderGround</title>
+
     <!-- Cargamos la libreria de bootstrap  -->
     {% load bootstrap4 %}
 
     <!-- CSS bootstrap -->
     {% bootstrap_css %}
     {% load static %}
+    <link rel="shortcut icon" href="{% static 'images/icon.ico' type='image/x-icon' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/log.css' %}">
     <script src="https://kit.fontawesome.com/c77eea7e8a.js" crossorigin="anonymous"></script>
     
@@ -78,10 +80,10 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.setRequestHeader('X-CSRFToken', csrf_token)
             xhr.onload = function() {
-                console.log('Signed in as: ' + xhr.responseText);
+                //alert(xhr.responseText);
+                window.location.href='http://localhost:8000/inicio';
             };
             xhr.send('idtoken=' + id_token);
-            location.href='http://localhost:8000/inicio';
         }
 
         function onClick() {
