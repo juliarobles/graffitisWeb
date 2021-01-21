@@ -40,10 +40,10 @@ crossorigin=""></script>
         
         </script>
     <ul class="nav nav-pills justify-content-center my-2" id="pills-tab" role="tablist">
-      <li class="nav-item">
+      <li class="nav-item pill-1 mr-md-2 mr-0">
         <a class="nav-link active" id="pills-home-tab" data-toggle="tab" href="#feed" role="tab" aria-controls="pills-home" aria-selected="true">Feed de publicaciones</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item pill-1 ml-md-2 ml-0">
         <a class="nav-link" id="pills-profile-tab" data-toggle="tab" href="#mapa" role="tab" aria-controls="pills-profile" aria-selected="false">Mapa de publicaciones</a>
       </li>
     </ul>
@@ -83,6 +83,9 @@ crossorigin=""></script>
             zoomOffset: -1,
             accessToken: 'pk.eyJ1IjoianVsaWFyb2JsZXMiLCJhIjoiY2trNG8xcWs5MTU1MjMycW9vNHQydjZ3MiJ9.tn9yzxwspPqdNymmZMqPfA'
         }).addTo(mymap);
+
+        L.marker([positionLat, positionLon], {opacity: 0.5}).bindPopup("<h4>Estas aquí</h4>").addTo(mymap);
+
         var listPubli = JSON.parse("{{ publicaciones|safe }}".replace(/'/g, '"'));
         for (var i = 0; i < listPubli.length; i++){
             try {
@@ -102,7 +105,7 @@ crossorigin=""></script>
                       + '<img class="w-100 rounded" style="height: 150px; object-fit: cover;" src=' + publ.listaGraffitis[0].imagen + ">" 
                       + '<h5 class="mt-3 mb-1" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.titulo + '</h5>'
                       + '<h6 class="mt-0 mb-1" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.autor + '</h6>' 
-                      + '<p class="mt-0" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.descripcion + '</p>'
+                      + '<p class="mt-0" s tyle="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">' + publ.descripcion + '</p>'
                     + '</a>'
                   + '</div>'
                   marker.bindPopup(html);
@@ -111,12 +114,40 @@ crossorigin=""></script>
             }
         }
         //GRACIAS: https://gis.stackexchange.com/questions/224932/problem-with-map-tiles-loading-with-leaflet-and-bootstrap
-      //https://stackoverflow.com/questions/36246815/data-toggle-tab-does-not-download-leaflet-map/36257493#36257493
-      $(document).ready(function(){
-        $("a[href='#mapa']").on('shown.bs.tab', function(e) {
-            mymap.invalidateSize();
+        //https://stackoverflow.com/questions/36246815/data-toggle-tab-does-not-download-leaflet-map/36257493#36257493
+        $(document).ready(function(){
+          $("a[href='#mapa']").on('shown.bs.tab', function(e) {
+              mymap.invalidateSize();
+          });
         });
-      });
+
+        var req = new XMLHttpRequest();
+        req.open('GET', 'http://127.0.0.1:8000/calidadDelAire/' + positionLat + ',' + positionLon + '&km=1', true);
+        req.onreadystatechange = function (aEvt) {
+          if (req.readyState == 4) {
+            if(req.status == 200){
+              var calidad = L.geoJSON(JSON.parse(req.responseText), {
+                style: function(feature) {
+                  switch (feature.properties['iuca.level_global']) {
+                    case 'good': return {color: "#00ff17"};
+                    case 'moderate': return {color: "#d0ff00"};
+                    case 'unhealthy': return {color: "#ff6f00"};
+                    case 'unhealthy-low': return {color: "#ffb300"};
+                    case 'unhealthy-high':   return {color: "#ff0019"};
+                  }
+                }
+              });
+              calidad.addTo(mymap);
+              var overlayMaps = {
+                "Calidad del aire en 1 km": calidad
+              }
+              L.control.layers(null, overlayMaps).addTo(mymap)
+            } else {
+              console.log("Error loading page");
+            }
+          }
+        };
+        req.send(null);
       }
 
     </script>

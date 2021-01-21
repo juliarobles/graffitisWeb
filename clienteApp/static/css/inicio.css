@@ -43,3 +43,25 @@ body, html{
     height: 70vh;
     width: 100%;
 }
+
+/* not active */
+.nav-pills .pill-1 .nav-link:not(.active) {
+    background-color:#f7f7f7;
+    color: black;
+}
+
+/* active (faded) */
+.nav-pills .pill-1 .nav-link {
+    background-color:#292b2c;
+    color: white;
+}
+
+.nav-pills .pill-1 .nav-link:hover {
+    background-color: rgb(85, 85, 85);
+    color: rgb(255, 255, 255);
+}
+
+.nav-pills .pill-1 .nav-link:not(.active):hover {
+    background-color:#e4e4e4;
+    color:black;
+}

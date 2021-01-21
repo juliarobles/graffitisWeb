@@ -14,3 +14,4 @@ django-bootstrap4==2.3.1
 flickrapi==2.4.0
 django-mongo-sessions==0.0.4
 google-api-python-client==1.12.8
+django-cors-headers==3.6.0

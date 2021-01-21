@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'graffitiApp',
     'ayuntamientoApp',
     'clienteApp',
+    'corsheaders',
     'bootstrap4'
 ]
 
@@ -61,7 +62,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
+
+CORS_ORIGIN_WHITELIST = (
+  'http://localhost:8000',
+  'http://127.0.0.1:8000'
+)
 
 ROOT_URLCONF = 'graffitisWeb.urls'
 
