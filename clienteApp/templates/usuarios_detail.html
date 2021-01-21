@@ -20,7 +20,17 @@
                         <h1 class="h3">{{usuario.nombre}}</h1>
                         <h1 class="h5">@{{usuario.usuario}}</h1>
                         <h6><strong>{{usuario.listaSeguidores|length}}</strong> seguidores  <strong>{{usuario.listaSeguidos|length}}</strong> seguidos</h6>
-                        <p class="descripcion">{{usuario.descripcion}}</p>
+                        
+                       <form action="{% url 'usuario-edit' usuario.id %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <p id="descripcionusuario" class="descripcion">{{usuario.descripcion}}
+                                {% if request.session.usuario == usuario.id %}
+                            </br><a href="#" onclick="editarDescripcion()" class="" style="padding-left:3cm"><i class="far fa-edit"></i> Editar descripcion</a></br>
+
+                                {% endif %}
+                            </p>
+                        </form>
+
                         <div class="d-flex justify-content-center">
                             {% if not request.session.usuario == usuario.id %}
                             <a href="{% url 'usuario-follow' usuario.id %}" class="btn btn-sm btn-outline-dark mr-3">
@@ -119,5 +129,11 @@
         </div> 
     </div> 
 </div>
+<script>
+    function editarDescripcion(){
+        var text = '<textarea cols="50" rows="10" name="descripcion" id="descripcion" style="resize: none">{{usuario.descripcion}}</textarea></br><button type="submit" class="btn btn-primary">Guardar</button>'
+        $('#descripcionusuario').html(text);
+    }
+</script>
 {% include 'boton_compartir.html' %}
 {% endblock %}
