@@ -73,6 +73,8 @@ def action_loginInToken(request):
         response.set_cookie('usuario', 'usuario')
         
         return response
+    else:
+        return redirect('/inicio')
     
 # ACCION
 # Origen: log.html
