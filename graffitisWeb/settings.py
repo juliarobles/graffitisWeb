@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'e)974b&*2^u#^1ocw$#ajl$!9^rw(0w)98-bbhqulpe!negj9p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['graffitiweb-c4.herokuapp.com', '127.0.0.1']
 
