@@ -171,9 +171,9 @@ MEDIA_URL = '/media/'
 SESSION_ENGINE = 'mongo_sessions.session'
 SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 
-connection = MongoClient()
-MONGO_CLIENT = connection.get_database(name='iweb')
-MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
+# connection = MongoClient()
+# MONGO_CLIENT = connection.get_database(name='iweb')
+# MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
 
 #MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
 
