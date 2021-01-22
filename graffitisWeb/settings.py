@@ -169,7 +169,7 @@ connection = MongoClient()
 MONGO_CLIENT = connection.get_database(name='iweb')
 MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
 
-MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
+# MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
 
 # Django configuration
 REST_FRAMEWORK = {
