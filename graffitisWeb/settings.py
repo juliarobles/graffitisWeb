@@ -28,7 +28,11 @@ SECRET_KEY = 'e)974b&*2^u#^1ocw$#ajl$!9^rw(0w)98-bbhqulpe!negj9p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'graffitisweb.herokuapp.com',
+    '127.0.0.1',
+    'localhost'
+]
 
 
 # Application definition
