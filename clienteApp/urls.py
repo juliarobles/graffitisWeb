@@ -60,6 +60,8 @@ urlpatterns = [
     path('html/usuarios', usuarios_list, name='usuarios-list'),
     path('html/usuarios/detalles/<str:pk>/', usuarios_detail, name='usuarios-detail'),
     path('html/usuarios/detalles/<str:pk>/follow/', usuario_follow, name='usuario-follow'),
+    path('html/usuarios/detalles/<str:pk>/edit/', usuario_edit, name='usuario-edit'),
+
 
     # Comentario #
     path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario'),

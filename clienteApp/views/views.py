@@ -482,6 +482,22 @@ def usuario_follow(request, pk):
         r = requests.post(f'http://localhost:8000/usuarios/{pk}/follow', data=body, headers=headers)
     return redirect(reverse('usuarios-detail', args={pk}))
 
+def usuario_edit(request, pk):
+    if request.session.has_key('usuario'):
+        if request.method == 'POST':
+            url = 'http://localhost:8000/usuarios/' + pk + "/"
+            data = {
+                "descripcion": request.POST.get("descripcion") 
+            }
+            body = json.dumps(data)
+            headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+            r = requests.put(url, data=body, headers=headers)
+            b = r.reason
+            c = r.status_code
+            d = r.json
+            
+    return redirect(reverse('usuarios-detail', args=[pk]))
+
 def graffiti_form(request, pk):
     """
     Esta funcion se encargara de generar la pagina html con el formulario
