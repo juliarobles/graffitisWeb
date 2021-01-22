@@ -69,7 +69,8 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = (
   'http://localhost:8000',
-  'http://127.0.0.1:8000'
+  'http://127.0.0.1:8000',
+  'graffitiweb-c4.herokuapp.com',
 )
 
 ROOT_URLCONF = 'graffitisWeb.urls'
@@ -109,13 +110,6 @@ DATABASES = {
         'HOST': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
         'USER': 'Guest',
         'PASSWORD': 'guest',
-        # 'CLIENT': {
-        #     'host': 
-        #     'name': 'iweb',
-        #     'username': 'Guest',
-        #     'password': 'guest',
-        #     'authMechanism': 'SCRAM-SHA-1',
-        # }
     }
 }
 
@@ -171,11 +165,11 @@ MEDIA_URL = '/media/'
 SESSION_ENGINE = 'mongo_sessions.session'
 SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 
-# connection = MongoClient()
-# MONGO_CLIENT = connection.get_database(name='iweb')
-# MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
+connection = MongoClient()
+MONGO_CLIENT = connection.get_database(name='iweb')
+MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
 
-#MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
+MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
 
 # Django configuration
 REST_FRAMEWORK = {
