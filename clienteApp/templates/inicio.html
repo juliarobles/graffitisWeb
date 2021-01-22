@@ -56,6 +56,10 @@ crossorigin=""></script>
     <script>
       var positionLon = -4.4216366;
       var positionLat = 36.7213028;
+      var calidadCoordenada = null;
+      var addCoordenada = false;
+      var control = null;
+      var mymap = null;
       if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(function showPosition(position){
           positionLat = position.coords.latitude;
@@ -74,7 +78,7 @@ crossorigin=""></script>
       function ponerMapa(){
         console.log(positionLat);
         console.log(positionLon);
-        var mymap = L.map('mapid').setView([positionLat, positionLon], 15);
+        mymap = L.map('mapid').setView([positionLat, positionLon], 15);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
@@ -84,7 +88,9 @@ crossorigin=""></script>
             accessToken: 'pk.eyJ1IjoianVsaWFyb2JsZXMiLCJhIjoiY2trNG8xcWs5MTU1MjMycW9vNHQydjZ3MiJ9.tn9yzxwspPqdNymmZMqPfA'
         }).addTo(mymap);
 
-        L.marker([positionLat, positionLon], {opacity: 0.5}).bindPopup("<h4>Estas aquí</h4>").addTo(mymap);
+        L.marker([positionLat, positionLon], {opacity: 0.5}).bindPopup("<h4>Estas aquí</h4>").addTo(mymap).on('click', function(e){
+            cambiarLayout(e.latlng.lat, e.latlng.lng);
+        });
 
         var listPubli = JSON.parse("{{ publicaciones|safe }}".replace(/'/g, '"'));
         for (var i = 0; i < listPubli.length; i++){
@@ -92,7 +98,9 @@ crossorigin=""></script>
                 var publ = listPubli[i];
                 var autor = publ.listaGraffitis[0].autor;
                 var coordenadas = publ.localizacion.split(',');
-                var marker = L.marker([coordenadas[0], coordenadas[1]]).addTo(mymap);
+                var marker = L.marker([coordenadas[0], coordenadas[1]]).addTo(mymap).on('click', function(e){
+                  cambiarLayout(e.latlng.lat, e.latlng.lng);
+                });
                 var url = "{% url 'usuarios-detail' "+autor.id+" %}".replace("+autor.id+", autor.id);
                 var url2 = "{% url 'publicacion-detail' "+publ.id+" %}".replace("+publ.id+", publ.id);
                 var html = ''
@@ -120,7 +128,8 @@ crossorigin=""></script>
               mymap.invalidateSize();
           });
         });
-
+        control = L.control.layers();
+        control.addTo(mymap);
         var req = new XMLHttpRequest();
         req.open('GET', 'http://127.0.0.1:8000/calidadDelAire/' + positionLat + ',' + positionLon + '&km=1', true);
         req.onreadystatechange = function (aEvt) {
@@ -138,16 +147,72 @@ crossorigin=""></script>
                 }
               });
               calidad.addTo(mymap);
-              var overlayMaps = {
-                "Calidad del aire en 1 km": calidad
-              }
-              L.control.layers(null, overlayMaps).addTo(mymap)
+              control.addOverlay(calidad, "Calidad del aire en 1 km");
             } else {
               console.log("Error loading page");
             }
           }
         };
         req.send(null);
+
+        
+        cambiarLayout(positionLat, positionLon);
+        function cambiarLayout(lat, lng){
+          var req = new XMLHttpRequest();
+          req.open('GET', 'http://127.0.0.1:8000/calidadDelAire/' + lat + ',' + lng, true);
+          req.onreadystatechange = function (aEvt) {
+            if (req.readyState == 4) {
+              if(req.status == 200){
+                if(calidadCoordenada != null){
+                  var aux = mymap.hasLayer(calidadCoordenada);
+                  mymap.removeLayer(calidadCoordenada);
+                  control.removeLayer(calidadCoordenada);
+                  addCoordenada = aux;
+                  calidadCoordenada = null;
+                }
+                try{
+                  if(req.responseText != '{}'){
+                    calidadCoordenada = L.geoJSON(JSON.parse(req.responseText), {
+                      style: function(feature) {
+                        switch (feature.properties['iuca.level_global']) {
+                          case 'good': return {color: "#00ff17"};
+                          case 'moderate': return {color: "#d0ff00"};
+                          case 'unhealthy': return {color: "#ff6f00"};
+                          case 'unhealthy-low': return {color: "#ffb300"};
+                          case 'unhealthy-high':   return {color: "#ff0019"};
+                        }
+                      }
+                    });
+                    console.log(addCoordenada);
+                    if(addCoordenada){
+                      calidadCoordenada.addTo(mymap);
+                    }
+                    control.addOverlay(calidadCoordenada, "Calidad del aire en la publicación seleccionada");
+                  }
+                } catch (error) {
+                    console.error(error);
+                }
+              } else {
+                console.log("Error loading page");
+              }
+            }
+          };
+          req.send(null);
+        }
+
+        mymap.on('overlayadd', function(eo) {
+          if (eo.name === 'Calidad del aire en la publicación seleccionada'){
+            addCoordenada = true;
+            console.log(addCoordenada + "add");
+          }
+        });
+        mymap.on('overlayremove', function(eo) {
+          if (eo.name === 'Calidad del aire en la publicación seleccionada'){
+            addCoordenada = false;
+            console.log(addCoordenada + "remove");
+          }
+        });
+
       }
 
     </script>
