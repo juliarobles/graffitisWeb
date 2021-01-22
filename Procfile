@@ -1,1 +1,1 @@
-web: gunicorn graffitisWeb.wsgi
+web: gunicorn graffitisWeb.wsgi --log-file -
