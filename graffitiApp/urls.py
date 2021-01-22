@@ -16,6 +16,8 @@ from django.urls import path
 # router.register(r'Usuario', views.UsuarioViewSet, basename="Usuario" )
 # --------------------------------------
 
+app_name = 'api'
+
 urlpatterns = [
     # url('', include(router.urls)), 
     url(r'^index', index),

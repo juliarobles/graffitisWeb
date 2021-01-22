@@ -56,7 +56,7 @@ def comprobarUsuarioLogueado(request):
     #Lo he cambiado por esto: https://stackoverflow.com/questions/4963186/django-sessions-can-you-check-for-session-data-and-set-it-in-same-view 
     if 'usuario' not in request.session:
         print(str('usuario' not in request.session) + " tiene que ser true")
-        return redirect('/principal/')
+        return redirect(reverse('principal'))
 
 def eliminar_eventos_repetidos(lista):
     # AYUNTAMIENTO CUTREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -104,7 +104,7 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
 
 def principal(request):
     if request.session.has_key('usuario'):
-        return redirect('/inicio/')
+        return redirect(reverse('inicio'))
         
     else:
         return render(request, 'log.html')
