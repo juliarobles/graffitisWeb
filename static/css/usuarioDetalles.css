@@ -1,0 +1,92 @@
+.descripcion {
+    line-height: 1.2;
+    color: #444444;
+}
+
+.altura {
+    height:14rem;
+}
+
+@media (max-width:992px) {
+  .anchura {
+    width: 100%;
+  }
+}
+
+@media(min-width:992px){
+.anchura {
+    width: 14rem !important; 
+}
+}
+
+.content {
+    position: absolute; /* Position the background text */
+    bottom: 0; /* At the bottom. Use top:0 to append it to the top */
+    background: rgb(0, 0, 0); /* Fallback color */
+    background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+    color: #f1f1f1; /* Grey text */
+    width: 100%; /* Full width */
+    padding: 4px; /* Some padding */
+}
+
+@media(min-width:992px){
+  .content {
+      width: 14rem !important; 
+  }
+  }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 14rem;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #5e5e5e00;
+  }
+
+  @media(min-width:992px){
+  .face:hover .overlay {
+    opacity: 1;
+  }
+  .face:hover .fondo {
+    opacity: 1;
+  }
+  }
+  
+  .text {
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+  }
+
+  .fondo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 14rem;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #0000008c;
+  }
+
+.nav-pills .pill-color .nav-link:not(.active) {
+    background-color: #ffffff00;
+    color: black;
+}
+
+.nav-pills .pill-color .nav-link {
+    background-color: #e95f28;
+    color: white;
+}

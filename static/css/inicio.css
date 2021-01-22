@@ -1,0 +1,67 @@
+.altura {
+    height:20rem;
+}
+
+.icon {
+    height:2rem;
+    width:2rem;
+}
+
+.wrapPalabras {
+    display: block;
+    display: -webkit-box;
+    max-width: 100%;
+
+    min-height: 58px;
+    line-height: 1.2;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+.puntosSuspensivos {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media(min-width:992px){
+    .abajo {
+        position: absolute;
+        bottom: 0;
+        right: 20px;
+    }
+}
+
+body, html{
+    width: 100%;
+    height: 100%;
+}
+
+.mapa {
+    height: 70vh;
+    width: 100%;
+}
+
+/* not active */
+.nav-pills .pill-1 .nav-link:not(.active) {
+    background-color:#f7f7f7;
+    color: black;
+}
+
+/* active (faded) */
+.nav-pills .pill-1 .nav-link {
+    background-color:#292b2c;
+    color: white;
+}
+
+.nav-pills .pill-1 .nav-link:hover {
+    background-color: rgb(85, 85, 85);
+    color: rgb(255, 255, 255);
+}
+
+.nav-pills .pill-1 .nav-link:not(.active):hover {
+    background-color:#e4e4e4;
+    color:black;
+}
