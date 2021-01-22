@@ -14,6 +14,7 @@ import os
 import pymongo
 from pymongo import MongoClient
 from mongoengine import connect
+from pymongo import mongo_client
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -100,6 +101,7 @@ MONGODB_DATABASES = {
     'default': {'name': 'iweb'}
 }
 # mongodb+srv://<username>:<password>@cluster0.pzn8b.mongodb.net/<dbname>?retryWrites=true&w=majority
+mongo_client.MongoClient.HOST = 'mongodb+srv://<username>:<password>@cluster0.pzn8b.mongodb.net/<dbname>?retryWrites=true&w=majority'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
