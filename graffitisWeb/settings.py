@@ -115,7 +115,7 @@ DATABASES = {
     }
 }
 
-connect('iweb', host='mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority')
+connect('iweb', host='mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority', username='Guest', password='guest')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
