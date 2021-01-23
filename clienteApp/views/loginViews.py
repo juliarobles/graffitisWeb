@@ -18,7 +18,7 @@ def isInApp(email):
      # Buscamos el usuario
     r = http.request(
         'GET',
-        'http://127.0.0.1:8000/usuarios/',
+        'http://127.0.0.1:8000/api/usuarios/',
     )
     
     usuario_data = json.loads(r.data.decode('utf-8'))

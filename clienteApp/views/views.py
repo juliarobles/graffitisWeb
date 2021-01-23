@@ -586,7 +586,7 @@ def comprobarUsuarioLogueado(request):
         return redirect(reverse('principal'))
 
 def principal(request):
-    if request.session.has_key('usuario'):
+    if 'usuario' in request.session:
         return redirect(reverse('inicio'))
         
     else:
