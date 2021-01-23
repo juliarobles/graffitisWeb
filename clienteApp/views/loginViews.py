@@ -36,7 +36,7 @@ def registerUser(name, email, img):
         "email": email,
         "password": "12345678",
         "imagen": img,
-        "descripcion": "Creado mediante autentificación OAuth 2.0. Amante de la pizza con piña"
+        "descripcion": "Creado mediante autentificación OAuth 2.0. Amante de la pizza con piña."
     }
     url='http://localhost:8000/usuarios/'
     
