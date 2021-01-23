@@ -102,7 +102,7 @@ MONGODB_DATABASES = {
     'default': {'name': 'iweb'}
 }
 # mongodb+srv://<username>:<password>@cluster0.pzn8b.mongodb.net/<dbname>?retryWrites=true&w=majority
-mongo_client.MongoClient.HOST = 'mongodb+srv://<username>:<password>@cluster0.pzn8b.mongodb.net/<dbname>?retryWrites=true&w=majority'
+mongo_client.MongoClient.HOST = 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
