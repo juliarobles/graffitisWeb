@@ -13,7 +13,6 @@ from urllib.parse import urlencode
 import time
 from xml.etree import ElementTree
 
-
 # ---------------------------------------------------------------------------- #
 #                                    INDICE                                    #
 # ---------------------------------------------------------------------------- #
@@ -91,28 +90,28 @@ def uploadImage(image):
     return None
 
 def actualizar_token(flickr):
-        flickr.authenticate_via_browser(perms='write')
+        # flickr.authenticate_via_browser(perms='write')
 
         # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
         # y obtener un token nuevo
         # Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
         ##############################################################################
-        # if not flickr.token_valid(perms='write'):
+        if not flickr.token_valid(perms='write'):
 
-        #     # Get a request token
-        #     flickr.get_request_token(oauth_callback='oob')
+            # Get a request token
+            flickr.get_request_token(oauth_callback='oob')
 
-        #     # Open a browser at the authentication URL. Do this however
-        #     # you want, as long as the user visits that URL.
-        #     authorize_url = flickr.auth_url(perms='write')
-        #     webbrowser.open_new_tab(authorize_url)
+            # Open a browser at the authentication URL. Do this however
+            # you want, as long as the user visits that URL.
+            authorize_url = flickr.auth_url(perms='write')
+            webbrowser.open_new_tab(authorize_url)
 
-        #     # Get the verifier code from the user. Do this however you
-        #     # want, as long as the user gives the application the code.
-        #     verifier = str(input('Verifier code: '))
+            # Get the verifier code from the user. Do this however you
+            # want, as long as the user gives the application the code.
+            verifier = str(input('Verifier code: '))
 
-        #     # Trade the request token for an access token
-        #     flickr.get_access_token(verifier)
+            # Trade the request token for an access token
+            flickr.get_access_token(verifier)
 
 # ---------------------------------------------------------------------------- #
 #                                 AYUNTAMIENTO                                 #
@@ -361,21 +360,21 @@ def crear_publicacion(request):
 
         # Comprobar validez del token de cache
     
+
+
         actualizar_token(flickr)
-        ################################################################################
-
-
-
+        
         imagen = request.FILES['imagen']
         resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
 
+        
         # Sacamos la id de la respuesta del servidor REST
         for elem in resp:
             if(str(elem.tag)=='photoid'):
                 photo_id = elem.text
-
+        
         # Obtenemos la URL consultando el servidor REST 
-        for photo in flickr.walk_user(user_id):
+        for photo in flickr.walk_user():
             # Estructura de la url por si alguien quiere utilizar algo 
             # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
             if(photo.get('id') == photo_id):
@@ -386,7 +385,6 @@ def crear_publicacion(request):
             del tematicas[0]
         for t in tematicas:
             t = t.strip()
-        # return render(request, 'imagen.html', context={'imagen':url})
         dic = {
             "titulo": request.POST["titulo"],
             "descripcion": request.POST["descripcion"],
@@ -406,14 +404,6 @@ def crear_publicacion(request):
         }
 
         requests.post('http://' + url_base + '/api/publicaciones/', data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
-        # r = http.request(
-        #     'POST',
-        #     'http://' + url_base + '/api/publicaciones', 
-        #     fields=json.dumps(dic), 
-        #     headers=  {'Content-type': 'application/json', 'Accept': 'application/json'}
-        # )
-        
-    
     return redirect(reverse('inicio'))
 
 def eliminar_publicacion(request, pk):
@@ -560,8 +550,10 @@ def graffiti_form(request, pk):
                 'imagen': url
             }
             body = json.dumps(data)
+            # print('Dictionary:' + body)
+            # print('URL:' + url)
             headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-            r = requests.post(f'http://' + url_base + '/publicaciones/{pk}/graffitis/', data=body, headers=headers)
+            r = requests.post(f'http://' + url_base + '/api/publicaciones/'+pk+'/graffitis/', data=body, headers=headers)
             return redirect(reverse('publicacion-detail', args=[pk]))
 
 def guardar_editar_graffiti(request, id_pub, id_graf):
