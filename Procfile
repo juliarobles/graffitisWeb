@@ -1,1 +1,1 @@
-web: gunicorn graffitisWeb.wsgi --preload
+web: gunicorn graffitisWeb.wsgi
