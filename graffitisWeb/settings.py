@@ -106,11 +106,12 @@ MONGODB_DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'iweb',
-        'HOST': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
-        'USER': 'Guest',
-        'PASSWORD': 'guest',
-        'authMechanism': 'SCRAM-SHA-1',
+        'CLIENT': {
+            'host': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
+            'username': 'Guest',
+            'password': 'guest',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
     }
 }
 
