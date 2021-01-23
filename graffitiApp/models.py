@@ -9,6 +9,7 @@ class Usuario(Document):
     password = fields.StringField(required=True, min_length=8)
     imagen = fields.URLField(required=False)
     descripcion = fields.StringField(max_length=500)
+    admin = fields.BooleanField(default=False)
     listaSeguidores = fields.ListField(fields.ReferenceField('Usuario'))
     listaSeguidos = fields.ListField(fields.ReferenceField('Usuario'))
     listaPublicaciones = fields.ListField(fields.ReferenceField('Publicacion'))

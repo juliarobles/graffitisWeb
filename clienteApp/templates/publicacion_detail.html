@@ -64,10 +64,10 @@
                                                 <p>{{graffiti.fechaCaptura}}</p>
                                                 <p class="h6">Estado de conservación:</p>
                                                 <p>{{graffiti.estado}}</p>
-                                                {% if graffiti.autor.id == request.session.usuario%}
+                                                {% if graffiti.autor.id == request.session.usuario or request.session.admin %}
                                                 <p>
                                                     <!-- De momento no editamos las contribuciones -->
-                                                    {% if request.session.usuario == graffiti.autor.id %}
+                                                    {% if request.session.usuario == graffiti.autor.id or request.session.admin %}
                                                     <a href="{% url 'editar-graffiti' publicacion.id graffiti.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
                                                     {%endif%}
                                                     <!-- <a href="#" class=""><i class="far fa-edit"></i> Editar</a></br> -->
@@ -127,7 +127,7 @@
                             </p>
                         </div>
                     </div>
-                    {% if request.session.usuario == creador.id %}
+                    {% if request.session.usuario == creador.id or request.session.admin %}
                         <a href="{% url 'editar-publicacion' publicacion.id primerGraffiti.id %}" class=""><i class="far fa-edit"></i> Editar</a></br>
                         <a href="{% url 'publicacion-delete' publicacion.id %}" class="text-danger"><i class="far fa-trash-alt"></i> Eliminar</a>
                     {%endif%}
@@ -196,7 +196,7 @@
     </script>
     <script src="{% static 'js/focusComment.js' %}"></script>
     <script>
-        var publ = JSON.parse("{{ publicacion|safe }}".replace(/'/g, '"'));
+        var publ = JSON.parse("{{ publicacion|safe }}".replace(/'/g, '"').replace(/"admin": False/g,'"admin": false').replace(/"admin": True/g,'"admin": true'));
         try {
             var coordenadas = publ.localizacion.split(',');
             var mymap = L.map('map').setView([coordenadas[0], coordenadas[1]], 15);
