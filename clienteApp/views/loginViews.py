@@ -66,8 +66,10 @@ def action_loginInToken(request):
         if matched_user == None: # Nuevo usuario -> Lo registramos en la aplicación
             newUser_Id = registerUser(idinfo['name'], gEmail, idinfo['picture'])
             request.session['usuario'] = newUser_Id
+            request.session['admin'] = False
         else:
             request.session['usuario'] = matched_user['id']
+            request.session['admin'] = matched_user['admin']
         
         request.session.save()
         return JsonResponse({'dummy': 'yei'})
@@ -97,6 +99,7 @@ def action_login(request):
     
     if password_correct == password_form:
         request.session['usuario'] = usuario_matched[0]['id']
+        request.session['admin'] = usuario_matched[0]['admin']
         
         response = HttpResponseRedirect('/url/to_your_home_page')
         return redirect('/inicio/')
@@ -113,5 +116,6 @@ def action_login(request):
 # Ruta final: principal
 def action_logout(request):
     del request.session['usuario']
+    del request.session['admin']
     
     return redirect('/principal/')

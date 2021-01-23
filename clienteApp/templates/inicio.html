@@ -91,8 +91,7 @@ crossorigin=""></script>
         L.marker([positionLat, positionLon], {opacity: 0.5}).bindPopup("<h4>Estas aquí</h4>").addTo(mymap).on('click', function(e){
             cambiarLayout(e.latlng.lat, e.latlng.lng);
         });
-
-        var listPubli = JSON.parse("{{ publicaciones|safe }}".replace(/'/g, '"'));
+        var listPubli = JSON.parse("{{ publicaciones|safe }}".replace(/'/g, '"').replace(/"admin": False/g,'"admin": false').replace(/"admin": True/g,'"admin": true'));
         for (var i = 0; i < listPubli.length; i++){
             try {
                 var publ = listPubli[i];
@@ -183,7 +182,6 @@ crossorigin=""></script>
                         }
                       }
                     });
-                    console.log(addCoordenada);
                     if(addCoordenada){
                       calidadCoordenada.addTo(mymap);
                     }
@@ -203,13 +201,11 @@ crossorigin=""></script>
         mymap.on('overlayadd', function(eo) {
           if (eo.name === 'Calidad del aire en la publicación seleccionada'){
             addCoordenada = true;
-            console.log(addCoordenada + "add");
           }
         });
         mymap.on('overlayremove', function(eo) {
           if (eo.name === 'Calidad del aire en la publicación seleccionada'){
             addCoordenada = false;
-            console.log(addCoordenada + "remove");
           }
         });
 

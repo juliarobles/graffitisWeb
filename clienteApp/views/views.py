@@ -388,7 +388,7 @@ def eliminar_publicacion(request, pk):
     )
 
     creador = json.loads(b.data)
-    if creador['id'] == request.session.get('usuario'):
+    if creador['id'] == request.session.get('usuario') or request.session.get('admin'):
         r = requests.delete(f'http://127.0.0.1:8000/publicaciones/{pk}/')
     return redirect(reverse('inicio'))
 
@@ -449,7 +449,7 @@ def eliminar_graffiti(request, ppk, gpk):
         r = requests.get('http://localhost:8000/usuarios/' + graffiti['autor']['id'])
         autor = json.loads(r.text)
     
-        if request.session.get('usuario') == autor['id']:
+        if request.session.get('usuario') == autor['id'] or request.session.get('admin'):
             requests.delete('http://localhost:8000/publicaciones/' + ppk +'/graffitis/' + gpk)
     
     return redirect(reverse('publicacion-detail', args={ppk}))
