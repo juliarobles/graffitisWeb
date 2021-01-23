@@ -7,6 +7,8 @@ from ayuntamientoApp.apiviews import *
 #router = routers.DefaultRouter()
 #router.register(r'calidadDelAire', views.PublicacionViewSet, basename="Calidad del aire" )
 
+app_name = 'ayuntamiento'
+
 urlpatterns = [
     url(r'^calidadDelAire/$', CalidadDelAireTodo.as_view()),
     url(r'^calidadDelAire/(?P<x>[0-9-.]+),(?P<y>[0-9-.]+)$', CalidadDelAireCoordenadas.as_view()),

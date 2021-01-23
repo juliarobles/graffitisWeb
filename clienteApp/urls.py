@@ -25,7 +25,7 @@ urlpatterns = [
 
     # General #
     path('inicio/', inicio, name='inicio'),
-    path('principal/', principal, name='principal'),
+    path('', principal, name='principal'),
     path('registro/', registro, name='registro'),
     path('html/politica-de-privacidad/', privacidad, name='privacidad'),
     path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
