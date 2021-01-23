@@ -110,6 +110,7 @@ DATABASES = {
         'HOST': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
         'USER': 'Guest',
         'PASSWORD': 'guest',
+        'authMechanism': 'SCRAM-SHA-1',
     }
 }
 
