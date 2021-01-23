@@ -18,19 +18,19 @@ from xml.etree import ElementTree
 #                                    INDICE                                    #
 # ---------------------------------------------------------------------------- #
 
-'''
--VARIABLES
--APIS
-    -PALETAS
-    -FLICKR
--AYUNTAMIENTO
-    -EVENTOS
--USUARIOS
--PUBLICACIONES
-    -COMENTARIOS
-    -GRAFFITIS
--FUNCIONES APP
-'''
+
+# -VARIABLES
+# -APIS
+#     -PALETAS
+#     -FLICKR
+# -AYUNTAMIENTO
+#     -EVENTOS
+# -USUARIOS
+# -PUBLICACIONES
+#     -COMENTARIOS
+#     -GRAFFITIS
+# -FUNCIONES APP
+
 
 
 
