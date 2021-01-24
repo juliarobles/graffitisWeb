@@ -18,14 +18,14 @@
                     </div>
                     <div class="col-12 col-md-6 mt-3 mt-md-0">
                         <h1 class="h3">{{usuario.nombre}}</h1>
-                        <h1 class="h5">@{{usuario.usuario}}</h1>
+                        <h1 class="h5">@{{usuario.usuario}}{{ request.session.admin }}</h1>
                         <h6><strong>{{usuario.listaSeguidores|length}}</strong> seguidores  <strong>{{usuario.listaSeguidos|length}}</strong> seguidos</h6>
                         
-                       <form action="{% url 'usuario-edit' usuario.id %}" method="POST" enctype="multipart/form-data">
+                        <form action="{% url 'usuario-edit' usuario.id %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             <p id="descripcionusuario" class="descripcion">{{usuario.descripcion}}
-                                {% if request.session.usuario == usuario.id %}
-                            </br><a href="#" onclick="editarDescripcion()" class="" style="padding-left:3cm"><i class="far fa-edit"></i> Editar descripcion</a></br>
+                                {% if request.session.usuario == usuario.id or request.session.admin == True %}
+                            </br><a href="#" onclick="editarDescripcion()" class="mt-3 pt-3"><i class="far fa-edit"></i> Editar descripcion</a></br>
 
                                 {% endif %}
                             </p>
