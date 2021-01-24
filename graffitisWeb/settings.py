@@ -14,6 +14,7 @@ import os
 import pymongo
 from pymongo import MongoClient
 from mongoengine import connect
+from pymongo import mongo_client
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,9 +27,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'e)974b&*2^u#^1ocw$#ajl$!9^rw(0w)98-bbhqulpe!negj9p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['graffitisweb-c4.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -63,12 +64,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware'
+    'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CORS_ORIGIN_WHITELIST = (
   'http://localhost:8000',
-  'http://127.0.0.1:8000'
+  'http://127.0.0.1:8000',
+  'graffitiweb-c4.herokuapp.com',
 )
 
 ROOT_URLCONF = 'graffitisWeb.urls'
@@ -100,24 +103,20 @@ MONGODB_DATABASES = {
     'default': {'name': 'iweb'}
 }
 # mongodb+srv://<username>:<password>@cluster0.pzn8b.mongodb.net/<dbname>?retryWrites=true&w=majority
+mongo_client.MongoClient.HOST = 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'iweb',
-        'HOST': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
-        'USER': 'Guest',
-        'PASSWORD': 'guest',
-        # 'CLIENT': {
-        #     'host': 
-        #     'name': 'iweb',
-        #     'username': 'Guest',
-        #     'password': 'guest',
-        #     'authMechanism': 'SCRAM-SHA-1',
-        # }
+        'CLIENT': {
+            'host': 'mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority',
+            'username': 'Guest',
+            'password': 'guest',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
     }
 }
 
-connect('iweb', host='mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority')
+connect('iweb', host='mongodb+srv://Guest:guest@cluster0.pzn8b.mongodb.net/iweb?retryWrites=true&w=majority', username='Guest', password='guest')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -156,11 +155,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "iweb", "static"),
+    os.path.join(BASE_DIR, "static"),
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -173,7 +172,7 @@ connection = MongoClient()
 MONGO_CLIENT = connection.get_database(name='iweb')
 MONGO_SESSIONS_COLLECTION = 'mongo_sessions' # default option
 
-#MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
+# MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.'
 
 # Django configuration
 REST_FRAMEWORK = {
