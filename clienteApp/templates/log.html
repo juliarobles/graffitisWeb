@@ -26,6 +26,9 @@
                 <div class="col-10 col-sm-8 col-md-4 rounded p-4 align-self-center justify-content-center bg-white">
                     <img class="w-100 d-flex justify-content-center contain" src="{% static 'images/logo.png' %}" height="50" alt="">
                     <form class="mt-3" method="post" action="{% url 'action_login' %}"> {% csrf_token %}
+                        
+                        {% comment %}
+                            
                         <div class="form-group">
                             <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
                             <input type="email" class="form-control" id="email" placeholder="Email" name="email" value= {{email}}>
@@ -42,11 +45,13 @@
                         <div class="d-flex justify-content-center">
                             <input type="submit" value="Iniciar sesion" class="btn btn-primary colorBoton"/>
                         </div> </br>
+                        {% endcomment %}
                         <div>
-                            <p>O bien, inicia sesion con Google:</p>
+                            <p class="text-center">Inicia sesion con Google</p>
                             <div class="g-signin2 d-flex justify-content-center" onclick="onClick" data-onsuccess="onSignIn"></div></div>
                         </div>
                         <hr/>
+                        
                     </form>
                 </div>
             </div>

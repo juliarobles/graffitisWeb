@@ -154,7 +154,7 @@
                         </div>
                     </form> 
                     {% for comentario in publicacion.listaComentarios %}
-                        {% if comentario.autor.id == usuarioLogeado %}
+                        {% if comentario.autor.id == usuarioLogeado or request.session.admin  %}
                         <a href="{% url 'delete-comentario' publicacion.id comentario|mongo_id %}" class="text-danger" style="float:right;" data-toggle="tooltip" data-placement="top" title="Borrar comentario" >
                             <i class="far fa-trash-alt squared icon"></i>
                         </a> 

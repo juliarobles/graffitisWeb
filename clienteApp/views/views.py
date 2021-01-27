@@ -493,7 +493,7 @@ def delete_comentario(request, pk, cpk):
         
         headers = {'Accept': 'application/json'}
         
-        if id_user == comentario.get('autor').get('id'):
+        if id_user == comentario.get('autor').get('id') or request.session.get('admin'):
             a=requests.delete('http://' + url_base + '/api/publicaciones/'+pk+'/comentarios/'+cpk, headers=headers)
             
 
