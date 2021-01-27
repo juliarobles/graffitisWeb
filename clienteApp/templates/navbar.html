@@ -51,9 +51,13 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_lista_usuarios}}"><i class="fas fa-users"></i></a>
-        </li>
+        
+        {% if request.session.admin %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_lista_usuarios}}"><i class="fas fa-users"></i></a>
+          </li>
+        {% endif %}
+        
         <!-- <li class="nav-item">
           <a class="nav-link" href="{{url_lista_eventos}}"><i class="fas fa-calendar-alt"></i></a>
         </li> -->
