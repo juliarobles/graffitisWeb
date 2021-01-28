@@ -572,7 +572,7 @@ def guardar_editar_graffiti(request, id_pub, id_graf):
             'fechaCaptura': request.POST['fecha_captura'],
             'autor': graf['autor']['id']
         }
-        url = url_base +'/publicaciones/' + id_pub + '/graffitis/' + id_graf
+        url = url_base +'/api/publicaciones/' + id_pub + '/graffitis/' + id_graf
         resp = requests.put(url, data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     return redirect(reverse('publicacion-detail', args=[id_pub]))
 
