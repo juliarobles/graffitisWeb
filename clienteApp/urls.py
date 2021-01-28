@@ -2,6 +2,7 @@ from django.conf.urls import url,include
 from django.urls import path
 from clienteApp.views.views import *
 from clienteApp.views.loginViews import *
+from clienteApp.views.tiempoViews import *
 
 #  ** Información API IMGUR**
 #  ** Cuenta: graffitisweb@gmail.com
@@ -30,7 +31,8 @@ urlpatterns = [
     path('html/politica-de-privacidad/', privacidad, name='privacidad'),
     path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
     path('ajax/paleta/', cargar_paleta_API, name='crear-paleta'),
-
+    path('tiempo/', cargar_tiempo, name="cargar-tiempo"),
+    
     # Eventos #
 
     path('html/eventos/', eventos_list ,name='eventos-list'),
@@ -66,7 +68,7 @@ urlpatterns = [
     # Comentario #
     path('html/publicaciones/detalles/<str:pk>/comentarios', crear_comentario, name='crear-comentario'),
     path('html/publicaciones/detalles/<str:pk>/comentarios/<str:cpk>', delete_comentario, name='delete-comentario'),
-    
+
 ]
 
 # Login
