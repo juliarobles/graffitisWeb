@@ -12,13 +12,13 @@ from google.auth.transport import requests as g_requests
 http = urllib3.PoolManager()
 
 CLIENT_ID = '495343275268-1b1ccmu06nc825uvhcnb6p83kbfo2nmf.apps.googleusercontent.com'
-
+url_base = 'https://graffitisweb-c4.herokuapp.com/'
 # Devolvemos el usuario con el email pasado como parametro o None, si no hay ninguno
 def isInApp(email):
      # Buscamos el usuario
     r = http.request(
         'GET',
-        'http://127.0.0.1:8000/api/usuarios/',
+        url_base+'api/usuarios/',
     )
     
     usuario_data = json.loads(r.data.decode('utf-8'))
@@ -39,7 +39,7 @@ def registerUser(name, email, img):
         "imagen": img,
         "descripcion": "Creado mediante autentificación OAuth 2.0. Amante de la pizza con piña."
     }
-    url='http://localhost:8000/usuarios/'
+    url=url_base+'usuarios/'
     
     response = requests.post(url, json.dumps(userJSON), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     responseJSON = json.loads(response.content)
@@ -88,7 +88,7 @@ def action_login(request):
     # Buscamos el usuario
     r = http.request(
         'GET',
-        'http://127.0.0.1:8000/api/usuarios/',
+        url_base+'api/usuarios/',
         
     )
     

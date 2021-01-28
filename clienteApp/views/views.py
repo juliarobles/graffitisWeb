@@ -48,7 +48,7 @@ FLICKR_USER = '191270823@N05'
 
 # Por ahora usaremos esto para modificar rápido las urls del server REST
 # pero estaría bien hacer una variable global de la app o algo
-url_base = 'localhost:8000'
+url_base = 'graffitisweb-c4.herokuapp.com'
 
 # ---------------------------------------------------------------------------- #
 #                                     APIS                                     #
