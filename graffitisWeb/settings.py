@@ -166,8 +166,16 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-SESSION_ENGINE = 'mongo_sessions.session'
+#SESSION_ENGINE = 'mongo_sessions.session'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
+
+CACHES = {
+    'default':{
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+    }
+}
 
 connection = MongoClient()
 MONGO_CLIENT = connection.get_database(name='iweb')
