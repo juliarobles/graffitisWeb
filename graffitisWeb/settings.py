@@ -29,7 +29,7 @@ SECRET_KEY = 'e)974b&*2^u#^1ocw$#ajl$!9^rw(0w)98-bbhqulpe!negj9p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['graffitisweb-c4.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['graffitisweb-c4.herokuapp.com', 'graffitisweb.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -72,6 +72,7 @@ CORS_ORIGIN_WHITELIST = (
   'http://localhost:8000',
   'http://127.0.0.1:8000',
   'graffitiweb-c4.herokuapp.com',
+  'graffitisweb.herokuapp.com'
 )
 
 ROOT_URLCONF = 'graffitisWeb.urls'
