@@ -81,11 +81,11 @@
             var csrf_token = getCookie('csrftoken');
             
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://localhost:8000/loginInToken'); // Hacemos un post a /loginIn
+            xhr.open('POST', 'https://graffitisweb-c4.herokuapp.com/loginInToken'); // Hacemos un post a /loginIn
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.setRequestHeader('X-CSRFToken', csrf_token)
             xhr.onload = function() {
-                window.location.href='http://localhost:8000/inicio';
+                window.location.href='https://graffitisweb-c4.herokuapp.com/inicio';
             };
             xhr.send('idtoken=' + id_token);
         }
