@@ -314,8 +314,8 @@ def editar_publicacion(request, pk, gpk):
         }
         data = json.dumps(dic)
         headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-        g = requests.put(url_base + '/api/publicaciones/{pk}/graffitis/{gpk}', data=json.dumps(doc), headers=headers)
-        r = requests.put(url_base + '/api/publicaciones/{pk}/', data=data, headers=headers)
+        g = requests.put(url_base + '/api/publicaciones/'+pk+'/graffitis/'+gpk, data=json.dumps(doc), headers=headers)
+        r = requests.put(url_base + '/api/publicaciones/'+pk+'/', data=data, headers=headers)
         
     else: 
         r = http.request(
