@@ -7,100 +7,94 @@ Tiempo en Málaga
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/tiempo.css' %}">
-<div class="container d-flex justify-content-center">
-    <div class="weather">
+<div class="container">
+        <div class="row justify-content-center">
+            <h1 class="display-4"> Tiempo en Málaga </h1>
+        </div>
         <div class="row">
-            <div class=" col-md-6">
-                <div class="card"> <span class="icon"><img class="img-fluid" src="https://img.icons8.com/emoji/96/000000/sun-emoji.png" /></span>
-                    <div class="title">
-                        <p>Sydney</p>
+            <div class="col card">
+                <span class="icon"><img class="img-fluid" src="https://img.icons8.com/emoji/96/000000/sun-emoji.png" /></span>
+                <div class="container">
+                    <div class="row title justify-content-center">
+                        <p class="text-center">Sydney</p>
                     </div>
-                    <div class="temp">+20<sup>&deg;</sup></div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="header">General</div>
-                            <div class="value">Sunny</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Air pollution</div>
-                            <div class="value">47</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Fire</div>
-                            <div class="value">No</div>
+                    <div class="row temp justify-content-center">
+                        +20º
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="header">Resumen</div>
+                                <div class="value">Sunny</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Viento(km/h)</div>
+                                <div class="value">47</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Veredicto</div>
+                                <div class="value">No</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card"> <span class="icon"><img class="img-fluid" src="https://img.icons8.com/emoji/96/000000/sun-emoji.png" /></span>
-                    <div class="title">
-                        <p>Melbourne</p>
+            <div class="col card">
+                <span class="icon"><img class="img-fluid" src="https://img.icons8.com/emoji/96/000000/sun-emoji.png" /></span>
+                <div class="container">
+                    <div class="row title justify-content-center">
+                        <p class="text-center">Sydney</p>
                     </div>
-                    <div class="temp">+18<sup>&deg;</sup></div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="header">General</div>
-                            <div class="value">Sunny</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Air pollution</div>
-                            <div class="value">20</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Fire</div>
-                            <div class="value">No</div>
+                    <div class="row temp justify-content-center">
+                        +20º
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="header">Resumen</div>
+                                <div class="value">Sunny</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Viento(km/h)</div>
+                                <div class="value">47</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Veredicto</div>
+                                <div class="value">Buen día</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card"> <span class="icon"><img src="https://img.icons8.com/color/50/000000/wind.png" /></span>
-                    <div class="title">
-                        <p>Lithgow</p>
+        <div class="row justify-content-md-center">
+        <div class="col-5 card">
+                <span class="icon"><img class="img-fluid" src="https://img.icons8.com/emoji/96/000000/sun-emoji.png" /></span>
+                <div class="container">
+                    <div class="row title justify-content-center">
+                        <p class="text-center">Sydney</p>
                     </div>
-                    <div class="temp">+17<sup>&deg;</sup></div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="header">General</div>
-                            <div class="value">Wind</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Air pollution</div>
-                            <div class="value">52</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Fire</div>
-                            <div class="value">No</div>
+                    <div class="row temp justify-content-center">
+                        +20º
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="header">Resumen</div>
+                                <div class="value">Sunny</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Viento(km/h)</div>
+                                <div class="value">47</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Veredicto</div>
+                                <div class="value">No</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <v class="card"> <span class="icon"><img src="https://img.icons8.com/office/80/000000/partly-cloudy-day.png" /></span>
-                    <div class="title">
-                        <p>Darvin</p>
-                    </div>
-                    <div class="temp">+15<sup>&deg;</sup></div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="header">General</div>
-                            <div class="value">Cloudy</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Air pollution</div>
-                            <div class="value">34</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="header">Fire</div>
-                            <div class="value">No</div>
-                        </div>
-                    </div>
             </div>
         </div>
     </div>
-</div>
-</div>
 {% endblock body %}

@@ -1,10 +1,4 @@
-body {
-    min-height: 100vh;
-    display: flex;
-}
-
 .container {
-    height: 80vh;
     align-items: center;
     border-radius: 1rem;
 }
@@ -41,17 +35,10 @@ body {
     }
 }
 
-.title {
-    justify-content: center;
-    position: absolute;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%)
-}
-
 .title p {
     margin-bottom: 0.2rem;
-    font-size: 1.2rem
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 .temp {
@@ -67,12 +54,14 @@ body {
     padding: 0 0.2rem
 }
 
+
+/*
 .icon {
     align-self: flex-end;
     margin-right: -2.5rem;
     margin-top: -2rem;
     z-index: 999
-}
+}*/
 
 .icon img {
     width: 5rem
