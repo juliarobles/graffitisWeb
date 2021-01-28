@@ -225,7 +225,8 @@ def usuario_follow(request, pk):
         headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
         data={'usuario':request.session.get('usuario')}
         body = json.dumps(data)
-        r = requests.post(url_base + '/api/usuarios/{pk}/follow', data=body, headers=headers)
+        url = url_base + '/api/usuarios/'+pk+'/follow'
+        r = requests.post(url, data=body, headers=headers)
     return redirect(reverse('usuarios-detail', args={pk}))
 
 def usuario_edit(request, pk):
@@ -553,7 +554,8 @@ def graffiti_form(request, pk):
             # print('Dictionary:' + body)
             # print('URL:' + url)
             headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-            r = requests.post(url_base + '/api/publicaciones/'+pk+'/graffitis/', data=body, headers=headers)
+            url = url_base + '/api/publicaciones/'+pk+'/graffitis/'
+            r = requests.post(url, data=body, headers=headers)
             return redirect(reverse('publicacion-detail', args=[pk]))
 
 def guardar_editar_graffiti(request, id_pub, id_graf):
