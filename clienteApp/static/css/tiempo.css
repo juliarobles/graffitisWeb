@@ -1,17 +1,12 @@
 body {
     min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .container {
     height: 80vh;
-    background-color: #ffffff;
-    border-color: #ffffff;
     align-items: center;
     border-radius: 1rem;
-    vertical-align: middle
 }
 
 @media(max-width:767px) {
