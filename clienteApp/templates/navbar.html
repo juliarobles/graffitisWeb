@@ -72,6 +72,13 @@
           }
         </script> -->
       <a class="nav-item btn btn-dark" href="{{url_crearPublicacion}}" >Nueva publicación</a>
+      <a class="nav-link dropdown-toggle nav-item btn btn-dark ml-2 menu-item-hover" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        ¿Pensando en pintar?
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><i class="fas fa-spray-can"></i><spam class="menu-item">Consultar el tiempo</spam></a>
+          <a class="dropdown-item" href="#">Encuentra inspiración</a>
+        </div>
       <a class="nav-item btn btn-dark ml-2 menu-item-hover" href="{% url 'cargar-tiempo' %}" ><i class="fas fa-spray-can"></i><spam class="menu-item">   ¿Pensando en pintar?</spam></a>
       <a class="nav-item btn btn-dark ml-2" href="{% url 'usuarios-detail' request.session.usuario %}" ><i class="fas fa-user"></i><spam> Mi perfil</spam></a>
       <button class="nav-item ml-2 mr-1 btn btn-outline-dark my-2 my-sm-0 form-inline" type="button" onclick="signOut();"><i class="fas fa-sign-out-alt"></i></button>
