@@ -562,7 +562,7 @@ def guardar_editar_graffiti(request, id_pub, id_graf):
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
-    graffiti = requests.get(url_base + '/publicaciones/'+id_pub+'/graffitis/' +id_graf)
+    graffiti = requests.get(url_base + '/api/publicaciones/'+id_pub+'/graffitis/' +id_graf)
     graf = json.loads(graffiti.text)
 
     if request.method == 'POST':
