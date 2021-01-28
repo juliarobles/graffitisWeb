@@ -90,6 +90,7 @@ def uploadImage(image):
     return None
 
 def actualizar_token(flickr):
+        print('Actualizando el token')
         flickr.authenticate_via_browser(perms='write')
 
         # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
@@ -339,6 +340,7 @@ def editar_publicacion(request, pk, gpk):
     return redirect(reverse('publicacion-detail', args=[pk]))
 
 def crear_publicacion(request):
+    print('He entrado a crear publicacion')
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
@@ -352,6 +354,7 @@ def crear_publicacion(request):
     otro_token ='898-452-861' #** Este código creo que si funciona, será el token
 
     if request.method == 'POST':
+        print('He entrado a el if de post')
         fecha = date.fromisoformat(request.POST['fecha_captura'])
 
         # Comprobamos la longitud de los campos
@@ -361,10 +364,10 @@ def crear_publicacion(request):
 
         # Comprobar validez del token de cache
     
-
-
-        actualizar_token(flickr)
         
+        print('He creado el objeto de la api de flickr correctamente')
+        actualizar_token(flickr)
+        print('He actualizado el token sin que pete?')
         imagen = request.FILES['imagen']
         resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
 
