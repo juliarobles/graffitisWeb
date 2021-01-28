@@ -13,6 +13,7 @@ http = urllib3.PoolManager()
 
 CLIENT_ID = '495343275268-1b1ccmu06nc825uvhcnb6p83kbfo2nmf.apps.googleusercontent.com'
 url_base = 'https://graffitisweb-c4.herokuapp.com/'
+
 # Devolvemos el usuario con el email pasado como parametro o None, si no hay ninguno
 def isInApp(email):
      # Buscamos el usuario
@@ -39,7 +40,7 @@ def registerUser(name, email, img):
         "imagen": img,
         "descripcion": "Creado mediante autentificación OAuth 2.0. Amante de la pizza con piña."
     }
-    url=url_base+'usuarios/'
+    url=url_base+'api/usuarios/'
     
     response = requests.post(url, json.dumps(userJSON), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     responseJSON = json.loads(response.content)
