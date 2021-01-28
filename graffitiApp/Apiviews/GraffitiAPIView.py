@@ -107,13 +107,14 @@ class GraffitiDetail(APIView):
         pk = ObjectId(pk)
         graffiti = self.get_object(pk,gpk)
         publicacion = PublicacionDetail.get_object(request,pk)
+        index = publicacion.listaGraffitis.index(graffiti)
         publicacion.listaGraffitis.remove(graffiti)
 
         serializer = GraffitiSerializer(graffiti, data=request.data)
     
         if serializer.is_valid():
             serializer.save()
-            publicacion.listaGraffitis.append(graffiti)
+            publicacion.listaGraffitis.insert(index, graffiti)
             publicacion.save()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
