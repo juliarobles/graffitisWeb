@@ -91,28 +91,28 @@ def uploadImage(image):
 
 def actualizar_token(flickr):
         print('Actualizando el token')
-        flickr.authenticate_via_browser(perms='write')
+        # flickr.authenticate_via_browser(perms='write')
 
         # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
         # y obtener un token nuevo
         # Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
         ##############################################################################
-        # if not flickr.token_valid(perms='write'):
+        if not flickr.token_valid(perms='write'):
 
-        #     # Get a request token
-        #     flickr.get_request_token(oauth_callback='oob')
+            # Get a request token
+            flickr.get_request_token(oauth_callback='oob')
 
-        #     # Open a browser at the authentication URL. Do this however
-        #     # you want, as long as the user visits that URL.
-        #     authorize_url = flickr.auth_url(perms='write')
-        #     webbrowser.open_new_tab(authorize_url)
+            # Open a browser at the authentication URL. Do this however
+            # you want, as long as the user visits that URL.
+            authorize_url = flickr.auth_url(perms='write')
+            webbrowser.open_new_tab(authorize_url)
 
-        #     # Get the verifier code from the user. Do this however you
-        #     # want, as long as the user gives the application the code.
-        #     verifier = str(input('Verifier code: '))
+            # Get the verifier code from the user. Do this however you
+            # want, as long as the user gives the application the code.
+            verifier = str(input('Verifier code: '))
 
-        #     # Trade the request token for an access token
-        #     flickr.get_access_token(verifier)
+            # Trade the request token for an access token
+            flickr.get_access_token(verifier)
 
 # ---------------------------------------------------------------------------- #
 #                                 AYUNTAMIENTO                                 #
