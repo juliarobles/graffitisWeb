@@ -41,7 +41,7 @@ def cargar_tiempo(request):
     f_hoy = fecha_hoy[2]+"-"+fecha_hoy[1]+"-"+fecha_hoy[0]
     
     n_hoy = 0
-    if vered_hoy.contains('Nublado'):
+    if 'Nublado' in vered_hoy:
         n_hoy = 1
     elif vered_hoy == 'Lluvia':
         n_hoy = 2
@@ -57,7 +57,7 @@ def cargar_tiempo(request):
     f_mañana = fecha_mañana[2]+"-"+fecha_mañana[1]+"-"+fecha_mañana[0]
     
     n_mañana = 0
-    if vered_mañana.contains('Nublado'):
+    if 'Nublado' in vered_mañana:
         n_mañana = 1
     elif vered_mañana == 'Lluvia':
         n_mañana = 2
@@ -73,7 +73,7 @@ def cargar_tiempo(request):
     f_pasado = fecha_pasado[2]+"-"+fecha_pasado[1]+"-"+fecha_pasado[0]
     
     n_pasado = 0
-    if vered_pasado.contains('Nublado'):
+    if 'Nublado' in vered_pasado:
         n_pasado = 1
     elif vered_pasado == 'Lluvia':
         n_pasado = 2
