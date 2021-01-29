@@ -40,6 +40,12 @@ def cargar_tiempo(request):
     (cond_hoy, vered_hoy) = parseCondicion(condicion_hoy)
     f_hoy = fecha_hoy[2]+"-"+fecha_hoy[1]+"-"+fecha_hoy[0]
     
+    n_hoy = 0
+    if vered_hoy == 'Nublado':
+        n_hoy = 1
+    elif vered_hoy == 'Lluvia':
+        n_hoy = 2
+    
     vered_mañana = None
     fecha_mañana = datos['forecast']['forecastday'][1]['date'].split('-')
     condicion_mañana = datos['forecast']['forecastday'][1]['day']['condition']['text']
@@ -49,6 +55,12 @@ def cargar_tiempo(request):
     temp_mañana = str(round(temp_mañana_max)) + '-' + str(round(temp_mañana_min))
     (cond_mañana, vered_mañana) = parseCondicion(condicion_mañana)
     f_mañana = fecha_mañana[2]+"-"+fecha_mañana[1]+"-"+fecha_mañana[0]
+    
+    n_mañana = 0
+    if vered_mañana == 'Nublado':
+        n_mañana = 1
+    elif vered_mañana == 'Lluvia':
+        n_mañana = 2
     
     vered_pasado = None
     fecha_pasado = datos['forecast']['forecastday'][2]['date'].split('-')
@@ -60,6 +72,12 @@ def cargar_tiempo(request):
     (cond_pasado, vered_pasado) = parseCondicion(condicion_pasado)
     f_pasado = fecha_pasado[2]+"-"+fecha_pasado[1]+"-"+fecha_pasado[0]
     
+    n_pasado = 0
+    if vered_pasado == 'Nublado':
+        n_pasado = 1
+    elif vered_pasado == 'Lluvia':
+        n_pasado = 2
+    
     # Datos
     data = {
         'fecha_hoy': f_hoy,
@@ -67,18 +85,21 @@ def cargar_tiempo(request):
         'viento_hoy': viento_hoy,
         'cond_hoy': cond_hoy,
         'vered_hoy': vered_hoy,
+        'n_hoy': n_hoy,
         
         'fecha_tom': f_mañana,
         'temp_tom': temp_mañana,
         'viento_tom': viento_mañana,
         'cond_tom': cond_mañana,
         'vered_tom': vered_mañana,
+        'n_tom': n_mañana,
         
         'fecha_pasado': f_pasado,
         'temp_pasado': temp_pasado,
         'viento_pasado': viento_pasado,
         'cond_pasado': cond_pasado,
         'vered_pasado': vered_pasado,
+        'n_pasado': n_pasado
     }
     
     return render(request, 'tiempo.html', data)

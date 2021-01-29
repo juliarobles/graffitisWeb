@@ -14,9 +14,9 @@ Tiempo en Málaga
         <div class="row">
             <div class="col card">
                 <span class="icon"><img class="img-fluid"
-                {% if vered_hoy == "Despejado" %}
+                {% if n_hoy == 0 %}
                     src="https://img.icons8.com/emoji/96/000000/sun-emoji.png"
-                {% elif vered_hoy == "Lluvia" %}
+                {% elif n_hoy == 1 %}
                     src="https://img.icons8.com/officel/80/000000/rain.png"
                 {% else %}
                     src="https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
@@ -52,9 +52,9 @@ Tiempo en Málaga
             </div>
             <div class="col card">
                 <span class="icon"><img class="img-fluid"
-                {% if vered_tom == "Despejado" %}
+                {% if n_tom == 0 %}
                     src="https://img.icons8.com/emoji/96/000000/sun-emoji.png"
-                {% elif vered_tom == "Lluvia" %}
+                {% elif n_tom == 1 %}
                     src="https://img.icons8.com/officel/80/000000/rain.png"
                 {% else %}
                     src="https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
@@ -92,9 +92,9 @@ Tiempo en Málaga
         <div class="row justify-content-md-center">
         <div class="col-5 card">
                 <span class="icon"><img class="img-fluid"
-                {% if vered_pasado == "Despejado" %}
+                {% if n_pasado == 0 %}
                     src="https://img.icons8.com/emoji/96/000000/sun-emoji.png"
-                {% elif vered_pasado == 'Lluvia' %}
+                {% elif n_pasado == 1 %}
                     src="https://img.icons8.com/officel/80/000000/rain.png"
                 {% else %}
                     src="https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
