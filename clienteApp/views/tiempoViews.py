@@ -32,7 +32,7 @@ def cargar_tiempo(request):
     
     datos=json.loads(r.data)
     
-    vered_hoy = None
+    enl_hoy = None
     fecha_hoy = datos['location']['localtime'].split(' ')[0].split('-')
     condicion_hoy = datos['current']['condition']['text']
     temp_hoy = str(round(datos['current']['temp_c']))
@@ -40,11 +40,11 @@ def cargar_tiempo(request):
     (cond_hoy, vered_hoy) = parseCondicion(condicion_hoy)
     f_hoy = fecha_hoy[2]+"-"+fecha_hoy[1]+"-"+fecha_hoy[0]
     
-    n_hoy = 0
+    enl_hoy = "https://img.icons8.com/emoji/96/000000/sun-emoji.png"
     if vered_hoy == 'Nublado' or vered_hoy == 'Parc. Nublado':
-        n_hoy = 1
+        enl_hoy = "https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
     elif vered_hoy == 'Lluvia':
-        n_hoy = 2
+        enl_hoy = "https://img.icons8.com/officel/80/000000/rain.png"
     
     vered_mañana = None
     fecha_mañana = datos['forecast']['forecastday'][1]['date'].split('-')
@@ -56,11 +56,11 @@ def cargar_tiempo(request):
     (cond_mañana, vered_mañana) = parseCondicion(condicion_mañana)
     f_mañana = fecha_mañana[2]+"-"+fecha_mañana[1]+"-"+fecha_mañana[0]
     
-    n_mañana = 0
+    enl_mañana = "https://img.icons8.com/emoji/96/000000/sun-emoji.png"
     if vered_mañana == 'Nublado' or vered_mañana == 'Parc. Nublado':
-        n_mañana = 1
+        enl_mañana = "https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
     elif vered_mañana == 'Lluvia':
-        n_mañana = 2
+        enl_mañana = "https://img.icons8.com/officel/80/000000/rain.png"
     
     vered_pasado = None
     fecha_pasado = datos['forecast']['forecastday'][2]['date'].split('-')
@@ -72,11 +72,11 @@ def cargar_tiempo(request):
     (cond_pasado, vered_pasado) = parseCondicion(condicion_pasado)
     f_pasado = fecha_pasado[2]+"-"+fecha_pasado[1]+"-"+fecha_pasado[0]
     
-    n_pasado = 0
+    enl_pasado = "https://img.icons8.com/emoji/96/000000/sun-emoji.png"
     if vered_pasado == 'Nublado' or vered_pasado == 'Parc. Nublado':
-        n_pasado = 1
+        enl_pasado = "https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
     elif vered_pasado == 'Lluvia':
-        n_pasado = 2
+        enl_pasado = "https://img.icons8.com/officel/80/000000/rain.png"
     
     # Datos
     data = {
@@ -85,21 +85,21 @@ def cargar_tiempo(request):
         'viento_hoy': viento_hoy,
         'cond_hoy': cond_hoy,
         'vered_hoy': vered_hoy,
-        'n_hoy': n_hoy,
+        'enl_hoy': enl_hoy,
         
         'fecha_tom': f_mañana,
         'temp_tom': temp_mañana,
         'viento_tom': viento_mañana,
         'cond_tom': cond_mañana,
         'vered_tom': vered_mañana,
-        'n_tom': n_mañana,
+        'enl_tom': enl_mañana,
         
         'fecha_pasado': f_pasado,
         'temp_pasado': temp_pasado,
         'viento_pasado': viento_pasado,
         'cond_pasado': cond_pasado,
         'vered_pasado': vered_pasado,
-        'n_pasado': n_pasado
+        'enl_pasado': enl_pasado
     }
     
     return render(request, 'tiempo.html', data)
