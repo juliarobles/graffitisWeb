@@ -54,26 +54,26 @@ def cargar_tiempo(request):
     temp_pasado_min = datos['forecast']['forecastday'][2]['day']['mintemp_c']
     viento_pasado = datos['forecast']['forecastday'][2]['day']['maxwind_kph']
     temp_pasado = str(round(temp_pasado_min)) + '-' + str(round(temp_pasado_max))
-    (vered_pasado, cond_pasado) = parseCondicion(condicion_pasado)
+    (cond_pasado, vered_pasado) = parseCondicion(condicion_pasado)
     
     # Datos
     data = {
         'fecha_hoy': fecha_hoy,
         'temp_hoy': temp_hoy,
         'viento_hoy': viento_hoy,
-        'cond_hoy': cond_hoy,
+        'cond_hoy': condicion_hoy,
         'vered_hoy': vered_hoy,
         
         'fecha_tom': fecha_mañana,
         'temp_tom': temp_mañana,
         'viento_tom': viento_mañana,
-        'cond_tom': cond_mañana,
+        'cond_tom': condicion_mañana,
         'vered_tom': vered_mañana,
         
         'fecha_pasado': fecha_pasado,
         'temp_pasado': temp_pasado,
         'viento_pasado': viento_pasado,
-        'cond_pasado': cond_pasado,
+        'cond_pasado': condicion_pasado,
         'vered_pasado': vered_pasado,
     }
     
