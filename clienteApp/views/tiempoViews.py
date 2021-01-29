@@ -35,7 +35,7 @@ def cargar_tiempo(request):
     vered_hoy = None
     fecha_hoy = datos['location']['localtime'].split(' ')[0].split('-')
     condicion_hoy = datos['current']['condition']['text']
-    temp_hoy = datos['current']['temp_c']
+    temp_hoy = str(round(datos['current']['temp_c']))
     viento_hoy = datos['current']['wind_kph']
     (cond_hoy, vered_hoy) = parseCondicion(condicion_hoy)
     f_hoy = fecha_hoy[2]+"-"+fecha_hoy[1]+"-"+fecha_hoy[0]
