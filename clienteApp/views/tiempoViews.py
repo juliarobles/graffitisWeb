@@ -65,19 +65,19 @@ def cargar_tiempo(request):
         'fecha_hoy': f_hoy,
         'temp_hoy': temp_hoy,
         'viento_hoy': viento_hoy,
-        'cond_hoy': condicion_hoy,
+        'cond_hoy': cond_hoy,
         'vered_hoy': vered_hoy,
         
         'fecha_tom': f_mañana,
         'temp_tom': temp_mañana,
         'viento_tom': viento_mañana,
-        'cond_tom': condicion_mañana,
+        'cond_tom': cond_mañana,
         'vered_tom': vered_mañana,
         
         'fecha_pasado': f_pasado,
         'temp_pasado': temp_pasado,
         'viento_pasado': viento_pasado,
-        'cond_pasado': condicion_pasado,
+        'cond_pasado': cond_pasado,
         'vered_pasado': vered_pasado,
     }
     
