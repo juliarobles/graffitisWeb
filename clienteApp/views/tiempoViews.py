@@ -11,9 +11,10 @@ url = "http://api.weatherapi.com/v1/forecast.json?key=355fa1dbfd2c4b7a9962150072
 
 def parseCondicion(cond):
     switcher = {
-        'Sunny': 'Soleado',
+        'Sunny': 'Despejado',
+        'Clear': 'Despejado',
         'Cloudy': 'Nublado',
-        'Partly Cloudy': 'Parc. Nublado'
+        'Partly cloudy': 'Parc. Nublado'
     }
     
     tiempo = switcher.get(cond, 'Lluvia')
