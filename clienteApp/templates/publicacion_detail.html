@@ -4,7 +4,7 @@
 {% load lookup %}
 
 {% block head %}
-    <meta property="og:url"                content="https://graffitisweb-c4.herokuapp.com{{ request.path|slice:'0:(request.path|length-3)' }}" />
+    <meta property="og:url"                content="{{ request.get_full_path }}" />
     <meta property="og:type"               content="website" />
     <meta property="og:title"              content="{{ publicacion.titulo }}" />
     <meta property="og:description"        content="{{ publicacion.descripcion }}" />
