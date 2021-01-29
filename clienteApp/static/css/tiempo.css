@@ -1,10 +1,4 @@
-body {
-    min-height: 100vh;
-    display: flex;
-}
-
 .container {
-    height: 80vh;
     align-items: center;
     border-radius: 1rem;
 }
@@ -29,8 +23,8 @@ body {
     padding: 1rem;
     margin: 1.5rem 4vw;
     border-radius: 1rem;
-    background-color: rgba(238, 237, 237, 0.22);
-    border-color: rgba(238, 237, 237, 0.22);
+    background-color: rgb(255, 253, 253);
+    border-color: rgb(238, 237, 237);
     box-shadow: 5px 6px 6px 2px #e9ecef;
     text-align: center
 }
@@ -41,17 +35,10 @@ body {
     }
 }
 
-.title {
-    justify-content: center;
-    position: absolute;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%)
-}
-
 .title p {
     margin-bottom: 0.2rem;
-    font-size: 1.2rem
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 .temp {
@@ -60,19 +47,21 @@ body {
 }
 
 .header {
-    color: #dddddd
+    color: #999696
 }
 
 .col-4 {
     padding: 0 0.2rem
 }
 
+
+/*
 .icon {
     align-self: flex-end;
     margin-right: -2.5rem;
     margin-top: -2rem;
     z-index: 999
-}
+}*/
 
 .icon img {
     width: 5rem

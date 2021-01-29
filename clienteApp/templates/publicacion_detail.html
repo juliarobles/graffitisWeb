@@ -4,8 +4,8 @@
 {% load lookup %}
 
 {% block head %}
-    <meta property="og:url"                content="{{ request.path }}" />
-    <meta property="og:type"               content="Publicacion" />
+    <meta property="og:url"                content="{{ request.get_full_path }}" />
+    <meta property="og:type"               content="website" />
     <meta property="og:title"              content="{{ publicacion.titulo }}" />
     <meta property="og:description"        content="{{ publicacion.descripcion }}" />
     {% with primerGraffiti=publicacion.listaGraffitis|lookup:0 %}
