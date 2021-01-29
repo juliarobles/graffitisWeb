@@ -2,6 +2,15 @@
 {% block title %}Detalles Usuario{% endblock %}
 {% load range %}
 {% load lookup %}
+
+{% block head %}
+    <meta property="og:url"                content="https://graffitisweb-c4.herokuapp.com{{ request.path }}" />
+    <meta property="og:type"               content="website" />
+    <meta property="og:title"              content="{{ usuario.nombre }}" />
+    <meta property="og:description"        content="{{ usuario.descripcion }}" />
+    <meta property="og:image"              content="{{  usuario.imagen  }}" />
+{% endblock %}
+
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
