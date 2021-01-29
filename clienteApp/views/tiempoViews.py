@@ -40,13 +40,13 @@ def cargar_tiempo(request):
     # Datos
     data = {
         'fecha_hoy': fecha_hoy,
-        'temp_hoy': temp_hoy,
+        #'temp_hoy': temp_hoy,
         'viento_hoy': viento_hoy,
-        'fecha_mañana': fecha_mañana,
-        'temp_mañana': temp_mañana,
-        'viento_mañana': viento_mañana,
+        'fecha_tom': fecha_mañana,
+        #'temp_mañana': temp_mañana,
+        'viento_tom': viento_mañana,
         'fecha_pasado': fecha_pasado,
-        'temp_pasado': temp_pasado,
+        #'temp_pasado': temp_pasado,
         'viento_pasado': viento_pasado,
     }
     
