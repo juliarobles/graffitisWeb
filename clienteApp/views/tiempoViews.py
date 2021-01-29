@@ -20,7 +20,7 @@ def cargar_tiempo(request):
     fecha_hoy = datos['location']['localtime'].split(' ')[0]
     condicion_hoy = datos['current']['condition']['text']
     temp_hoy = datos['current']['temp_c']
-    viento_hoy = datos['current']['maxwind_kph']
+    viento_hoy = datos['current']['wind_kph']
     
     fecha_mañana = datos['forecast']['forecastday'][1]['date']
     condicion_mañana = datos['forecast']['forecastday'][1]['day']['condition']['text']
