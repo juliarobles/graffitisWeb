@@ -100,8 +100,9 @@ def actualizar_token(flickr):
         print('Parte 3 de autenticación')
         url = flickr.auth_url('write')
         print('la url es ' + url)
-        if not webbrowser.open_new_tab(url):
-            raise flickr.FlickrError('Unable to open a browser to visit %s' % url)
+        webbrowser.open_new_tab(url)
+        # if not webbrowser.open_new_tab(url):
+        #     raise flickr.FlickrError('Unable to open a browser to visit %s' % url)
         print('Vamos a ver qué está pasando')
         flickr.verifier = flickr.auth_http_server.wait_for_oauth_verifier()
         print('Parte 4 de autenticación')
