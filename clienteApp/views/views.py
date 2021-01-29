@@ -90,6 +90,7 @@ def uploadImage(image):
     return None
 
 def actualizar_token(flickr):
+        print('Actualizando el token')
         flickr.authenticate_via_browser(perms='write')
 
         # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
@@ -314,8 +315,8 @@ def editar_publicacion(request, pk, gpk):
         }
         data = json.dumps(dic)
         headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-        g = requests.put(url_base + '/api/publicaciones/{pk}/graffitis/{gpk}', data=json.dumps(doc), headers=headers)
-        r = requests.put(url_base + '/api/publicaciones/{pk}/', data=data, headers=headers)
+        g = requests.put(url_base + '/api/publicaciones/'+pk+'/graffitis/'+gpk, data=json.dumps(doc), headers=headers)
+        r = requests.put(url_base + '/api/publicaciones/'+pk+'/', data=data, headers=headers)
         
     else: 
         r = http.request(
@@ -339,6 +340,7 @@ def editar_publicacion(request, pk, gpk):
     return redirect(reverse('publicacion-detail', args=[pk]))
 
 def crear_publicacion(request):
+    print('He entrado a crear publicacion')
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
@@ -352,6 +354,7 @@ def crear_publicacion(request):
     otro_token ='898-452-861' #** Este código creo que si funciona, será el token
 
     if request.method == 'POST':
+        print('He entrado a el if de post')
         fecha = date.fromisoformat(request.POST['fecha_captura'])
 
         # Comprobamos la longitud de los campos
@@ -361,10 +364,10 @@ def crear_publicacion(request):
 
         # Comprobar validez del token de cache
     
-
-
-        actualizar_token(flickr)
         
+        print('He creado el objeto de la api de flickr correctamente')
+        actualizar_token(flickr)
+        print('He actualizado el token sin que pete?')
         imagen = request.FILES['imagen']
         resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
 
@@ -562,7 +565,7 @@ def guardar_editar_graffiti(request, id_pub, id_graf):
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
-    graffiti = requests.get(url_base + '/publicaciones/'+id_pub+'/graffitis/' +id_graf)
+    graffiti = requests.get(url_base + '/api/publicaciones/'+id_pub+'/graffitis/' +id_graf)
     graf = json.loads(graffiti.text)
 
     if request.method == 'POST':
@@ -572,7 +575,8 @@ def guardar_editar_graffiti(request, id_pub, id_graf):
             'fechaCaptura': request.POST['fecha_captura'],
             'autor': graf['autor']['id']
         }
-        resp = requests.put(url_base + '/publicaciones/' + id_pub + '/graffitis/' + id_graf, data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
+        url = url_base +'/api/publicaciones/' + id_pub + '/graffitis/' + id_graf
+        resp = requests.put(url, data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     return redirect(reverse('publicacion-detail', args=[id_pub]))
 
 # ---------------------------------------------------------------------------- #

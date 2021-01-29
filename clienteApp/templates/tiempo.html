@@ -4,7 +4,117 @@
 {% block title %}
 Tiempo en Málaga
 {% endblock title %}
-<p> Malaguita de los amores
 {% block body %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tiempo.css' %}">
+<div class="container">
+        <div class="row justify-content-center">
+            <h1 class="display-4"> Tiempo en Málaga </h1>
+        </div>
+        <div class="row">
+            <div class="col card">
+                <span class="icon"><img class="img-fluid" src="{{enl_hoy}}"
+                /></span>
+                <div class="container">
+                    <div class="row justify-content-center" style="font-size: 1.5rem">
+                        Hoy
+                    </div>
+                    <div class="row title justify-content-center">
+                        <p class="text-center">{{fecha_hoy}}</p>
+                    </div>
+                    <div class="row temp justify-content-center">
+                        {{temp_hoy}}º
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="header">Resumen</div>
+                                <div class="value">{{cond_hoy}}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Viento(km/h)</div>
+                                <div class="value">{{viento_hoy}}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Veredicto</div>
+                                <div class="value">{{vered_hoy}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col card">
+                <span class="icon"><img class="img-fluid" src="{{enl_tom}}"
+                /></span>
+                <div class="container">
+                    <div class="row temp justify-content-center" style="font-size: 1.5rem">
+                        Mañana
+                    </div>
+                    <div class="row title justify-content-center">
+                        <p class="text-center">{{fecha_tom}}</p>
+                    </div>
+                    <div class="row temp justify-content-center">
+                        {{temp_tom}}º
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="header">Resumen</div>
+                                <div class="value">{{cond_tom}}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Viento(km/h)</div>
+                                <div class="value">{{viento_tom}}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Veredicto</div>
+                                <div class="value">{{vered_tom}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+        <div class="col-5 card">
+                <span class="icon"><img class="img-fluid" src="{{enl_pasado}}"
+                /></span>
+                <div class="container">
+                    <div class="row temp justify-content-center" style="font-size: 1.5rem">
+                        Pasado mañana
+                    </div>
+                    <div class="row title justify-content-center">
+                        <p class="text-center">{{fecha_pasado}}</p>
+                    </div>
+                    <div class="row temp justify-content-center">
+                        {{temp_pasado}}º
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="header">Resumen</div>
+                                <div class="value">{{cond_pasado}}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Viento(km/h)</div>
+                                <div class="value">{{viento_pasado}}</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="header">Veredicto</div>
+                                <div class="value">{{vered_pasado}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock body %}
+
+<!-- Iconos
+
+  -- https://img.icons8.com/emoji/96/000000/sun-emoji.png sol
+  -- https://img.icons8.com/office/80/000000/partly-cloudy-day.png parc. nublado
+  -- https://img.icons8.com/officel/80/000000/rain.png lluvia
+
+-->
