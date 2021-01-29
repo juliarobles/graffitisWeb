@@ -41,9 +41,9 @@ def cargar_tiempo(request):
     f_hoy = fecha_hoy[2]+"-"+fecha_hoy[1]+"-"+fecha_hoy[0]
     
     enl_hoy = "https://img.icons8.com/emoji/96/000000/sun-emoji.png"
-    if vered_hoy == 'Nublado' or vered_hoy == 'Parc. Nublado':
+    if cond_hoy == 'Nublado' or cond_hoy == 'Parc. Nublado':
         enl_hoy = "https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
-    elif vered_hoy == 'Lluvia':
+    elif cond_hoy == 'Lluvia':
         enl_hoy = "https://img.icons8.com/officel/80/000000/rain.png"
     
     vered_mañana = None
@@ -52,14 +52,14 @@ def cargar_tiempo(request):
     temp_mañana_max = datos['forecast']['forecastday'][1]['day']['maxtemp_c']
     temp_mañana_min = datos['forecast']['forecastday'][1]['day']['mintemp_c']
     viento_mañana = datos['forecast']['forecastday'][1]['day']['maxwind_kph']
-    temp_mañana = str(round(temp_mañana_max)) + '-' + str(round(temp_mañana_min))
+    temp_mañana = str(round(temp_mañana_min)) + '-' + str(round(temp_mañana_max))
     (cond_mañana, vered_mañana) = parseCondicion(condicion_mañana)
     f_mañana = fecha_mañana[2]+"-"+fecha_mañana[1]+"-"+fecha_mañana[0]
     
     enl_mañana = "https://img.icons8.com/emoji/96/000000/sun-emoji.png"
-    if vered_mañana == 'Nublado' or vered_mañana == 'Parc. Nublado':
+    if cond_mañana == 'Nublado' or cond_mañana == 'Parc. Nublado':
         enl_mañana = "https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
-    elif vered_mañana == 'Lluvia':
+    elif cond_mañana == 'Lluvia':
         enl_mañana = "https://img.icons8.com/officel/80/000000/rain.png"
     
     vered_pasado = None
@@ -73,9 +73,9 @@ def cargar_tiempo(request):
     f_pasado = fecha_pasado[2]+"-"+fecha_pasado[1]+"-"+fecha_pasado[0]
     
     enl_pasado = "https://img.icons8.com/emoji/96/000000/sun-emoji.png"
-    if vered_pasado == 'Nublado' or vered_pasado == 'Parc. Nublado':
+    if cond_pasado == 'Nublado' or cond_pasado == 'Parc. Nublado':
         enl_pasado = "https://img.icons8.com/office/80/000000/partly-cloudy-day.png"
-    elif vered_pasado == 'Lluvia':
+    elif cond_pasado == 'Lluvia':
         enl_pasado = "https://img.icons8.com/officel/80/000000/rain.png"
     
     # Datos
