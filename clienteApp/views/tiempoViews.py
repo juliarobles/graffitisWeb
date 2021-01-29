@@ -6,6 +6,38 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, JsonResponse
 
+http = urllib3.PoolManager()
+url = "http://api.weatherapi.com/v1/forecast.json?key=355fa1dbfd2c4b7a996215007212801&q=Malaga&days=3"
 
 def cargar_tiempo(request):
-    return render(request, 'tiempo.html')
+    r = http.request(
+        'GET',
+        url
+    )
+    
+    datos=json.loads(r.data)
+    
+    fecha_hoy = datos['location']['localtime'].split(' ')[0]
+    condicion_hoy = datos['current']['condition']['text']
+    temp_hoy = datos['current']['temp_c']
+    
+    fecha_mañana = datos['forecast']['forecastday'][1]['date']
+    condicion_mañana = datos['forecast']['forecastday'][1]['day']['condition']['text']
+    temp_mañana_max = datos['forecast']['forecastday'][1]['day']['maxtemp_c']
+    temp_mañana_min = datos['forecast']['forecastday'][1]['day']['mintemp_c']
+    temp_mañana = str(round(temp_mañana_max)) + '-' + str(round(temp_mañana_min))
+    
+    fecha_pasado = datos['forecast']['forecastday'][2]['date']
+    condicion_pasado = datos['forecast']['forecastday'][2]['day']['condition']['text']
+    temp_pasado_max = datos['forecast']['forecastday'][2]['day']['maxtemp_c']
+    temp_pasado_min = datos['forecast']['forecastday'][2]['day']['mintemp_c']
+    temp_pasado = str(round(temp_pasado_min)) + '-' + str(round(temp_pasado_max))
+    
+    # Datos
+    data = {
+        'fecha_hoy': fecha_hoy,
+        'fecha_mañana': fecha_mañana,
+        'fecha_pasado': fecha_pasado
+    }
+    
+    return render(request, 'tiempo.html', data)
