@@ -416,6 +416,7 @@ def callback(request):
         print('Error2')
     if f.requested_permissions is None:
         print('Error3')
+    print('Esto es una prueba definitiva?')
     print('yo que se bro1: ' + f.ACCESS_TOKEN_URL)
     print(f.ACCESS_TOKEN_URL)
     content = f.do_request(f.ACCESS_TOKEN_URL)
