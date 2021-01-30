@@ -45,7 +45,9 @@ client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
 FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
 FLICKR_API_SECRET = '15075131b9983f9b'
 FLICKR_USER = '191270823@N05'
-
+REQUEST_TOKEN_URL = "https://www.flickr.com/services/oauth/request_token"
+AUTHORIZE_URL = "https://www.flickr.com/services/oauth/authorize"
+ACCESS_TOKEN_URL = "https://www.flickr.com/services/oauth/access_token"
 # Por ahora usaremos esto para modificar rápido las urls del server REST
 # pero estaría bien hacer una variable global de la app o algo
 url_base = 'https://graffitisweb-c4.herokuapp.com'
@@ -400,7 +402,7 @@ def callback(request):
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
         FLICKR_API_SECRET, store_token=False)
     print('PRimer paso')
-    f.get_access_token
+    
     
     frob = request.GET['oauth_verifier']
     print('Segundo paso')
@@ -417,9 +419,9 @@ def callback(request):
     if f.requested_permissions is None:
         print('Error3')
     print('Esto es una prueba definitiva?')
-    print('yo que se bro1: ' + f.ACCESS_TOKEN_URL)
-    print(f.ACCESS_TOKEN_URL)
-    content = f.do_request(f.ACCESS_TOKEN_URL)
+    print('yo que se bro1: ' + ACCESS_TOKEN_URL)
+    print(ACCESS_TOKEN_URL)
+    content = f.do_request(ACCESS_TOKEN_URL)
     # parse the response
     print('yo que se bro2')
     access_token_resp = f.parse_oauth_response(content)
