@@ -360,6 +360,53 @@ def editar_publicacion(request, pk, gpk):
     
     return redirect(reverse('publicacion-detail', args=[pk]))
 
+
+def require_flickr_auth(view):
+    '''View decorator, redirects users to Flickr when no valid
+    authentication token is available.
+    '''
+
+    def protected_view(request, *args, **kwargs):
+        if 'token' in request.session:
+            token = request.session['token']
+        else:
+            token = None
+
+        f = flickrapi.FlickrAPI(FLICKR_API_KEY,FLICKR_API_SECRET, token=token,store_token=False)
+
+        if token:
+            # We have a token, but it might not be valid
+            try:
+                f.auth_checkToken()
+            except flickrapi.FlickrError:
+                token = None
+                del request.session['token']
+
+        if not token:
+            # No valid token, so redirect to Flickr
+            f.get_request_token('http://' + url_base + '/flickr/callback')
+            url = f.auth_url(perms='write')
+            print('El token no era válido: ' + url_base + '/flickr/callback' )
+            return HttpResponseRedirect(url)
+
+        # If the token is valid, we can call the decorated view.
+
+        return view(request, *args, **kwargs)
+
+    return protected_view
+
+def callback(request):
+    print('HE ENTRADO EN EL CALLBACK')
+    f = flickrapi.FlickrAPI(FLICKR_API_KEY,
+        FLICKR_API_SECRET, store_token=False)
+
+    frob = request.GET['frob']
+    token = f.get_token(frob)
+    request.session['token'] = token
+
+    return HttpResponseRedirect(url_base + 'html/nuevapublicacion/publicar')
+
+@require_flickr_auth
 def crear_publicacion(request):
     print('He entrado a crear publicacion')
     ret = comprobarUsuarioLogueado(request)
@@ -386,9 +433,7 @@ def crear_publicacion(request):
         # Comprobar validez del token de cache
     
         
-        print('He creado el objeto de la api de flickr correctamente')
-        actualizar_token(flickr)
-        print('He actualizado el token sin que pete?')
+        # actualizar_token(flickr)
         imagen = request.FILES['imagen']
         resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
 
