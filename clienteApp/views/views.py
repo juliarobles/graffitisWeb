@@ -399,11 +399,14 @@ def callback(request):
     print('HE ENTRADO EN EL CALLBACK')
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
         FLICKR_API_SECRET, store_token=False)
+    print('PRimer paso')
 
     frob = request.GET['frob']
+    print('Segundo paso')
     token = f.get_token(frob)
+    print('Tercer paso')
     request.session['token'] = token
-
+    print('Salgo del callback')
     return HttpResponseRedirect(url_base + 'html/nuevapublicacion/publicar')
 
 @require_flickr_auth
