@@ -440,7 +440,9 @@ def callback(request):
     req = oauth.Request(method='GET' , url = ACCESS_TOKEN_URL, parameters=access_token_parms)
 
     print ('e posibile que falle aqui')
-    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, f.flickr_oauth.token )
+    token = oauth.Token(f.flickr_oauth.oauth.client.resource_owner_key ,
+	f.flickr_oauth.oauth.client.resource_owner_secret)
+    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, token )
     # content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL, params=access_token_parms)
     print('La signature que sale es esta: (siguiente linea) ')
     print('La signature que sale es esta: ' + signature)
