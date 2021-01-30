@@ -403,7 +403,7 @@ def callback(request):
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
         FLICKR_API_SECRET, store_token=False)
     print('PRimer paso')
-    
+    f.get_request_token()
     
     frob = request.GET['oauth_verifier']
     print('Segundo paso')
@@ -440,8 +440,10 @@ def callback(request):
     req = oauth.Request(method='GET' , url = ACCESS_TOKEN_URL, parameters=access_token_parms)
 
     print ('e posibile que falle aqui')
-    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, f.token )
+    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, f.flickr_oauth.token )
     # content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL, params=access_token_parms)
+    print('La signature que sale es esta: (siguiente linea) ')
+    print('La signature que sale es esta: ' + signature)
     req['oauth_signature'] = signature
     print ('e posibile que falle aqui')
     
