@@ -420,8 +420,10 @@ def callback(request):
         print('Error3')
     print('Esto es una prueba definitiva?')
     print('yo que se bro1: ' + ACCESS_TOKEN_URL)
-    print(ACCESS_TOKEN_URL)
+    print('Esto de donde sale:' + ACCESS_TOKEN_URL)
     
+    # Tengo que añadir signature tio pero ni idea
+    # https://gist.github.com/cwurld/5483567 ojo?   
     content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL+ '?oauth_token=' + request.GET['oauth_token'])
     # parse the response
     print('yo que se bro2: ' + content)
