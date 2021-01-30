@@ -433,14 +433,17 @@ def callback(request):
     }
     # Tengo que añadir signature tio pero ni idea
 
+    print 'e posibile que falle aqui'
     consumer = oauth.Consumer(key = FLICKR_API_KEY, secret = FLICKR_API_SECRET)
 
+    print 'e posibile que falle aqui'
     req = oauth.Request(method='GET' , url = ACCESS_TOKEN_URL, parameters=access_token_parms)
 
-    
+    print 'e posibile que falle aqui'
     signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, f.token )
     # content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL, params=access_token_parms)
     req['oauth_signature'] = signature
+    print 'e posibile que falle aqui'
     
     resp, content = requests.get(req.to_url)
     #parse the response
