@@ -384,7 +384,7 @@ def require_flickr_auth(view):
 
         if not token:
             # No valid token, so redirect to Flickr
-            f.get_request_token('http://' + url_base + '/flickr/callback')
+            f.get_request_token(url_base + '/flickr/callback')
             url = f.auth_url(perms='write')
             print('El token no era válido: ' + url_base + '/flickr/callback' )
             return HttpResponseRedirect(url)
