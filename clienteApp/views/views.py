@@ -421,23 +421,25 @@ def callback(request):
     print('Esto es una prueba definitiva?')
     print('yo que se bro1: ' + ACCESS_TOKEN_URL)
     print(ACCESS_TOKEN_URL)
-    content = f.do_request(ACCESS_TOKEN_URL)
+    
+    content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL)
     # parse the response
-    print('yo que se bro2')
-    access_token_resp = f.parse_oauth_response(content)
+    print('yo que se bro2: ' + content)
+    
+    access_token_resp = f.flickr_oauth.parse_oauth_response(content)
     print('yo que se bro3')
-    f.oauth_token = flickrapi.auth.FlickrAccessToken(access_token_resp['oauth_token'],
+    f.flickr_oauth.oauth_token = flickrapi.auth.FlickrAccessToken(access_token_resp['oauth_token'],
                                         access_token_resp['oauth_token_secret'],
-                                        f.requested_permissions,
+                                        f.flickr_oauth.requested_permissions,
                                         access_token_resp.get('fullname', ''),
                                         access_token_resp['username'],
                                         access_token_resp['user_nsid'])
     print('yo que se bro4')
-    f.oauth.client.resource_owner_key = access_token_resp['oauth_token']
+    f.flickr_oauth.oauth.client.resource_owner_key = access_token_resp['oauth_token']
     print('yo que se bro5')
-    f.oauth.client.resource_owner_secret = access_token_resp['oauth_token_secret']
+    f.flickr_oauth.oauth.client.resource_owner_secret = access_token_resp['oauth_token_secret']
     print('yo que se bro6')
-    f.oauth.client.verifier = None
+    f.flickr_oauth.oauth.client.verifier = None
     print('yo que se bro7')
 
     print('Tercer paso')
