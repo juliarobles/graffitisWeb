@@ -401,10 +401,12 @@ def callback(request):
         FLICKR_API_SECRET, store_token=False)
     print('PRimer paso')
     
-
+    
     frob = request.GET['oauth_verifier']
     print('Segundo paso')
-    token = f.get_access_token(frob)
+    f.flickr_oauth.verifier = frob
+
+    token = f.flickr_oauth.get_access_token()
     print('Tercer paso')
     request.session['token'] = token
     print('Salgo del callback')
