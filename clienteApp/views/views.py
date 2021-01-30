@@ -424,7 +424,7 @@ def callback(request):
     
     # http://mkelsey.com/2011/07/03/Flickr-oAuth-Python-Example/
     access_token_parms = {
-	'oauth_consumer_key': keys.apikey,
+	'oauth_consumer_key': FLICKR_API_KEY,
 	'oauth_nonce': oauth.generate_nonce(),
 	'oauth_signature_method':"HMAC-SHA1",
 	'oauth_timestamp': str(int(time.time())),
