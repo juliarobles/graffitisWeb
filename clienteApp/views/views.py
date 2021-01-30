@@ -12,6 +12,7 @@ from datetime import date
 from urllib.parse import urlencode
 import time
 from xml.etree import ElementTree
+import oauth2 as oauth
 
 # ---------------------------------------------------------------------------- #
 #                                    INDICE                                    #
@@ -420,14 +421,36 @@ def callback(request):
         print('Error3')
     print('Esto es una prueba definitiva?')
     print('yo que se bro1: ' + ACCESS_TOKEN_URL)
-    print('Esto de donde sale:' + ACCESS_TOKEN_URL)
     
+    # http://mkelsey.com/2011/07/03/Flickr-oAuth-Python-Example/
+    access_token_parms = {
+	'oauth_consumer_key': keys.apikey,
+	'oauth_nonce': oauth.generate_nonce(),
+	'oauth_signature_method':"HMAC-SHA1",
+	'oauth_timestamp': str(int(time.time())),
+	'oauth_token':request.GET['oauth_token'],
+	'oauth_verifier' : f.flickr_oauth.verifier
+    }
     # Tengo que añadir signature tio pero ni idea
-    # https://gist.github.com/cwurld/5483567 ojo?   
-    content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL+ '?oauth_token=' + request.GET['oauth_token'])
-    # parse the response
-    print('yo que se bro2: ' + content)
+
+    consumer = oauth.Consumer(key = FLICKR_API_KEY, secret = FLICKR_API_SECRET)
+
+    req = oauth.Request(method='GET' , url = ACCESS_TOKEN_URL, parameters=access_token_parms)
+
     
+    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, f.token )
+    # content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL, params=access_token_parms)
+    req['oauth_signature'] = signature
+    
+    resp, content = requests.get(req.to_url)
+    #parse the response
+    print('Esta es la respuesta pero no llegaremos aqui:' + resp)
+    print('Este es el contenido :' + content)
+    # parse the response
+    
+
+
+    print('yo que se bro2: ' + content)
     access_token_resp = f.flickr_oauth.parse_oauth_response(content)
     print('yo que se bro3')
     f.flickr_oauth.oauth_token = flickrapi.auth.FlickrAccessToken(access_token_resp['oauth_token'],
