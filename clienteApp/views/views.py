@@ -400,15 +400,44 @@ def callback(request):
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
         FLICKR_API_SECRET, store_token=False)
     print('PRimer paso')
-    
+    f.get_access_token
     
     frob = request.GET['oauth_verifier']
     print('Segundo paso')
     f.flickr_oauth.verifier = frob
     print('Paso dos y medio')
-    token = f.flickr_oauth.get_access_token()
+    """Exchanges the request token for an access token.
+    Also stores the access token in 'self' for easy authentication of subsequent calls.
+    @return: Access token, a FlickrAccessToken object.
+    """
+    if f.oauth.client.resource_owner_key is None:
+        print('Error1')
+    if f.oauth.client.verifier is None:
+        print('Error2')
+    if f.requested_permissions is None:
+        print('Error3')
+    print('yo que se bro1')
+    content = f.do_request(f.ACCESS_TOKEN_URL)
+    # parse the response
+    print('yo que se bro2')
+    access_token_resp = f.parse_oauth_response(content)
+    print('yo que se bro3')
+    f.oauth_token = flickrapi.auth.FlickrAccessToken(access_token_resp['oauth_token'],
+                                        access_token_resp['oauth_token_secret'],
+                                        f.requested_permissions,
+                                        access_token_resp.get('fullname', ''),
+                                        access_token_resp['username'],
+                                        access_token_resp['user_nsid'])
+    print('yo que se bro4')
+    f.oauth.client.resource_owner_key = access_token_resp['oauth_token']
+    print('yo que se bro5')
+    f.oauth.client.resource_owner_secret = access_token_resp['oauth_token_secret']
+    print('yo que se bro6')
+    f.oauth.client.verifier = None
+    print('yo que se bro7')
+
     print('Tercer paso')
-    request.session['token'] = token
+    request.session['token'] = f.oauth_token
     print('Salgo del callback')
     return HttpResponseRedirect(url_base + 'html/nuevapublicacion/publicar')
 
