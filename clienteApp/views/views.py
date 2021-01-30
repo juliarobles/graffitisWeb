@@ -400,10 +400,11 @@ def callback(request):
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
         FLICKR_API_SECRET, store_token=False)
     print('PRimer paso')
+    
 
-    frob = request.GET['frob']
+    frob = request.GET['oauth_verifier']
     print('Segundo paso')
-    token = f.get_token(frob)
+    token = f.get_access_token(frob)
     print('Tercer paso')
     request.session['token'] = token
     print('Salgo del callback')
