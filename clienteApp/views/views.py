@@ -405,7 +405,7 @@ def callback(request):
     frob = request.GET['oauth_verifier']
     print('Segundo paso')
     f.flickr_oauth.verifier = frob
-
+    print('Paso dos y medio')
     token = f.flickr_oauth.get_access_token()
     print('Tercer paso')
     request.session['token'] = token
