@@ -65,10 +65,12 @@ def cargar_paleta_API(request):
 # ---------------------------------- IMGUR ---------------------------------- #
 
 def subirImagen_imgur(archivo):
+    print("adios?")
     dic = {
         'image': b64encode(archivo.file.read()),
         'type': 'base64'
     }
+    print(dic)
     print("hola4")
     j1 = requests.post(
         "https://api.imgur.com/3/image",
