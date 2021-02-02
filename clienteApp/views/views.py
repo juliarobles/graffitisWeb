@@ -399,9 +399,10 @@ def require_flickr_auth(view):
     return protected_view
 
 def callback(request):
-
+    print('He entrado')
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
           FLICKR_API_SECRET, store_token=False)
+    print('REQUEST')
     print('Request:' + request)
     frob = request.GET['frob']
     token = f.get_token(frob)
