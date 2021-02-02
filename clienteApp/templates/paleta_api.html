@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
-    <style>
+
+
+    
+    {% block body %}
+        <style>
         .color{
             width: 20%;
             float: left;
@@ -12,12 +16,7 @@
             margin: auto;
             height: 100%;
         }
-    </style>
-
-    
-    {% block body %}
-        
-    
+    </style>    
     <div class="general h-100">
         <div class="paleta row" id="paleta">
             {% if paleta  %}
