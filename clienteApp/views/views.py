@@ -350,7 +350,7 @@ def eliminar_publicacion(request, pk):
 
     creador = json.loads(b.data)
     if creador['id'] == request.session.get('usuario') or request.session.get('admin'):
-        r = requests.delete(url_base + '/api/publicaciones/{pk}/')
+        r = requests.delete(url_base + '/api/publicaciones/'+pk+'/')
     return redirect(reverse('inicio'))
 
 

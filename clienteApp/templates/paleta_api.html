@@ -1,4 +1,4 @@
-<html>
+{% extends 'base.html' %}
     <style>
         .color{
             width: 20%;
@@ -13,6 +13,11 @@
             height: 100%;
         }
     </style>
+
+    
+    {% block body %}
+        
+    
     <div class="general h-100">
         <div class="paleta row" id="paleta">
             {% if paleta  %}
@@ -20,13 +25,13 @@
             {% for color in paleta %}
             <div class="color col rounded-lg" style="background-color: {{color}};"></div>
             {% endfor %}
-                
+            
         {% else %}
         <h3 class="col-12">Aún no has creado una paleta</h3>
         <button class='btn btn-primary' onclick="crearPaleta()">Generar</button>
         {% endif %}
     </div> 
-        </div>
+</div>
     
     <script>
         function crearPaleta(){
@@ -44,4 +49,4 @@
             )
         }
     </script>
-</html>
+{% endblock body %}
