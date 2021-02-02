@@ -66,10 +66,15 @@ def cargar_paleta_API(request):
 
 def subirImagen_imgur(archivo):
     print("adios?")
-    dic = {
-        'image': b64encode(archivo.file.read()),
-        'type': 'base64'
-    }
+    try:
+        dic = {
+            'image': b64encode(archivo.file.read()),
+            'type': 'base64'
+        }
+    except Exception as inst:
+        print(type(inst))    # the exception instance
+        print(inst.args)     # arguments stored in .args
+        print(inst)          # __str__ allows args to be printed directly, 
     print(dic)
     print("hola4")
     j1 = requests.post(
