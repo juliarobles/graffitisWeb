@@ -401,14 +401,15 @@ def require_flickr_auth(view):
 def callback(request):
     print('He entrado')
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
-          FLICKR_API_SECRET, store_token=False)
+        FLICKR_API_SECRET, store_token=False)
     print('REQUEST')
-    print('Request:' + request.GET)
+    print('Request:' + request.GET['oauth_verifier'])
 
-    frob = request.GET['frob']
-    token = f.get_token(frob)
+    ver = request.GET['oauth_verifier']
+    token = f.get_access_token(ver)
     request.session['token'] = token
-
+    print('Saliendo del callback')
+    print(token)
     return HttpResponseRedirect('/content')
 
 @require_flickr_auth
