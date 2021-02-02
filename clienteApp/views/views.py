@@ -76,7 +76,6 @@ def subirImagen_imgur(archivo):
         print(type(inst))    # the exception instance
         print(inst.args)     # arguments stored in .args
         print(inst)          # __str__ allows args to be printed directly, 
-    print(dic)
     print("hola4")
     j1 = requests.post(
         "https://api.imgur.com/3/image",
@@ -243,7 +242,7 @@ def editar_publicacion(request, pk, gpk):
         imagencheck = request.FILES.get('imagen') or None
         if imagencheck is not None  :
             imagen = request.FILES['imagen']
-            url = subirImagen_imgur(archivo)
+            url = subirImagen_imgur(imagencheck)
         else :
             r = http.request(
                 'GET',
@@ -303,11 +302,8 @@ def crear_publicacion(request):
         return ret
     
     if request.method == 'POST':
-        print("hola")
         fecha = date.fromisoformat(request.POST['fecha_captura'])
-        print("hola2")
         imagen = request.FILES['imagen']
-        print("hola3")
         url = subirImagen_imgur(imagen)
 
         tematicas = str(request.POST['tematica']).split('#')
