@@ -69,6 +69,7 @@ def subirImagen_imgur(archivo):
         'image': b64encode(archivo.file.read()),
         'type': 'base64'
     }
+    print("hola4")
     j1 = requests.post(
         "https://api.imgur.com/3/image",
         data = dic,
@@ -77,6 +78,7 @@ def subirImagen_imgur(archivo):
             'Authorization': 'Client-ID a3a0174547253ee'
         }
     )
+    print("hola5")
     return json.loads(j1.content)['data']['link']
 
 # ---------------------------------------------------------------------------- #
@@ -293,8 +295,11 @@ def crear_publicacion(request):
         return ret
     
     if request.method == 'POST':
+        print("hola")
         fecha = date.fromisoformat(request.POST['fecha_captura'])
+        print("hola2")
         imagen = request.FILES['imagen']
+        print("hola3")
         url = subirImagen_imgur(imagen)
 
         tematicas = str(request.POST['tematica']).split('#')
