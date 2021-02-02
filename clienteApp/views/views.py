@@ -7,6 +7,7 @@ from django.template import Context
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 from django.utils.http import urlencode
 import urllib3, json
+from base64 import b64encode
 import requests, webbrowser
 from datetime import date
 from urllib.parse import urlencode
