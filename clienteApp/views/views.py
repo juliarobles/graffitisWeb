@@ -17,7 +17,6 @@ from xml.etree import ElementTree
 #                                    INDICE                                    #
 # ---------------------------------------------------------------------------- #
 
-
 # -VARIABLES
 # -APIS
 #     -PALETAS
