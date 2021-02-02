@@ -6,6 +6,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 from django.utils.http import urlencode
+from base64 import b64encode
 import urllib3, json, flickrapi
 import requests, webbrowser
 from datetime import date
@@ -337,49 +338,64 @@ def editar_publicacion(request, pk, gpk):
     
     return redirect(reverse('publicacion-detail', args=[pk]))
 
+def subirImagen_imgur(archivo):
+    dic = {
+        'image': b64encode(archivo.file.read()),
+        'type': 'base64'
+    }
+    j1 = requests.post(
+        "https://api.imgur.com/3/image",
+        data = dic,
+        headers = {
+            'Accept': 'application/json', 
+            'Authorization': 'Client-ID a3a0174547253ee'
+        }
+    )
+    return json.loads(j1.content)['data']['link']
+
+
+
 def crear_publicacion(request):
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
     #  ** Flickr
-    token= '72157717157590777-acde95669be3f3f1&oauth_verifier=b7825e3b792089ef'  #**No sé que es esto. oauth_token
-    api_key = '75b8452aae39dc0967a42c37c139e8a0'
-    api_secret = '15075131b9983f9b'
-    user_id= '191270823@N05'
+    # token= '72157717157590777-acde95669be3f3f1&oauth_verifier=b7825e3b792089ef'  #**No sé que es esto. oauth_token
+    # api_key = '75b8452aae39dc0967a42c37c139e8a0'
+    # api_secret = '15075131b9983f9b'
+    # user_id= '191270823@N05'
 
 
-    otro_token ='898-452-861' #** Este código creo que si funciona, será el token
+    # otro_token ='898-452-861' #** Este código creo que si funciona, será el token
 
     if request.method == 'POST':
         fecha = date.fromisoformat(request.POST['fecha_captura'])
-
-        # Comprobamos la longitud de los campos
-
-
-        flickr = flickrapi.FlickrAPI(api_key, api_secret)
-
-        # Comprobar validez del token de cache
-    
-
-
-        actualizar_token(flickr)
-        
         imagen = request.FILES['imagen']
-        resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
+
+
+        url = subirImagen_imgur(imagen)
+        # # Comprobamos la longitud de los campos
+        # flickr = flickrapi.FlickrAPI(api_key, api_secret)
+
+        # # Comprobar validez del token de cache
+        # actualizar_token(flickr)
+        
+        
+        # resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
 
         
         # Sacamos la id de la respuesta del servidor REST
-        for elem in resp:
-            if(str(elem.tag)=='photoid'):
-                photo_id = elem.text
+        # for elem in resp:
+        #     if(str(elem.tag)=='photoid'):
+        #         photo_id = elem.text
         
-        # Obtenemos la URL consultando el servidor REST 
-        for photo in flickr.walk_user():
-            # Estructura de la url por si alguien quiere utilizar algo 
-            # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
-            if(photo.get('id') == photo_id):
-                url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
-                break        
+        # # Obtenemos la URL consultando el servidor REST 
+        # for photo in flickr.walk_user():
+        #     # Estructura de la url por si alguien quiere utilizar algo 
+        #     # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
+        #     if(photo.get('id') == photo_id):
+        #         url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
+        #         break        
         tematicas = str(request.POST['tematica']).split('#')
         if tematicas[0] == "":
             del tematicas[0]
