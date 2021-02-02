@@ -403,7 +403,8 @@ def callback(request):
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
           FLICKR_API_SECRET, store_token=False)
     print('REQUEST')
-    print('Request:' + request)
+    print('Request:' + request.POST)
+    print('Request:' + request.GET)
     frob = request.GET['frob']
     token = f.get_token(frob)
     request.session['token'] = token
