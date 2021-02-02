@@ -3,7 +3,7 @@
         .color{
             width: 20%;
             float: left;
-     
+            padding-top: 20px;
             height: 50%;
             margin: 5px;
         }
@@ -23,7 +23,7 @@
             {% if paleta  %}
             <h3 class="col-12">Esta paleta de colores es para ti:</h3>
             {% for color in paleta %}
-            <div class="color col rounded-lg" style="background-color: {{color}};"></div>
+            <div class="color border border-1 border-dark col rounded-lg" style="background-color: {{color}};"></div>
             {% endfor %}
             
         {% else %}
