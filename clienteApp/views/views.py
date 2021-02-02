@@ -406,7 +406,8 @@ def callback(request):
     print('Request:' + request.GET['oauth_verifier'])
 
     ver = request.GET['oauth_verifier']
-    token = f.get_access_token(ver)
+    f.get_access_token(ver)
+    token = f.token_cache._token
     request.session['token'] = token
     print('Saliendo del callback')
     print(token)
