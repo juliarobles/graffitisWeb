@@ -399,85 +399,15 @@ def require_flickr_auth(view):
     return protected_view
 
 def callback(request):
-    print('HE ENTRADO EN EL CALLBACK')
+
     f = flickrapi.FlickrAPI(FLICKR_API_KEY,
-        FLICKR_API_SECRET, store_token=False)
-    print('PRimer paso')
-    f.get_request_token()
-    
-    frob = request.GET['oauth_verifier']
-    print('Segundo paso')
-    f.flickr_oauth.verifier = frob
-    print('Paso dos y medio')
-    """Exchanges the request token for an access token.
-    Also stores the access token in 'self' for easy authentication of subsequent calls.
-    @return: Access token, a FlickrAccessToken object.
-    """
-    if f.oauth.client.resource_owner_key is None:
-        print('Error1')
-    if f.oauth.client.verifier is None:
-        print('Error2')
-    if f.requested_permissions is None:
-        print('Error3')
-    print('Esto es una prueba definitiva?')
-    print('yo que se bro1: ' + ACCESS_TOKEN_URL)
-    
-    # http://mkelsey.com/2011/07/03/Flickr-oAuth-Python-Example/
-    access_token_parms = {
-	'oauth_consumer_key': FLICKR_API_KEY,
-	'oauth_nonce': oauth.generate_nonce(),
-	'oauth_signature_method':"HMAC-SHA1",
-	'oauth_timestamp': str(int(time.time())),
-	'oauth_token':request.GET['oauth_token'],
-	'oauth_verifier' : f.flickr_oauth.verifier
-    }
-    # Tengo que añadir signature tio pero ni idea
+          FLICKR_API_SECRET, store_token=False)
+    print('Request:' + request)
+    frob = request.GET['frob']
+    token = f.get_token(frob)
+    request.session['token'] = token
 
-    print ('e posibile que falle aqui')
-    consumer = oauth.Consumer(key = FLICKR_API_KEY, secret = FLICKR_API_SECRET)
-
-    print ('e posibile que falle aqui')
-    req = oauth.Request(method='GET' , url = ACCESS_TOKEN_URL, parameters=access_token_parms)
-
-    print ('e posibile que falle aqui')
-    token = oauth.Token(f.flickr_oauth.oauth.client.resource_owner_key ,
-	f.flickr_oauth.oauth.client.resource_owner_secret)
-    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, token )
-    # content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL, params=access_token_parms)
-    print('La signature que sale es esta: (siguiente linea) ')
-    print('La signature que sale es esta: ' + signature)
-    req['oauth_signature'] = signature
-    print ('e posibile que falle aqui')
-    
-    resp, content = requests.get(req.to_url)
-    #parse the response
-    print('Esta es la respuesta pero no llegaremos aqui:' + resp)
-    print('Este es el contenido :' + content)
-    # parse the response
-    
-
-
-    print('yo que se bro2: ' + content)
-    access_token_resp = f.flickr_oauth.parse_oauth_response(content)
-    print('yo que se bro3')
-    f.flickr_oauth.oauth_token = flickrapi.auth.FlickrAccessToken(access_token_resp['oauth_token'],
-                                        access_token_resp['oauth_token_secret'],
-                                        f.flickr_oauth.requested_permissions,
-                                        access_token_resp.get('fullname', ''),
-                                        access_token_resp['username'],
-                                        access_token_resp['user_nsid'])
-    print('yo que se bro4')
-    f.flickr_oauth.oauth.client.resource_owner_key = access_token_resp['oauth_token']
-    print('yo que se bro5')
-    f.flickr_oauth.oauth.client.resource_owner_secret = access_token_resp['oauth_token_secret']
-    print('yo que se bro6')
-    f.flickr_oauth.oauth.client.verifier = None
-    print('yo que se bro7')
-
-    print('Tercer paso')
-    request.session['token'] = f.oauth_token
-    print('Salgo del callback')
-    return HttpResponseRedirect(url_base + 'html/nuevapublicacion/publicar')
+    return HttpResponseRedirect('/content')
 
 @require_flickr_auth
 def crear_publicacion(request):
