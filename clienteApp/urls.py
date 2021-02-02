@@ -32,7 +32,6 @@ urlpatterns = [
     path('html/inicio/<str:pk>/like', like_inicio, name='inicio-like'),
     path('ajax/paleta/', cargar_paleta_API, name='crear-paleta'),
     path('tiempo/', cargar_tiempo, name="cargar-tiempo"),
-    path('flickr/callback', callback, name="flickr-callback"),
     
     # Eventos #
 

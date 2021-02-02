@@ -6,13 +6,12 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpRequest, JsonResponse, HttpResponseRedirect
 from django.utils.http import urlencode
-import urllib3, json, flickrapi
+import urllib3, json
 import requests, webbrowser
 from datetime import date
 from urllib.parse import urlencode
 import time
 from xml.etree import ElementTree
-import oauth2 as oauth
 
 # ---------------------------------------------------------------------------- #
 #                                    INDICE                                    #
@@ -22,7 +21,7 @@ import oauth2 as oauth
 # -VARIABLES
 # -APIS
 #     -PALETAS
-#     -FLICKR
+#     -IMGUR
 # -AYUNTAMIENTO
 #     -EVENTOS
 # -USUARIOS
@@ -43,12 +42,6 @@ import oauth2 as oauth
 http = urllib3.PoolManager()
 client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
-FLICKR_API_KEY = '75b8452aae39dc0967a42c37c139e8a0'
-FLICKR_API_SECRET = '15075131b9983f9b'
-FLICKR_USER = '191270823@N05'
-REQUEST_TOKEN_URL = "https://www.flickr.com/services/oauth/request_token"
-AUTHORIZE_URL = "https://www.flickr.com/services/oauth/authorize"
-ACCESS_TOKEN_URL = "https://www.flickr.com/services/oauth/access_token"
 # Por ahora usaremos esto para modificar rápido las urls del server REST
 # pero estaría bien hacer una variable global de la app o algo
 url_base = 'https://graffitisweb-c4.herokuapp.com'
@@ -70,73 +63,22 @@ def cargar_paleta_API(request):
     print(paleta)
     return render(request, 'paleta_api.html', paleta)
 
-# ---------------------------------- FLICKR ---------------------------------- #
+# ---------------------------------- IMGUR ---------------------------------- #
 
-#**Añadir esta función a crear publicación 
-def uploadImage(image):
-    flickr = flickrapi.FlickrAPI(FLICKR_API_KEY, FLICKR_API_SECRET)
-
-    filename = image.name
-    rsp = flickr.upload(filename=filename, fileobj=image)
-    time.sleep(3)
-
-    if rsp.get('stat') != 'ok':
-        return None
-
-    image_id = rsp.find('photoid').text
-
-    for photo in flickr.walk_user():
-        if photo.get('id') == image_id:
-            url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
-            return url
-
-    return None
-
-def actualizar_token(flickr):
-        print('Actualizando el token')
-        # flickr.authenticate_via_browser(perms='write')
-
-
-        print('Parte 2 de autenticación')
-
-        flickr.get_request_token()
-        print('Parte 3 de autenticación')
-        url = flickr.auth_url('write')
-        print('la url es ' + url)
-        webbrowser.open_new_tab(url)
-        webbrowser.open_new_tab('www.google.com')
-        webbrowser.open_new(url)
-        # if not webbrowser.open_new_tab(url):
-        #     raise flickr.FlickrError('Unable to open a browser to visit %s' % url)
-        print('Vamos a ver qué está pasando')
-        flickr.verifier = flickr.auth_http_server.wait_for_oauth_verifier()
-        print('Parte 4 de autenticación')
-        token = flickr.get_access_token()
-        print('Parte 5 de autenticación')
-        flickr.token = token
-        print('Parte 6 de autenticación')
-
-
-        # DESCOMENTAR AQUI. Solo tendréis que DESCOMENTAR las líneas de abajo para autorizar la app
-        # y obtener un token nuevo
-        # Más info: https://stuvel.eu/flickrapi-doc/3-auth.html
-        ##############################################################################
-        # if not flickr.token_valid(perms='write'):
-
-        #     # Get a request token
-        #     flickr.get_request_token(oauth_callback='oob')
-
-        #     # Open a browser at the authentication URL. Do this however
-        #     # you want, as long as the user visits that URL.
-        #     authorize_url = flickr.auth_url(perms='write')
-        #     webbrowser.open_new_tab(authorize_url)
-
-        #     # Get the verifier code from the user. Do this however you
-        #     # want, as long as the user gives the application the code.
-        #     verifier = str(input('Verifier code: '))
-
-        #     # Trade the request token for an access token
-        #     flickr.get_access_token(verifier)
+def subirImagen_imgur(archivo):
+    dic = {
+        'image': b64encode(archivo.file.read()),
+        'type': 'base64'
+    }
+    j1 = requests.post(
+        "https://api.imgur.com/3/image",
+        data = dic,
+        headers = {
+            'Accept': 'application/json', 
+            'Authorization': 'Client-ID a3a0174547253ee'
+        }
+    )
+    return json.loads(j1.content)['data']['link']
 
 # ---------------------------------------------------------------------------- #
 #                                 AYUNTAMIENTO                                 #
@@ -289,28 +231,10 @@ def private_post_like(request,pk):
 def editar_publicacion(request, pk, gpk):
     if request.method == 'POST' :
 
-        api_key = '75b8452aae39dc0967a42c37c139e8a0'
-        api_secret = '15075131b9983f9b'
-        user_id= '191270823@N05'
-
-        flickr = flickrapi.FlickrAPI(api_key, api_secret)
         imagencheck = request.FILES.get('imagen') or None
         if imagencheck is not None  :
             imagen = request.FILES['imagen']
-            resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
-
-            # Sacamos la id de la respuesta del servidor REST
-            for elem in resp:
-                if(str(elem.tag)=='photoid'):
-                    photo_id = elem.text
-
-            # Obtenemos la URL consultando el servidor REST 
-            for photo in flickr.walk_user(user_id):
-                # Estructura de la url por si alguien quiere utilizar algo 
-                # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
-                if(photo.get('id') == photo_id):
-                    url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
-                    break
+            url = subirImagen_imgur(archivo)
         else :
             r = http.request(
                 'GET',
@@ -363,166 +287,17 @@ def editar_publicacion(request, pk, gpk):
     
     return redirect(reverse('publicacion-detail', args=[pk]))
 
-
-def require_flickr_auth(view):
-    '''View decorator, redirects users to Flickr when no valid
-    authentication token is available.
-    '''
-
-    def protected_view(request, *args, **kwargs):
-        if 'token' in request.session:
-            token = request.session['token']
-        else:
-            token = None
-
-        f = flickrapi.FlickrAPI(FLICKR_API_KEY,FLICKR_API_SECRET, token=token,store_token=False)
-
-        if token:
-            # We have a token, but it might not be valid
-            try:
-                f.auth_checkToken()
-            except flickrapi.FlickrError:
-                token = None
-                del request.session['token']
-
-        if not token:
-            # No valid token, so redirect to Flickr
-            f.get_request_token(url_base + '/flickr/callback')
-            url = f.auth_url(perms='write')
-            print('El token no era válido: ' + url_base + '/flickr/callback' )
-            return HttpResponseRedirect(url)
-
-        # If the token is valid, we can call the decorated view.
-
-        return view(request, *args, **kwargs)
-
-    return protected_view
-
-def callback(request):
-    print('HE ENTRADO EN EL CALLBACK')
-    f = flickrapi.FlickrAPI(FLICKR_API_KEY,
-        FLICKR_API_SECRET, store_token=False)
-    print('PRimer paso')
-    f.get_request_token()
-    
-    frob = request.GET['oauth_verifier']
-    print('Segundo paso')
-    f.flickr_oauth.verifier = frob
-    print('Paso dos y medio')
-    """Exchanges the request token for an access token.
-    Also stores the access token in 'self' for easy authentication of subsequent calls.
-    @return: Access token, a FlickrAccessToken object.
-    """
-    if f.oauth.client.resource_owner_key is None:
-        print('Error1')
-    if f.oauth.client.verifier is None:
-        print('Error2')
-    if f.requested_permissions is None:
-        print('Error3')
-    print('Esto es una prueba definitiva?')
-    print('yo que se bro1: ' + ACCESS_TOKEN_URL)
-    
-    # http://mkelsey.com/2011/07/03/Flickr-oAuth-Python-Example/
-    access_token_parms = {
-	'oauth_consumer_key': FLICKR_API_KEY,
-	'oauth_nonce': oauth.generate_nonce(),
-	'oauth_signature_method':"HMAC-SHA1",
-	'oauth_timestamp': str(int(time.time())),
-	'oauth_token':request.GET['oauth_token'],
-	'oauth_verifier' : f.flickr_oauth.verifier
-    }
-    # Tengo que añadir signature tio pero ni idea
-
-    print ('e posibile que falle aqui')
-    consumer = oauth.Consumer(key = FLICKR_API_KEY, secret = FLICKR_API_SECRET)
-
-    print ('e posibile que falle aqui')
-    req = oauth.Request(method='GET' , url = ACCESS_TOKEN_URL, parameters=access_token_parms)
-
-    print ('e posibile que falle aqui')
-    token = oauth.Token(f.flickr_oauth.oauth.client.resource_owner_key ,
-	f.flickr_oauth.oauth.client.resource_owner_secret)
-    signature = oauth.SignatureMethod_HMAC_SHA1().sign(req, consumer, token )
-    # content = f.flickr_oauth.do_request(ACCESS_TOKEN_URL, params=access_token_parms)
-    print('La signature que sale es esta: (siguiente linea) ')
-    print('La signature que sale es esta: ' + signature)
-    req['oauth_signature'] = signature
-    print ('e posibile que falle aqui')
-    
-    resp, content = requests.get(req.to_url)
-    #parse the response
-    print('Esta es la respuesta pero no llegaremos aqui:' + resp)
-    print('Este es el contenido :' + content)
-    # parse the response
-    
-
-
-    print('yo que se bro2: ' + content)
-    access_token_resp = f.flickr_oauth.parse_oauth_response(content)
-    print('yo que se bro3')
-    f.flickr_oauth.oauth_token = flickrapi.auth.FlickrAccessToken(access_token_resp['oauth_token'],
-                                        access_token_resp['oauth_token_secret'],
-                                        f.flickr_oauth.requested_permissions,
-                                        access_token_resp.get('fullname', ''),
-                                        access_token_resp['username'],
-                                        access_token_resp['user_nsid'])
-    print('yo que se bro4')
-    f.flickr_oauth.oauth.client.resource_owner_key = access_token_resp['oauth_token']
-    print('yo que se bro5')
-    f.flickr_oauth.oauth.client.resource_owner_secret = access_token_resp['oauth_token_secret']
-    print('yo que se bro6')
-    f.flickr_oauth.oauth.client.verifier = None
-    print('yo que se bro7')
-
-    print('Tercer paso')
-    request.session['token'] = f.oauth_token
-    print('Salgo del callback')
-    return HttpResponseRedirect(url_base + 'html/nuevapublicacion/publicar')
-
-@require_flickr_auth
 def crear_publicacion(request):
     print('He entrado a crear publicacion')
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
-    #  ** Flickr
-    token= '72157717157590777-acde95669be3f3f1&oauth_verifier=b7825e3b792089ef'  #**No sé que es esto. oauth_token
-    api_key = '75b8452aae39dc0967a42c37c139e8a0'
-    api_secret = '15075131b9983f9b'
-    user_id= '191270823@N05'
-
-
-    otro_token ='898-452-861' #** Este código creo que si funciona, será el token
-
-    if request.method == 'POST':
-        print('He entrado a el if de post')
-        fecha = date.fromisoformat(request.POST['fecha_captura'])
-
-        # Comprobamos la longitud de los campos
-
-
-        flickr = flickrapi.FlickrAPI(api_key, api_secret)
-
-        # Comprobar validez del token de cache
     
-        
-        # actualizar_token(flickr)
+    if request.method == 'POST':
+        fecha = date.fromisoformat(request.POST['fecha_captura'])
         imagen = request.FILES['imagen']
-        resp = flickr.upload(filename=str(imagen), fileobj=imagen.file, format='etree')
+        url = subirImagen_imgur(imagen)
 
-        
-        # Sacamos la id de la respuesta del servidor REST
-        for elem in resp:
-            if(str(elem.tag)=='photoid'):
-                photo_id = elem.text
-        
-        # Obtenemos la URL consultando el servidor REST 
-        for photo in flickr.walk_user():
-            # Estructura de la url por si alguien quiere utilizar algo 
-            # https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
-            if(photo.get('id') == photo_id):
-                url = 'https://live.staticflickr.com/'+photo.get('server')+'/'+photo.get('id')+'_'+photo.get('secret')+'.jpg'
-                break        
         tematicas = str(request.POST['tematica']).split('#')
         if tematicas[0] == "":
             del tematicas[0]
@@ -682,9 +457,8 @@ def graffiti_form(request, pk):
     elif request.method == 'POST':
         if request.session.has_key('usuario'):
             imagen = request.FILES['imagen']
-            # Subir imagen a flickr
-            url = uploadImage(imagen)
-            print(imagen.name)
+            # Subir imagen a imgur
+            url = subirImagen_imgur(imagen)
             form = request.POST
             data = {
                 'estado': form['estado'],
