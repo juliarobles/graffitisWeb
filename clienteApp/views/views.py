@@ -407,8 +407,11 @@ def callback(request):
 
     ver = request.GET['oauth_verifier']
     f.get_access_token(ver)
+    print('Obtenido el token de acceso y guardado en memoria')
     token = f.token_cache._token
+    print('Sacando el token de acceso desde la cache')
     request.session['token'] = token
+    
     print('Saliendo del callback')
     print(token)
     return HttpResponseRedirect('/content')
