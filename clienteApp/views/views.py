@@ -516,6 +516,7 @@ def comprobarUsuarioLogueado(request):
         print(str('usuario' not in request.session) + " tiene que ser true")
         return redirect(reverse('principal'))
 
+@xframe_options_exempt
 def principal(request):
     if 'usuario' in request.session:
         return redirect(reverse('inicio'))
@@ -523,6 +524,7 @@ def principal(request):
     else:
         return render(request, 'log.html')
 
+@xframe_options_exempt
 def inicio(request):
     ret = comprobarUsuarioLogueado(request)
     busNav = ""
