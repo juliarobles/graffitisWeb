@@ -34,7 +34,7 @@ def isInApp(email, request):
         res = usuario_matched[0]
     return res
 
-def registerUser(name, email, img):
+def registerUser(name, email, img, request):
     host = request.get_host()
     if "8000" in host:
         host = "http://" + host
@@ -67,11 +67,9 @@ def action_loginInToken(request):
         # El usuario se ha verificado correctamente
         # Tenemos que comprobar si el usuario se encuentra ya registrado; lo haremos buscando su email
         gEmail = idinfo['email']
-        print(gEmail)
         matched_user = isInApp(gEmail, request)
-        print('hola')
         if matched_user == None: # Nuevo usuario -> Lo registramos en la aplicación
-            newUser_Id = registerUser(idinfo['name'], gEmail, idinfo['picture'])
+            newUser_Id = registerUser(idinfo['name'], gEmail, idinfo['picture'], request)
             request.session['usuario'] = newUser_Id
             request.session['admin'] = False
         else:
