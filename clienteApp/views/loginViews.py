@@ -12,23 +12,26 @@ from google.auth.transport import requests as g_requests
 http = urllib3.PoolManager()
 
 CLIENT_ID = '495343275268-1b1ccmu06nc825uvhcnb6p83kbfo2nmf.apps.googleusercontent.com'
-url_base = 'https://graffitisweb-c4.herokuapp.com/'
+#url_base = 'https://graffitisweb-c4.herokuapp.com/'
 
 # Devolvemos el usuario con el email pasado como parametro o None, si no hay ninguno
-def isInApp(email):
+def isInApp(email, request):
      # Buscamos el usuario
+    url = request.get_host()
+    if "8000" in url:
+        url = "http://" + url
+    else:
+        url = "https://" + url
     r = http.request(
         'GET',
-        url_base+'api/usuarios/',
+        url + '/'+'api/usuarios/',
     )
-    
+    print(r)
     usuario_data = json.loads(r.data.decode('utf-8'))
     usuario_matched = [user for user in usuario_data if user['email'] == email]
-    
     res = None
     if len(usuario_matched) > 0:
         res = usuario_matched[0]
-    
     return res
 
 def registerUser(name, email, img):
@@ -40,8 +43,7 @@ def registerUser(name, email, img):
         "imagen": img,
         "descripcion": "Creado mediante autentificación OAuth 2.0. Amante de la pizza con piña."
     }
-    url=url_base+'api/usuarios/'
-    
+    url=request.get_host() + '/'+'api/usuarios/'
     response = requests.post(url, json.dumps(userJSON), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     responseJSON = json.loads(response.content)
     
@@ -51,20 +53,18 @@ def registerUser(name, email, img):
 def action_loginInToken(request):
     if request.method == 'POST' and 'idtoken' in request.POST:
         idToken = request.POST['idtoken']
-        
         try:
             # Verificamos la validez del token
             idinfo = id_token.verify_oauth2_token(idToken, g_requests.Request(), CLIENT_ID)
         except ValueError: 
             context = {'message' : 'Error de validacion de credenciales.'}
             return render(request, 'log.html', context=context)
-        
         # El usuario se ha verificado correctamente
         # Tenemos que comprobar si el usuario se encuentra ya registrado; lo haremos buscando su email
         gEmail = idinfo['email']
-        
-        matched_user = isInApp(gEmail)
-        
+        print(gEmail)
+        matched_user = isInApp(gEmail, request)
+        print('hola')
         if matched_user == None: # Nuevo usuario -> Lo registramos en la aplicación
             newUser_Id = registerUser(idinfo['name'], gEmail, idinfo['picture'])
             request.session['usuario'] = newUser_Id
@@ -89,7 +89,7 @@ def action_login(request):
     # Buscamos el usuario
     r = http.request(
         'GET',
-        url_base+'api/usuarios/',
+        request.get_host() + '/' +'api/usuarios/',
         
     )
     

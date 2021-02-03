@@ -44,7 +44,15 @@ client_id = '6f71c692857b528'
 client_secret = 'fdd4159d0389284b15e33c8c80018700b0a8f5c0'
 # Por ahora usaremos esto para modificar rápido las urls del server REST
 # pero estaría bien hacer una variable global de la app o algo
-url_base = 'https://graffitisweb-c4.herokuapp.com'
+#url_base = 'https://graffitisweb-c4.herokuapp.com'
+
+def url_base(request):
+    url = request.get_host()
+    if "8000" in url:
+        url = "http://" + url
+    else:
+        url = "https://" + url
+    return url
 
 # ---------------------------------------------------------------------------- #
 #                                     APIS                                     #
@@ -66,7 +74,6 @@ def cargar_paleta_API(request):
 # ---------------------------------- IMGUR ---------------------------------- #
 
 def subirImagen_imgur(archivo):
-    print("adios?")
     try:
         dic = {
             'image': b64encode(archivo.file.read()),
@@ -76,7 +83,6 @@ def subirImagen_imgur(archivo):
         print(type(inst))    # the exception instance
         print(inst.args)     # arguments stored in .args
         print(inst)          # __str__ allows args to be printed directly, 
-    print("hola4")
     j1 = requests.post(
         "https://api.imgur.com/3/image",
         data = dic,
@@ -85,7 +91,6 @@ def subirImagen_imgur(archivo):
             'Authorization': 'Client-ID a3a0174547253ee'
         }
     )
-    print("hola5")
     return json.loads(j1.content)['data']['link']
 
 # ---------------------------------------------------------------------------- #
@@ -122,7 +127,7 @@ def cargar_eventos_ajax(request):
         http = urllib3.PoolManager()
         r = http.request(
         'GET',
-        url_base + '/eventos/'
+        url_base(request) + '/eventos/'
         )
         data = {'eventos':eliminar_eventos_repetidos(json.loads(r.data))}
         return render(request, 'eventos_panel.html', data)
@@ -131,7 +136,7 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
     if request.is_ajax and request.method == "GET":
         r = http.request(
             'GET',
-            url_base + '/eventosID/'+str(ID_ACTIVIDAD),
+            url_base(request) + '/eventosID/'+str(ID_ACTIVIDAD),
         )
         data={'evento_seleccionado':json.loads(r.data)}
         # data['evento_seleccionado']['DESCRIPCION']= limpiar_nombre(data['evento_seleccionado']['DESCRIPCION'])
@@ -141,7 +146,7 @@ def cargar_evento_id_ajax(request, ID_ACTIVIDAD):
 def eventos_details(request, ID_ACTIVIDAD):
     r = http.request(
         'GET',
-         url_base + '/eventosID/' + str(ID_ACTIVIDAD),
+        url_base(request) + '/eventosID/' + str(ID_ACTIVIDAD),
     )
     context={'evento':json.loads(r.data)}
     if 'NOMBRE' in context['evento']:
@@ -151,7 +156,7 @@ def eventos_details(request, ID_ACTIVIDAD):
 def eventos_list(request):
     r = http.request(
         'GET',
-        url_base + '/eventos/'
+        url_base(request) + '/eventos/'
     )
     context={'eventos':eliminar_eventos_repetidos(json.loads(r.data))}
     return render(request, 'eventos_list.html', context=context)
@@ -164,7 +169,7 @@ def eventos_list(request):
 def usuarios_list(request):
     r = http.request(
         'GET',
-     url_base + '/api/usuarios/'
+        url_base(request) + '/api/usuarios/'
     )
     context = {
         "usuarios": json.loads(r.data)
@@ -174,16 +179,16 @@ def usuarios_list(request):
 def usuarios_detail(request, pk):
     r = http.request(
         'GET',
-    url_base + '/api/usuarios/'+str(pk)
+    url_base(request) + '/api/usuarios/'+str(pk)
     )
     usuario=json.loads(r.data)
     listaPublicaciones = []
     for id in usuario['listaPublicaciones']:
-        r = http.request('GET', url_base + '/api/publicaciones/'+str(id))
+        r = http.request('GET', url_base(request) + '/api/publicaciones/'+str(id))
         listaPublicaciones.append(json.loads(r.data))
     listaActualizaciones = []
     for id in usuario['listaGraffitisPublicaciones']:
-        r = http.request('GET',  url_base + '/api/publicaciones/'+str(id))
+        r = http.request('GET',  url_base(request) + '/api/publicaciones/'+str(id))
         listaActualizaciones.append(json.loads(r.data))
 
 
@@ -200,14 +205,14 @@ def usuario_follow(request, pk):
         headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
         data={'usuario':request.session.get('usuario')}
         body = json.dumps(data)
-        url = url_base + '/api/usuarios/'+pk+'/follow'
+        url = url_base(request) + '/api/usuarios/'+pk+'/follow'
         r = requests.post(url, data=body, headers=headers)
     return redirect(reverse('usuarios-detail', args={pk}))
 
 def usuario_edit(request, pk):
     if request.session.has_key('usuario'):
         if request.method == 'POST':
-            url = url_base + '/api/usuarios/' + pk + "/"
+            url = url_base(request) + '/api/usuarios/' + pk + "/"
             data = {
                 "descripcion": request.POST.get("descripcion") 
             }
@@ -231,7 +236,7 @@ def private_post_like(request,pk):
             "usuario": str(request.session['usuario'])
         }
         data = json.dumps(cadena)
-        url = url_base + '/api/publicaciones/'+str(pk)+'/like'
+        url = url_base(request) + '/api/publicaciones/'+str(pk)+'/like'
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
         requests.post(url, data=data, headers=headers)
@@ -246,7 +251,7 @@ def editar_publicacion(request, pk, gpk):
         else :
             r = http.request(
                 'GET',
-                url_base + '/api/publicaciones/'+pk+'/graffitis/'+gpk
+                url_base(request) + '/api/publicaciones/'+pk+'/graffitis/'+gpk
             )
             graffiti = json.loads(r.data)
             url = graffiti.get('imagen')        
@@ -271,13 +276,13 @@ def editar_publicacion(request, pk, gpk):
         }
         data = json.dumps(dic)
         headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-        g = requests.put(url_base + '/api/publicaciones/'+pk+'/graffitis/'+gpk, data=json.dumps(doc), headers=headers)
-        r = requests.put(url_base + '/api/publicaciones/'+pk+'/', data=data, headers=headers)
+        g = requests.put(url_base(request) + '/api/publicaciones/'+pk+'/graffitis/'+gpk, data=json.dumps(doc), headers=headers)
+        r = requests.put(url_base(request) + '/api/publicaciones/'+pk+'/', data=data, headers=headers)
         
     else: 
         r = http.request(
             'GET',
-            url_base + '/api/publicaciones/'+str(pk)
+            url_base(request) + '/api/publicaciones/'+str(pk)
         )
         publicacion = json.loads(r.data)
         primerGraffiti = publicacion.get('listaGraffitis')[0]
@@ -296,7 +301,6 @@ def editar_publicacion(request, pk, gpk):
     return redirect(reverse('publicacion-detail', args=[pk]))
 
 def crear_publicacion(request):
-    print('He entrado a crear publicacion')
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
@@ -329,31 +333,31 @@ def crear_publicacion(request):
             ],
         }
 
-        requests.post(url_base + '/api/publicaciones/', data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
+        requests.post(url_base(request) + '/api/publicaciones/', data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     return redirect(reverse('inicio'))
 
 def eliminar_publicacion(request, pk):
     r = http.request(
         'GET',
-    url_base + '/api/publicaciones/'+str(pk)
+    url_base(request) + '/api/publicaciones/'+str(pk)
     )
     publicacion=json.loads(r.data)
     
     b = http.request(
         'GET',
-    url_base + '/api/usuarios/'+str(publicacion['creador'])
+    url_base(request) + '/api/usuarios/'+str(publicacion['creador'])
     )
 
     creador = json.loads(b.data)
     if creador['id'] == request.session.get('usuario') or request.session.get('admin'):
-        r = requests.delete(url_base + '/api/publicaciones/'+pk+'/')
+        r = requests.delete(url_base(request) + '/api/publicaciones/'+pk+'/')
     return redirect(reverse('inicio'))
 
 
 def list_publicaciones_views(request):
     r = http.request(
         'GET',
-    url_base + '/api/publicaciones/'
+    url_base(request) + '/api/publicaciones/'
     )
     context={'publicaciones':json.loads(r.data)}
     return render(request, 'publicaciones_list.html', context=context)
@@ -361,12 +365,12 @@ def list_publicaciones_views(request):
 def publicaciones_detail_view(request, pk):
     r = http.request(
         'GET',
-    url_base + '/api/publicaciones/'+str(pk)
+    url_base(request) + '/api/publicaciones/'+str(pk)
     )
     publicacion=json.loads(r.data)
     b = http.request(
         'GET',
-    url_base + '/api/usuarios/'+str(publicacion['creador'])
+    url_base(request) + '/api/usuarios/'+str(publicacion['creador'])
     )
 
     for graffiti in publicacion['listaGraffitis']:
@@ -401,7 +405,7 @@ def crear_comentario(request, pk):
                 "autor": str(id_user)
             }
             data = json.dumps(cadena)
-            url = url_base + '/api/publicaciones/'+str(pk)+'/comentarios/'
+            url = url_base(request) + '/api/publicaciones/'+str(pk)+'/comentarios/'
             headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
             requests.post(url, data=data, headers=headers)
@@ -413,14 +417,14 @@ def delete_comentario(request, pk, cpk):
         id_user = request.session['usuario']
         r = http.request(
             'GET',
-            url_base + '/api/publicaciones/'+pk+'/comentarios/'+cpk
+            url_base(request) + '/api/publicaciones/'+pk+'/comentarios/'+cpk
         )
         comentario = json.loads(r.data)
         
         headers = {'Accept': 'application/json'}
         
         if id_user == comentario.get('autor').get('id') or request.session.get('admin'):
-            a=requests.delete(url_base + '/api/publicaciones/'+pk+'/comentarios/'+cpk, headers=headers)
+            a=requests.delete(url_base(request) + '/api/publicaciones/'+pk+'/comentarios/'+cpk, headers=headers)
             
 
             
@@ -431,21 +435,21 @@ def delete_comentario(request, pk, cpk):
 
 def editar_graffiti(request, id_pub, id_graf):
     if request.session.has_key('usuario'):
-        r = requests.get(url_base + '/api/publicaciones/' + id_pub +'/graffitis/' + id_graf)
+        r = requests.get(url_base(request) + '/api/publicaciones/' + id_pub +'/graffitis/' + id_graf)
         graffiti = json.loads(r.text)
-        r = requests.get(url_base + '/api/usuarios/' + graffiti['autor']['id'])
+        r = requests.get(url_base(request) + '/api/usuarios/' + graffiti['autor']['id'])
         autor = json.loads(r.text)
     return render(request, 'editar_graffiti.html', context={'graffiti' : graffiti, 'autor':autor, 'publicacion_id': id_pub, })
 
 def eliminar_graffiti(request, ppk, gpk):
     if request.session.has_key('usuario'):
-        r = requests.get(url_base + '/api/publicaciones/' + ppk +'/graffitis/' + gpk)
+        r = requests.get(url_base(request) + '/api/publicaciones/' + ppk +'/graffitis/' + gpk)
         graffiti = json.loads(r.text)
-        r = requests.get(url_base + '/api/usuarios/' + graffiti['autor']['id'])
+        r = requests.get(url_base(request) + '/api/usuarios/' + graffiti['autor']['id'])
         autor = json.loads(r.text)
     
         if request.session.get('usuario') == autor['id'] or request.session.get('admin'):
-            requests.delete(url_base + '/api/publicaciones/' + ppk +'/graffitis/' + gpk)
+            requests.delete(url_base(request) + '/api/publicaciones/' + ppk +'/graffitis/' + gpk)
     
     return redirect(reverse('publicacion-detail', args={ppk}))
 
@@ -478,7 +482,7 @@ def graffiti_form(request, pk):
             # print('Dictionary:' + body)
             # print('URL:' + url)
             headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
-            url = url_base + '/api/publicaciones/'+pk+'/graffitis/'
+            url = url_base(request) + '/api/publicaciones/'+pk+'/graffitis/'
             r = requests.post(url, data=body, headers=headers)
             return redirect(reverse('publicacion-detail', args=[pk]))
 
@@ -486,7 +490,7 @@ def guardar_editar_graffiti(request, id_pub, id_graf):
     ret = comprobarUsuarioLogueado(request)
     if ret:
         return ret
-    graffiti = requests.get(url_base + '/api/publicaciones/'+id_pub+'/graffitis/' +id_graf)
+    graffiti = requests.get(url_base(request) + '/api/publicaciones/'+id_pub+'/graffitis/' +id_graf)
     graf = json.loads(graffiti.text)
 
     if request.method == 'POST':
@@ -496,7 +500,7 @@ def guardar_editar_graffiti(request, id_pub, id_graf):
             'fechaCaptura': request.POST['fecha_captura'],
             'autor': graf['autor']['id']
         }
-        url = url_base +'/api/publicaciones/' + id_pub + '/graffitis/' + id_graf
+        url = url_base(request) +'/api/publicaciones/' + id_pub + '/graffitis/' + id_graf
         resp = requests.put(url, data=json.dumps(dic), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     return redirect(reverse('publicacion-detail', args=[id_pub]))
 
@@ -533,7 +537,7 @@ def inicio(request):
             listaHT = busqueda.split("#")
             for ht in listaHT:
                 if ht != '':
-                    url = url_base + '/api/publicaciones/tematica/' + str(ht).strip()
+                    url = url_base(request) + '/api/publicaciones/tematica/' + str(ht).strip()
                     try:
                         r = requests.get(url)
                         data = r.json()
@@ -546,10 +550,10 @@ def inicio(request):
             for user in listaUsers:
                 if user != '':
                     try:
-                        r = http.request('GET', url_base + '/api/usuarios/username/' + str(user).strip())
+                        r = http.request('GET', url_base(request) + '/api/usuarios/username/' + str(user).strip())
                         usuario = json.loads(r.data)
                         id = usuario[0]['id']
-                        r = http.request('GET', url_base + '/api/publicaciones/creador/' + str(id))
+                        r = http.request('GET', url_base(request) + '/api/publicaciones/creador/' + str(id))
                         data = json.loads(r.data)
                         for dato in data:
                             publicaciones.append(dato)
@@ -562,9 +566,9 @@ def inicio(request):
                 if word != '':
                     try:
                         word = str(word).strip()
-                        r = http.request('GET', url_base + '/api/publicaciones/titulo/' + word)
+                        r = http.request('GET', url_base(request) + '/api/publicaciones/titulo/' + word)
                         data1 = json.loads(r.data)
-                        r = http.request('GET', url_base + '/api/publicaciones/descripcion/' + word)
+                        r = http.request('GET', url_base(request) + '/api/publicaciones/descripcion/' + word)
                         data2 = json.loads(r.data)
 
                         for dato in data1:
@@ -579,7 +583,7 @@ def inicio(request):
             request.session['ultBusqueda'] = ""
         r = http.request(
             'GET',
-         url_base + '/api/publicaciones/'
+         url_base(request) + '/api/publicaciones/'
         )
         publicaciones = json.loads(r.data)
     context={'publicaciones': publicaciones, "busqueda": busNav}

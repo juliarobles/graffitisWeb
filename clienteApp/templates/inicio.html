@@ -130,7 +130,7 @@ crossorigin=""></script>
         control = L.control.layers();
         control.addTo(mymap);
         var req = new XMLHttpRequest();
-        req.open('GET', 'https://graffitisweb-c4.herokuapp.com/calidadDelAire/' + positionLat + ',' + positionLon + '&km=1', true);
+        req.open('GET', '/calidadDelAire/' + positionLat + ',' + positionLon + '&km=1', true);
         req.onreadystatechange = function (aEvt) {
           if (req.readyState == 4) {
             if(req.status == 200){
@@ -158,7 +158,7 @@ crossorigin=""></script>
         cambiarLayout(positionLat, positionLon);
         function cambiarLayout(lat, lng){
           var req = new XMLHttpRequest();
-          req.open('GET', 'https://graffitisweb-c4.herokuapp.com/calidadDelAire/' + lat + ',' + lng, true);
+          req.open('GET', '/calidadDelAire/' + lat + ',' + lng, true);
           req.onreadystatechange = function (aEvt) {
             if (req.readyState == 4) {
               if(req.status == 200){
