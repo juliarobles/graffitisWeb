@@ -14,6 +14,7 @@ from urllib.parse import urlencode
 import time
 from xml.etree import ElementTree
 
+from django.views.decorators.clickjacking import xframe_options_exempt
 # ---------------------------------------------------------------------------- #
 #                                    INDICE                                    #
 # ---------------------------------------------------------------------------- #
