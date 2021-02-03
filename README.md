@@ -77,7 +77,12 @@ Aún así si se quisiera ejecutar localmente solo tiene que seguir estos pasos:
  ```
   O bien puedes descargar la opción que prefieras directamente desde aquí.
  
- 4. Instalar los requisitos especificados dentro del archivo requirements.txt,
+ 4. (Solo en el caso de la rama nube-heroku) Antes de la primera ejecución ejecutar:
+ ``` shell
+ python manage.py collectstatic
+ ```
+ 
+ 5. Instalar los requisitos especificados dentro del archivo requirements.txt,
  ``` shell
  pip install -r requirements.txt
  ```
