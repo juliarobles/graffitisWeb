@@ -35,6 +35,11 @@ def isInApp(email, request):
     return res
 
 def registerUser(name, email, img):
+    host = request.get_host()
+    if "8000" in host:
+        host = "http://" + host
+    else:
+        host = "https://" + host
     userJSON = {
         "usuario": email.split('@')[0],
         "nombre": name,
@@ -43,7 +48,7 @@ def registerUser(name, email, img):
         "imagen": img,
         "descripcion": "Creado mediante autentificación OAuth 2.0. Amante de la pizza con piña."
     }
-    url=request.get_host() + '/'+'api/usuarios/'
+    url=host + '/'+'api/usuarios/'
     response = requests.post(url, json.dumps(userJSON), headers= {'Content-type': 'application/json', 'Accept': 'application/json'})
     responseJSON = json.loads(response.content)
     
@@ -81,7 +86,12 @@ def action_loginInToken(request):
 # Efecto: autentifica a un usuario
 def action_login(request):
     context = None
-    
+
+    url = request.get_host()
+    if "8000" in url:
+        url = "http://" + url
+    else:
+        url = "https://" + url
     # Tomamos el usuario y contraseña del post
     email_form = request.POST.get('email', '')
     password_form = request.POST.get('password', '')
@@ -89,7 +99,7 @@ def action_login(request):
     # Buscamos el usuario
     r = http.request(
         'GET',
-        request.get_host() + '/' +'api/usuarios/',
+        url + '/' +'api/usuarios/',
         
     )
     
